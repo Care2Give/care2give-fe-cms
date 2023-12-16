@@ -41,20 +41,18 @@ export default function LoginForm() {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="flex flex-col text-black bg-white p-10 rounded-2xl shadow m-10"
+        className="flex flex-col text-black bg-white p-10 rounded-2xl shadow-lg m-10 space-y-4"
       >
-        <p className="font-bold text-3xl text-center my-2">Welcome back!</p>
-        <p className="font-bold text-sm text-center my-2">
-          Caregivers Alliance Limited
-        </p>
+        <p className="font-bold text-4xl text-center">Welcome back!</p>
+        <p className="font-bold text-center">Caregivers Alliance Limited</p>
         <FormField
           control={form.control}
           name="email"
           render={({ field }) => (
-            <FormItem className="my-2">
-              <FormLabel className="font-light text-xs">Email</FormLabel>
+            <FormItem>
+              <FormLabel className="font-light text-sm">Email</FormLabel>
               <FormControl>
-                <Input placeholder="Email" {...field} />
+                <Input placeholder="Email" type="email" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -64,28 +62,35 @@ export default function LoginForm() {
           control={form.control}
           name="password"
           render={({ field }) => (
-            <FormItem className="my-2">
-              <FormLabel className="font-light text-xs">Password</FormLabel>
+            <FormItem>
+              <FormLabel className="font-light text-sm">Password</FormLabel>
               <FormControl>
-                <Input placeholder="Password" {...field} />
+                <Input placeholder="Password" type="password" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        <div className="my-4 flex items-center justify-between">
+        <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
-            <Checkbox id="remember" />
+            <Checkbox id="remember" className="border-[#E5E7EB]" />
             <label
               htmlFor="remember"
-              className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              className="text-sm font-light leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
             >
               Remember me
             </label>
           </div>
-          <a className="text-sm">Forgot password?</a>
+          <a className="text-sm font-light" href="/login">
+            Forgot password?
+          </a>
         </div>
-        <Button>Login</Button>
+        <Button
+          className="bg-[#E6F3FF] hover:bg-[#B3DBFF] text-black font-light"
+          type="submit"
+        >
+          Login
+        </Button>
       </form>
     </Form>
   );
