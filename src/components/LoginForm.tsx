@@ -41,7 +41,7 @@ export default function LoginForm() {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="flex flex-col text-black bg-white p-10 rounded-2xl shadow-lg m-10 space-y-4"
+        className="flex flex-col text-black bg-white p-10 rounded-2xl shadow-lg m-10 space-y-4 min-w-[300px] max-w-[800px] min-h-[460px]"
       >
         <p className="font-bold text-4xl text-center">Welcome back!</p>
         <p className="font-bold text-center">Caregivers Alliance Limited</p>
@@ -81,7 +81,7 @@ export default function LoginForm() {
               Remember me
             </label>
           </div>
-          <a className="text-sm font-light" href="/login">
+          <a className="text-sm font-light text-right" href="/login">
             Forgot password?
           </a>
         </div>
