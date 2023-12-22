@@ -1,53 +1,40 @@
-
-.SideBar {
-    height: 100vh;
-    width: 150px;
-    background-color: white;
-}
-
-.SideBarButtonWrapper {
-    padding: 2px 5px 2px 5px;
-}
-
 .SideBarButton {
-    display: flex;
-    justify-content: left;
-    width: 100%;
-    border-radius: 10px;
- }
+  display: flex;
+  justify-content: left;
+  width: 100%;
+  border-radius: 10px;
+}
 
 .SideBarButton:hover {
-    background-color: blanchedalmond;;
+  background-color: blanchedalmond;
 }
 
 .SideBarButtonIconWrapper {
-    padding-right: 10px;
-    width: 30%;
+  padding-right: 10px;
+  width: 30%;
 }
 
 .SideBarButtonText {
-    width: 70%;
-    text-align: left;
-    white-space: normal;
+  width: 70%;
+  text-align: left;
+  white-space: normal;
 }
 
 .SideBarDivider {
-    margin: 10px;
+  margin: 10px;
 }
 
 .SideBarBottom {
-    position: absolute;
-    bottom: 0;
+  position: absolute;
+  bottom: 0;
 }
 
 .SideBarProfile {
-    background-color: lightgray;
+  background-color: lightgray;
 }
 
 .SideBarProfileUserName {
-
 }
 
 .SideBarProfileUserType {
-
 }

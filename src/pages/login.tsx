@@ -3,8 +3,12 @@ import React from "react";
 import LoginImg from "../../public/login/login-img.svg";
 import LoginBg from "../../public/login/login-bg-wave.svg";
 import LoginForm from "@/components/LoginForm";
+import useAuthStore from "@/stores/useAuthStore";
+import { useRouter } from "next/router";
 
 export default function Login() {
+  const { toggleLoggedIn } = useAuthStore();
+  const router = useRouter();
   return (
     <div className="flex flex-col bg-[#96CDFF] min-h-screen">
       <Image
@@ -20,6 +24,15 @@ export default function Login() {
         </div>
         <div className="z-10">
           <LoginForm />
+          <button
+            onClick={() => {
+              console.log("click");
+              toggleLoggedIn();
+              router.push("/");
+            }}
+          >
+            Secret login button for dev
+          </button>
         </div>
       </div>
     </div>

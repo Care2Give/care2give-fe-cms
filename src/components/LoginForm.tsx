@@ -14,6 +14,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "./ui/checkbox";
+import Link from "next/link";
 
 const formSchema = z.object({
   email: z.string().email({
@@ -81,9 +82,9 @@ export default function LoginForm() {
               Remember me
             </label>
           </div>
-          <a className="text-sm font-light text-right" href="/login">
+          <Link className="text-sm font-light text-right" href="/login">
             Forgot password?
-          </a>
+          </Link>
         </div>
         <Button
           className="bg-[#E6F3FF] hover:bg-[#B3DBFF] text-black font-light"
