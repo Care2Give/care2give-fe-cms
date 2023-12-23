@@ -45,12 +45,7 @@ export default function SideBar() {
       <SideBarButton icon={GridIcon} text="Donations" link="/donations" />
       <SideBarButton icon={FileHeartIcon} text="Campaigns" link="/campaigns" />
       <SideBarDivider />
-      <SideBarButton
-        icon={MailIcon}
-        text="Email Editor"
-        link="/email-editor
-      "
-      />
+      <SideBarButton icon={MailIcon} text="Email Editor" link="/email-editor" />
       <SideBarButton
         icon={UsersIcon}
         text="Admin Controls"

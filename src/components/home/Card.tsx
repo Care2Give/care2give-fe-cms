@@ -5,7 +5,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { HeartHandshakeIcon, LucideIcon } from "lucide-react";
+import { LucideIcon } from "lucide-react";
 import localFont from "next/font/local";
 import { Montserrat } from "next/font/google";
 import clsx from "clsx";
