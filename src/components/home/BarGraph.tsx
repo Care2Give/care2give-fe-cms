@@ -1,6 +1,13 @@
 import useDemoConfig from "@/lib/useDemoConfig";
 import React from "react";
-import { AxisOptions, Chart } from "react-charts";
+import { AxisOptions } from "react-charts";
+
+// very yucky workaround for importing react-charts
+import dynamic from "next/dynamic";
+
+const Chart = dynamic(() => import("react-charts").then((mod) => mod.Chart), {
+  ssr: false,
+});
 
 export default function Bar() {
   const { data } = useDemoConfig({

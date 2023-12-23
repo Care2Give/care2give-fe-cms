@@ -23,22 +23,18 @@ export default function Home() {
 
   return (
     <Layout>
-      <div className="m-8 bg-[#fffcf9] rounded">
-        <div className="p-8 flex flex-col gap-4">
-          <Header />
-          <OverallStatistics />
-          <div className="flex items-center gap-4 flex-wrap">
-            <div className="flex flex-col gap-4">
-              <Card
-                statistic="$20"
-                data="Most Popular Amount"
-                Icon={ThumbsUpIcon}
-                footerData="46 donors"
-              />
-            </div>
-            <GraphCard />
-          </div>
+      <Header />
+      <OverallStatistics />
+      <div className="flex items-center gap-4 flex-wrap">
+        <div className="flex flex-col gap-4">
+          <Card
+            statistic="$20"
+            data="Most Popular Amount"
+            Icon={ThumbsUpIcon}
+            footerData="46 donors"
+          />
         </div>
+        <GraphCard />
       </div>
     </Layout>
   );
