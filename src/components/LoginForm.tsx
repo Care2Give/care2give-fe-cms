@@ -20,7 +20,7 @@ const formSchema = z.object({
   email: z.string().email({
     message: "Invalid email, please try again",
   }),
-  password: z.string().min(1, {
+  password: z.string().min(8, {
     message: "Invalid password, please try again",
   }),
 });
@@ -82,7 +82,10 @@ export default function LoginForm() {
               Remember me
             </label>
           </div>
-          <Link className="text-sm font-light text-right" href="/login">
+          <Link
+            className="text-sm font-light text-right underline"
+            href="/login"
+          >
             Forgot password?
           </Link>
         </div>
