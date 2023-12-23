@@ -39,6 +39,7 @@ export default function SideBar() {
         height={50}
         width={50}
         className="mt-10 mb-6"
+        priority
       />
       <SideBarButton icon={HomeIcon} text="Home" link="/" />
       <SideBarButton icon={BarChartIcon} text="Analytics" link="/analytics" />
