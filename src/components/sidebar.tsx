@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next/router";
 
 import HomeIcon from "../../public/icons/home.svg";
 import BarChartIcon from "../../public/icons/bar-chart-3.svg";
@@ -13,6 +13,7 @@ import LogOutIcon from "../../public/icons/log-out.svg";
 import ArchiveIcon from "../../public/icons/archive.svg";
 import CornerDownRightIcon from "../../public/icons/corner-down-right.svg";
 import Logo from "../../public/logo.png";
+import clsx from "clsx";
 
 export default function SideBar() {
   const ArchiveMenuButtons = [
@@ -31,7 +32,7 @@ export default function SideBar() {
   ];
 
   return (
-    <div className="flex flex-col items-center bg-white w-44 h-screen">
+    <div className="flex flex-col items-center bg-white min-w-44 h-screen">
       <Image
         src={Logo}
         alt="Caregivers Alliance Logo"
@@ -70,12 +71,10 @@ function SideBarButton({
   icon,
   text,
   link,
-  className,
 }: {
   icon: string;
   text: string;
   link: string;
-  className?: string;
 }) {
   const router = useRouter();
 
@@ -83,7 +82,10 @@ function SideBarButton({
     <div className="py-1 px-3 w-full">
       <Button
         onClick={() => router.push(link)}
-        className="w-full bg-white flex justify-start hover:bg-[#ffefe0] gap-4"
+        className={clsx(
+          "w-full bg-white flex justify-start hover:bg-[#ffefe0] gap-4",
+          { "bg-[#ffefe0]": link === router.pathname }
+        )}
       >
         <span>
           <Image src={icon} alt={text + " icon"} width={24} height={24} />

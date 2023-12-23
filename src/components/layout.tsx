@@ -5,7 +5,7 @@ export default function Layout({ children }: PropsWithChildren) {
   return (
     <div className="flex">
       <SideBar />
-      <main>{children}</main>
+      <main className="w-full">{children}</main>
     </div>
   );
 }
