@@ -8,7 +8,6 @@ import BarChartIcon from "../../public/icons/bar-chart-3.svg";
 import GridIcon from "../../public/icons/grid.svg";
 import FileHeartIcon from "../../public/icons/file-heart.svg";
 import MailIcon from "../../public/icons/mail.svg";
-import AdminIcon from "../../public/icons/admin.svg";
 import UsersIcon from "../../public/icons/users.svg";
 import LogOutIcon from "../../public/icons/log-out.svg";
 import ArchiveIcon from "../../public/icons/archive.svg";
@@ -32,7 +31,7 @@ export default function SideBar() {
   ];
 
   return (
-    <div className="flex flex-col items-center bg-white w-40 h-screen">
+    <div className="flex flex-col items-center bg-white w-44 h-screen">
       <Image
         src={Logo}
         alt="Caregivers Alliance Logo"
@@ -40,17 +39,26 @@ export default function SideBar() {
         width={50}
         className="mt-10 mb-6"
       />
-      <SideBarButton icon={HomeIcon} text="Home" link="/home" />
+      <SideBarButton icon={HomeIcon} text="Home" link="/" />
       <SideBarButton icon={BarChartIcon} text="Analytics" link="/analytics" />
       <SideBarButton icon={GridIcon} text="Donations" link="/donations" />
       <SideBarButton icon={FileHeartIcon} text="Campaigns" link="/campaigns" />
       <SideBarDivider />
-      <SideBarButton icon={MailIcon} text="Email Editor" link="/editemail" />
-      <SideBarButton icon={AdminIcon} text="Admin Control" link="/admin" />
+      <SideBarButton
+        icon={MailIcon}
+        text="Email Editor"
+        link="/email-editor
+      "
+      />
+      <SideBarButton
+        icon={UsersIcon}
+        text="Admin Controls"
+        link="/admin-controls"
+      />
       <SideBarDivider />
       <SideBarButton icon={ArchiveIcon} text={"Archive"} link={"/archive"} />
       <div>{...ArchiveMenuButtons}</div>
-      <div className="absolute bottom-0 w-40">
+      <div className="absolute bottom-0 w-44">
         <SideBarButton icon={LogOutIcon} text="Logout" link="/login" />
         <SideBarProfile />
       </div>
@@ -75,19 +83,21 @@ function SideBarButton({
     <div className="py-1 px-3 w-full">
       <Button
         onClick={() => router.push(link)}
-        className="w-full bg-white flex justify-start hover:bg-[#ffefe0] gap-3"
+        className="w-full bg-white flex justify-start hover:bg-[#ffefe0] gap-4"
       >
         <span>
-          <Image src={icon} alt={text + " icon"} width={20} height={20} />
+          <Image src={icon} alt={text + " icon"} width={24} height={24} />
         </span>
-        <span className="text-black">{text}</span>
+        <span className="text-black whitespace-normal text-left">{text}</span>
       </Button>
     </div>
   );
 }
 
 function SideBarDivider() {
-  return <hr className="h-5" />;
+  return (
+    <hr className="h-1 w-32 border-t-2 border-gray-200 border-solid rounded" />
+  );
 }
 
 function SideBarProfile() {
@@ -101,7 +111,6 @@ function SideBarProfile() {
 
   return (
     <div className="flex justify-center items-center gap-4 p-3 bg-gray-300">
-      {/* className={styles.SideBarProfile}> */}
       <Avatar>
         <AvatarImage src={profileDetails.profilePicture} />
         <AvatarFallback>{profileDetails.username}</AvatarFallback>

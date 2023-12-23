@@ -1,10 +1,11 @@
 import SideBar from "@/components/sidebar";
+import { PropsWithChildren } from "react";
 
-export default function Layout({ children }) {
-    return (
-        <>
-            <SideBar />
-            <main>{children}</main>
-        </>
-    );
+export default function Layout({ children }: PropsWithChildren) {
+  return (
+    <div className="flex">
+      <SideBar />
+      <main>{children}</main>
+    </div>
+  );
 }

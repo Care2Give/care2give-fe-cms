@@ -26,7 +26,6 @@ export default function Login() {
           <LoginForm />
           <button
             onClick={() => {
-              console.log("click");
               toggleLoggedIn();
               router.push("/");
             }}
