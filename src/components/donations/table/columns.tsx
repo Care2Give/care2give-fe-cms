@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, MoreHorizontal } from "lucide-react";
+import { ArrowUpDown } from "lucide-react";
+import { DataTableColumnHeader } from "./column-header";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -20,19 +21,27 @@ export type Donation = {
 export const columns: ColumnDef<Donation>[] = [
   {
     accessorKey: "id",
-    header: "ID",
+    header: ({ column, table }) => (
+      <DataTableColumnHeader column={column} table={table} title="ID" />
+    ),
   },
   {
     accessorKey: "date",
-    header: "Date",
+    header: ({ column, table }) => (
+      <DataTableColumnHeader column={column} table={table} title="Date" />
+    ),
   },
   {
     accessorKey: "donor",
-    header: "Donor",
+    header: ({ column, table }) => (
+      <DataTableColumnHeader column={column} table={table} title="Donor" />
+    ),
   },
   {
     accessorKey: "amount",
-    header: "Amount",
+    header: ({ column, table }) => (
+      <DataTableColumnHeader column={column} table={table} title="Amount" />
+    ),
     cell: ({ row }) => {
       const amount = parseFloat(row.getValue("amount"));
       const formatted = new Intl.NumberFormat("en-SG", {
@@ -45,36 +54,46 @@ export const columns: ColumnDef<Donation>[] = [
   },
   {
     accessorKey: "campaign",
-    header: "Campaign",
+    header: ({ column, table }) => (
+      <DataTableColumnHeader column={column} table={table} title="Campaign" />
+    ),
   },
   {
     accessorKey: "status",
-    header: "Status",
+    header: ({ column, table }) => (
+      <DataTableColumnHeader column={column} table={table} title="Status" />
+    ),
   },
   {
     accessorKey: "type",
-    header: "Type of Donation",
+    header: ({ column, table }) => (
+      <DataTableColumnHeader
+        column={column}
+        table={table}
+        title="Type of Donation"
+      />
+    ),
   },
   {
     accessorKey: "email",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Email
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
+    header: ({ column, table }) => (
+      <DataTableColumnHeader column={column} table={table} title="Email" />
+    ),
   },
   {
     accessorKey: "nric",
-    header: "NRIC",
+    header: ({ column, table }) => (
+      <DataTableColumnHeader column={column} table={table} title="NRIC" />
+    ),
   },
   {
     accessorKey: "trainings",
-    header: "Training Programs",
+    header: ({ column, table }) => (
+      <DataTableColumnHeader
+        column={column}
+        table={table}
+        title="Training programs"
+      />
+    ),
   },
 ];

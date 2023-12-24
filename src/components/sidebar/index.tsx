@@ -33,7 +33,7 @@ export default function SideBar() {
   ];
 
   return (
-    <div className="flex flex-col items-center justify-between bg-white min-w-44 h-screen">
+    <div className="flex flex-col items-center justify-between bg-white min-w-44 h-screen fixed z-50">
       <div className="flex flex-col items-center bg-white min-w-44 h-screen">
         <Image
           src={Logo}
