@@ -9,7 +9,6 @@ import GridIcon from "../../../public/icons/grid.svg";
 import FileHeartIcon from "../../../public/icons/file-heart.svg";
 import MailIcon from "../../../public/icons/mail.svg";
 import UsersIcon from "../../../public/icons/users.svg";
-import ArchiveIcon from "../../../public/icons/archive.svg";
 import CornerDownRightIcon from "../../../public/icons/corner-down-right.svg";
 import Logo from "../../../public/logo.png";
 import clsx from "clsx";
@@ -22,12 +21,14 @@ export default function SideBar() {
       icon={CornerDownRightIcon}
       text="Donations"
       link="/archive/donations"
+      isSmall
     />,
     <SideBarButton
       key="archive-campaigns-button"
       icon={CornerDownRightIcon}
       text="Campaigns"
       link="/archive/campaigns"
+      isSmall
     />,
   ];
 
@@ -62,12 +63,15 @@ export default function SideBar() {
           link="/admin-controls"
         />
         <SideBarDivider />
-        <SideBarButton icon={ArchiveIcon} text={"Archive"} link={"/archive"} />
-        <div>{...ArchiveMenuButtons}</div>
+        <div className="flex flex-col gap-1 mt-2">
+          <span className="w-full text-left px-5 text-sm font-light">
+            Archive
+          </span>
+          <div>{...ArchiveMenuButtons}</div>
+        </div>
       </div>
       <div className="w-full flex flex-col gap-2">
         <Logout />
-        {/* <SideBarButton icon={LogOutIcon} text="Logout" link="/login" /> */}
         <SideBarProfile />
       </div>
     </div>
@@ -78,10 +82,12 @@ function SideBarButton({
   icon,
   text,
   link,
+  isSmall = false,
 }: {
   icon: string;
   text: string;
   link: string;
+  isSmall?: boolean;
 }) {
   const router = useRouter();
 
@@ -91,13 +97,25 @@ function SideBarButton({
         onClick={() => router.push(link)}
         className={clsx(
           "w-full bg-white flex justify-start hover:bg-[#ffefe0] gap-4",
-          { "bg-[#ffefe0]": link === router.pathname }
+          { "bg-[#ffefe0]": link === router.pathname },
+          { "h-5 pl-3 pr-8": isSmall }
         )}
       >
         <span>
-          <Image src={icon} alt={text + " icon"} width={24} height={24} />
+          <Image
+            src={icon}
+            alt={text + " icon"}
+            width={isSmall ? 12 : 24}
+            height={isSmall ? 12 : 24}
+          />
         </span>
-        <span className="text-black whitespace-normal text-left">{text}</span>
+        <span
+          className={clsx("text-black whitespace-normal text-left", {
+            "text-xs": isSmall,
+          })}
+        >
+          {text}
+        </span>
       </Button>
     </div>
   );

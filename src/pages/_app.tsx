@@ -1,6 +1,14 @@
+import InactivityDialog from "@/components/shared/InactivityDialog";
+import useAuthStore from "@/stores/useAuthStore";
 import "@/styles/globals.css";
 import type { AppProps } from "next/app";
 
 export default function App({ Component, pageProps }: AppProps) {
-  return <Component {...pageProps} />;
+  const { isLoggedIn } = useAuthStore();
+  return (
+    <>
+      {isLoggedIn && <InactivityDialog />}
+      <Component {...pageProps} />
+    </>
+  );
 }
