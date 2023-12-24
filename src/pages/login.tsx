@@ -5,12 +5,14 @@ import LoginBg from "../../public/login/login-bg-wave.svg";
 import LoginForm from "@/components/LoginForm";
 import useAuthStore from "@/stores/useAuthStore";
 import { useRouter } from "next/router";
+import { UserButton } from "@clerk/nextjs";
 
 export default function Login() {
   const { toggleLoggedIn } = useAuthStore();
   const router = useRouter();
   return (
     <div className="flex flex-col bg-[#FFEFE0] min-h-screen">
+      <UserButton afterSignOutUrl="/login" />
       <Image
         src={LoginBg}
         alt="login-vector-bg"

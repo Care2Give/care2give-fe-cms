@@ -5,18 +5,6 @@ import OverallStatistics from "@/components/home/OverallStatistics";
 import Layout from "@/components/layout";
 import useIsLoggedIn from "@/lib/useIsLoggedIn";
 import { ThumbsUpIcon } from "lucide-react";
-import { Montserrat } from "next/font/google";
-import localFont from "next/font/local";
-
-const montserrat = Montserrat({
-  subsets: ["latin"],
-  style: ["normal"],
-  weight: ["400"],
-});
-
-const arabotoBold = localFont({
-  src: "../../public/fonts/araboto/Araboto Bold 400.ttf",
-});
 
 export default function Home() {
   useIsLoggedIn();
