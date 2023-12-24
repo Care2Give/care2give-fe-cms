@@ -5,5 +5,9 @@ import Table from "@/components/donations/table";
 export default function Donations() {
   useIsLoggedIn();
 
-  return <Layout>{/* <Table /> */}</Layout>;
+  return (
+    <Layout>
+      <Table />
+    </Layout>
+  );
 }
