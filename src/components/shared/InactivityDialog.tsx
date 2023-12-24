@@ -53,7 +53,6 @@ export default function InactivityDialog() {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      console.log(getRemainingTime(), remaining);
       setRemaining(convertMsToMinutesSeconds(Math.ceil(getRemainingTime())));
     }, 500);
 

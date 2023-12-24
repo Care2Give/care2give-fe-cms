@@ -15,11 +15,12 @@ export default function Login() {
         src={LoginBg}
         alt="login-vector-bg"
         className="absolute bottom-0 z-0"
+        priority
       />
       <div className="grid grid-cols-1 sm:grid-cols-2 my-auto sm:mx-20">
         <div className="flex items-center justify-center z-10">
           <div className="w-3/5 sm:w-3/4 max-w-sm pt-10 sm:pt-0">
-            <Image src={LoginImg} alt="login-img" />
+            <Image src={LoginImg} alt="login-img" priority />
           </div>
         </div>
         <div className="z-10">
