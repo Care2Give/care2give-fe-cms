@@ -90,7 +90,7 @@ export default function LoginForm() {
           </Link>
         </div>
         <Button
-          className="bg-[#E6F3FF] hover:bg-[#B3DBFF] text-black font-light"
+          className="bg-[#5185FF] hover:bg-[#5185FF] text-white font-bold"
           type="submit"
         >
           Login

@@ -10,7 +10,7 @@ export default function Login() {
   const { toggleLoggedIn } = useAuthStore();
   const router = useRouter();
   return (
-    <div className="flex flex-col bg-[#96CDFF] min-h-screen">
+    <div className="flex flex-col bg-[#FFEFE0] min-h-screen">
       <Image
         src={LoginBg}
         alt="login-vector-bg"
