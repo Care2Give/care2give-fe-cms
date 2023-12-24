@@ -55,10 +55,12 @@ export function DataTableColumnHeader<TData, TValue>({
         </DropdownMenuTrigger>
         <DropdownMenuContent align="start">
           <DropdownMenuItem onClick={() => column.toggleSorting(false)}>
-            <ArrowDownWideNarrowIcon className="mr-2 h-3.5 w-3.5" />A - Z
+            <ArrowDownWideNarrowIcon className="mr-2 h-3.5 w-3.5" />
+            Sort A - Z
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => column.toggleSorting(true)}>
-            <ArrowUpNarrowWideIcon className="mr-2 h-3.5 w-3.5" />Z - A
+            <ArrowUpNarrowWideIcon className="mr-2 h-3.5 w-3.5" />
+            Sort Z - A
           </DropdownMenuItem>
           <DropdownMenuSeparator />
 

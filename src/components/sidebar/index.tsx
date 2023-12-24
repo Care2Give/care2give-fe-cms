@@ -90,6 +90,7 @@ function SideBarButton({
   isSmall?: boolean;
 }) {
   const router = useRouter();
+  const firstLevelPath = "/" + router.pathname.split("/")[1];
 
   return (
     <div className="py-1 px-3 w-full">
@@ -97,7 +98,7 @@ function SideBarButton({
         onClick={() => router.push(link)}
         className={clsx(
           "w-full bg-white flex justify-start hover:bg-[#ffefe0] gap-4",
-          { "bg-[#ffefe0]": link === router.pathname },
+          { "bg-[#ffefe0]": link === firstLevelPath },
           { "h-5 pl-3 pr-8": isSmall }
         )}
       >
