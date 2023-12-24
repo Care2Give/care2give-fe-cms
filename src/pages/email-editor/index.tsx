@@ -87,7 +87,7 @@ export default function EmailEditor() {
                   <Button
                     type="button"
                     onClick={() => setIsEditing(false)}
-                    className="w-32 bg-blue-600 hover:bg-blue-800"
+                    className="w-32 bg-blue-500 hover:bg-blue-800"
                   >
                     Confirm
                   </Button>

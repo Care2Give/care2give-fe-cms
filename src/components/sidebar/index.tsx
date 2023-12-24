@@ -3,17 +3,17 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Image from "next/image";
 import { useRouter } from "next/router";
 
-import HomeIcon from "../../public/icons/home.svg";
-import BarChartIcon from "../../public/icons/bar-chart-3.svg";
-import GridIcon from "../../public/icons/grid.svg";
-import FileHeartIcon from "../../public/icons/file-heart.svg";
-import MailIcon from "../../public/icons/mail.svg";
-import UsersIcon from "../../public/icons/users.svg";
-import LogOutIcon from "../../public/icons/log-out.svg";
-import ArchiveIcon from "../../public/icons/archive.svg";
-import CornerDownRightIcon from "../../public/icons/corner-down-right.svg";
-import Logo from "../../public/logo.png";
+import HomeIcon from "../../../public/icons/home.svg";
+import BarChartIcon from "../../../public/icons/bar-chart-3.svg";
+import GridIcon from "../../../public/icons/grid.svg";
+import FileHeartIcon from "../../../public/icons/file-heart.svg";
+import MailIcon from "../../../public/icons/mail.svg";
+import UsersIcon from "../../../public/icons/users.svg";
+import ArchiveIcon from "../../../public/icons/archive.svg";
+import CornerDownRightIcon from "../../../public/icons/corner-down-right.svg";
+import Logo from "../../../public/logo.png";
 import clsx from "clsx";
+import Logout from "./Logout";
 
 export default function SideBar() {
   const ArchiveMenuButtons = [
@@ -32,31 +32,42 @@ export default function SideBar() {
   ];
 
   return (
-    <div className="flex flex-col items-center bg-white min-w-44 h-screen">
-      <Image
-        src={Logo}
-        alt="Caregivers Alliance Logo"
-        height={50}
-        width={50}
-        className="mt-10 mb-6"
-        priority
-      />
-      <SideBarButton icon={HomeIcon} text="Home" link="/" />
-      <SideBarButton icon={BarChartIcon} text="Analytics" link="/analytics" />
-      <SideBarButton icon={GridIcon} text="Donations" link="/donations" />
-      <SideBarButton icon={FileHeartIcon} text="Campaigns" link="/campaigns" />
-      <SideBarDivider />
-      <SideBarButton icon={MailIcon} text="Email Editor" link="/email-editor" />
-      <SideBarButton
-        icon={UsersIcon}
-        text="Admin Controls"
-        link="/admin-controls"
-      />
-      <SideBarDivider />
-      <SideBarButton icon={ArchiveIcon} text={"Archive"} link={"/archive"} />
-      <div>{...ArchiveMenuButtons}</div>
-      <div className="absolute bottom-0 w-44">
-        <SideBarButton icon={LogOutIcon} text="Logout" link="/login" />
+    <div className="flex flex-col items-center justify-between bg-white min-w-44 h-screen">
+      <div className="flex flex-col items-center bg-white min-w-44 h-screen">
+        <Image
+          src={Logo}
+          alt="Caregivers Alliance Logo"
+          height={50}
+          width={50}
+          className="mt-10 mb-6"
+          priority
+        />
+        <SideBarButton icon={HomeIcon} text="Home" link="/" />
+        <SideBarButton icon={BarChartIcon} text="Analytics" link="/analytics" />
+        <SideBarButton icon={GridIcon} text="Donations" link="/donations" />
+        <SideBarButton
+          icon={FileHeartIcon}
+          text="Campaigns"
+          link="/campaigns"
+        />
+        <SideBarDivider />
+        <SideBarButton
+          icon={MailIcon}
+          text="Email Editor"
+          link="/email-editor"
+        />
+        <SideBarButton
+          icon={UsersIcon}
+          text="Admin Controls"
+          link="/admin-controls"
+        />
+        <SideBarDivider />
+        <SideBarButton icon={ArchiveIcon} text={"Archive"} link={"/archive"} />
+        <div>{...ArchiveMenuButtons}</div>
+      </div>
+      <div className="w-full flex flex-col gap-2">
+        <Logout />
+        {/* <SideBarButton icon={LogOutIcon} text="Logout" link="/login" /> */}
         <SideBarProfile />
       </div>
     </div>
