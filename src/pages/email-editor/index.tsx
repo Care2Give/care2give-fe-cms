@@ -18,7 +18,7 @@ import { DialogClose } from "@radix-ui/react-dialog";
 
 import { useRouter } from "next/router";
 import { useEffect } from "react";
-import { useBeforeUnload } from "react-use";
+import UnsavedChangesDialog from "@/components/shared/UnsavedChangesDialog";
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -27,25 +27,9 @@ const montserrat = Montserrat({
 });
 
 export default function EmailEditor() {
-  const { isEditing, setIsEditing } = useEmailEditorStore();
   useIsLoggedIn();
-  const router = useRouter();
-  useBeforeUnload(isEditing, "You have unsaved changes, are you sure?");
 
-  useEffect(() => {
-    // TODO: route change behavior is still inconsistent. need to add you have unsaved changes dialog.
-    const handleRouteChange = () => {
-      if (isEditing) {
-        throw "Route Canceled";
-      }
-    };
-
-    router.events.on("beforeHistoryChange", handleRouteChange);
-
-    return () => {
-      router.events.off("beforeHistoryChange", handleRouteChange);
-    };
-  }, [router]);
+  const { isEditing, setIsEditing } = useEmailEditorStore();
 
   return (
     <Layout>
@@ -86,7 +70,6 @@ export default function EmailEditor() {
                 <DialogClose asChild>
                   <Button
                     type="button"
-                    onClick={() => setIsEditing(false)}
                     className="w-32 bg-blue-500 hover:bg-blue-800"
                   >
                     Confirm

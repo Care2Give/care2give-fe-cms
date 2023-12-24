@@ -4,11 +4,12 @@ import StarterKit from "@tiptap/starter-kit";
 import { useEffect } from "react";
 
 const Subject = () => {
-  const { isEditing } = useEmailEditorStore();
+  const { isEditing, subjectContent, setSubjectContent, didSaveContent } =
+    useEmailEditorStore();
 
   const editor = useEditor({
     extensions: [StarterKit],
-    content: "<p>Thank you for donating to Caregivers Alliance!",
+    content: subjectContent,
     editorProps: {
       attributes: {
         class: "p-3 border-gray-300 border-2 border-solid rounded text-sm",
@@ -23,8 +24,15 @@ const Subject = () => {
       } else {
         editor.setOptions({ editable: false });
       }
+
+      if (!isEditing && didSaveContent) {
+        setSubjectContent(editor.getHTML());
+      }
+      if (!isEditing && !didSaveContent) {
+        editor.commands.setContent(subjectContent);
+      }
     }
-  }, [isEditing]);
+  }, [editor, isEditing, didSaveContent]);
 
   return (
     <div className="flex flex-col gap-2">
