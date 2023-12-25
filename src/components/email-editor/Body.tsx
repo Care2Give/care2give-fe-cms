@@ -1,14 +1,29 @@
 import useEmailEditorStore from "@/stores/useEmailEditorStore";
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
+import Underline from "@tiptap/extension-underline";
+import { Color } from "@tiptap/extension-color";
+import TextStyle from "@tiptap/extension-text-style";
+import Link from "@tiptap/extension-link";
+import TextAlign from "@tiptap/extension-text-align";
 import { useEffect } from "react";
+import MenuBar from "./MenuBar";
 
 const Body = () => {
   const { isEditing, didSaveContent, bodyContent, setBodyContent } =
     useEmailEditorStore();
 
   const editor = useEditor({
-    extensions: [StarterKit],
+    extensions: [
+      StarterKit,
+      Underline,
+      TextStyle,
+      Color,
+      Link.configure({ openOnClick: false }),
+      TextAlign.configure({
+        types: ["heading", "paragraph", "textStyle"],
+      }),
+    ],
     content: bodyContent,
     editorProps: {
       attributes: {
@@ -34,6 +49,7 @@ const Body = () => {
   return (
     <div className="flex flex-col gap-2">
       <p>Body:</p>
+      {isEditing && <MenuBar editor={editor} />}
       <EditorContent editor={editor} />
     </div>
   );
