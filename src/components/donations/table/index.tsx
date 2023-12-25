@@ -9,7 +9,7 @@ export default function DemoPage() {
   const tableRef = useRef(null);
   return (
     <div className="container mx-auto py-10">
-      <DataTable columns={columns} data={data} ref={tableRef} />
+      <DataTable columns={columns} data={data} innerRef={tableRef} />
       <div className="w-full flex justify-end mt-4">
         <Link href="/donations/export-data">
           <Button className="bg-blue-500 hover:bg-blue-700 text-lg">

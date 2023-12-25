@@ -25,13 +25,13 @@ import { DataTablePagination } from "./pagination";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
-  ref: MutableRefObject<null>;
+  innerRef: MutableRefObject<null>;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
-  ref,
+  innerRef,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -54,7 +54,7 @@ export function DataTable<TData, TValue>({
   return (
     <div>
       <div className="rounded-md border">
-        <Table ref={ref}>
+        <Table ref={innerRef}>
           <TableHeader className="bg-[#FFEFE0]">
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
