@@ -70,3 +70,9 @@ body {
   background-color: blanchedalmond;
   color: rgb(var(--foreground-rgb));
 }
+
+.ProseMirror a {
+  color: #0000ff;
+  text-decoration: underline;
+  cursor: pointer;
+}

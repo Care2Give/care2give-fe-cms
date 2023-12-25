@@ -19,9 +19,13 @@ const Body = () => {
       Underline,
       TextStyle,
       Color,
-      Link.configure({ openOnClick: false }),
+      Link.configure({
+        openOnClick: false,
+        protocols: ["http", "https"],
+        autolink: true,
+      }),
       TextAlign.configure({
-        types: ["heading", "paragraph", "textStyle"],
+        types: ["heading", "paragraph"],
       }),
     ],
     content: bodyContent,

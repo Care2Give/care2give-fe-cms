@@ -3,63 +3,25 @@ import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { Toggle } from "@/components/ui/toggle";
-
 import {
   AlignCenterIcon,
   AlignLeftIcon,
   AlignRightIcon,
   BoldIcon,
   ItalicIcon,
-  LinkIcon,
   StrikethroughIcon,
   UnderlineIcon,
 } from "lucide-react";
-import { useCallback, useRef } from "react";
 import { cn } from "@/lib/utils";
+import EditUrlDialog from "./EditUrlDialog";
 
 type MenuBarProps = {
   editor: Editor | null;
 };
 
-// const MenuBarButton;
-
 const MenuBar = ({ editor }: MenuBarProps) => {
-  const inputRef = useRef(null);
-
-  const setLink = useCallback(() => {
-    if (editor) {
-      const previousUrl = editor.getAttributes("link").href;
-      const url = window.prompt("URL", previousUrl);
-
-      // cancelled
-      if (url === null) {
-        return;
-      }
-
-      // empty
-      if (url === "") {
-        editor.chain().focus().extendMarkRange("link").unsetLink().run();
-
-        return;
-      }
-
-      // update link
-      editor
-        .chain()
-        .focus()
-        .extendMarkRange("link")
-        .setLink({ href: url })
-        .run();
-    }
-  }, [editor]);
-
   if (!editor) {
     return null;
   }
@@ -153,26 +115,19 @@ const MenuBar = ({ editor }: MenuBarProps) => {
       </DropdownMenu>
 
       <input
-        ref={inputRef}
         type="color"
         className=""
         onInput={(event) =>
-          editor.chain().focus().setColor(event.target.value).run()
+          editor
+            .chain()
+            .focus()
+            .setColor((event.target as HTMLInputElement).value)
+            .run()
         }
         value={editor.getAttributes("textStyle").color}
       />
 
-      <Button
-        onClick={setLink}
-        className={cn(
-          "bg-white text-black border rounded border-gray-200 hover:bg-gray-100 hover:text-black",
-          {
-            "bg-gray-200": editor.isActive("link"),
-          }
-        )}
-      >
-        <LinkIcon className="h-4 w-4" />
-      </Button>
+      <EditUrlDialog editor={editor} />
     </div>
   );
 };

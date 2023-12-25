@@ -64,7 +64,7 @@ export default function SideBar() {
         />
         <SideBarDivider />
         <div className="flex flex-col gap-1 mt-2">
-          <span className="w-full text-left px-5 text-sm font-light">
+          <span className="w-full text-left px-5 text-xs font-semibold">
             Archive
           </span>
           <div>{...ArchiveMenuButtons}</div>
