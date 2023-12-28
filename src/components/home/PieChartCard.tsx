@@ -12,7 +12,7 @@ import clsx from "clsx";
 import {
   capitalizeFirstLetter,
   joinBlankspacedStringLowercased,
-} from "@/utils/displayUtils";
+} from "@/lib/utils";
 import { PieChart } from "react-minimal-pie-chart";
 
 const montserrat = Montserrat({

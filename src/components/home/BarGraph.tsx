@@ -5,16 +5,16 @@ import { AxisOptions } from "react-charts";
 // very yucky workaround for importing react-charts
 import dynamic from "next/dynamic";
 import { addDays, differenceInDays } from "date-fns";
-import { mmddFormatter } from "@/utils/displayUtils";
+import { mmddFormatter } from "@/lib/utils";
+
+const Chart = dynamic(() => import("react-charts").then((mod) => mod.Chart), {
+  ssr: false,
+});
 
 type BarGraphProps = {
   startDate: Date;
   endDate: Date;
 };
-
-const Chart = dynamic(() => import("react-charts").then((mod) => mod.Chart), {
-  ssr: false,
-});
 
 export default function BarGraph({ startDate, endDate }: BarGraphProps) {
   const length = differenceInDays(endDate, startDate) + 1; // Inclusive of end
