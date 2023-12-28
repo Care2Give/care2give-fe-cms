@@ -1,6 +1,4 @@
-import { Button } from "@/components/ui/button";
 import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown } from "lucide-react";
 import { DataTableColumnHeader } from "./column-header";
 
 // This type is used to define the shape of our data.

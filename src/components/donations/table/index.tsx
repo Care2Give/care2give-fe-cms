@@ -5,7 +5,7 @@ import data from "./MOCK_DATA";
 import { useRef } from "react";
 import Link from "next/link";
 
-export default function DemoPage() {
+export default function Table() {
   const tableRef = useRef(null);
   return (
     <div className="container mx-auto py-10">
