@@ -4,6 +4,7 @@ import Subject from "@/components/email-editor/Subject";
 import Layout from "@/components/layout";
 import { Button } from "@/components/ui/button";
 import useIsLoggedIn from "@/lib/useIsLoggedIn";
+import useRouteHandler from "@/lib/useRouteHandler";
 import { Montserrat } from "next/font/google";
 import useEmailEditorStore from "@/stores/useEmailEditorStore";
 import {
@@ -14,11 +15,10 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { DialogClose } from "@radix-ui/react-dialog";
+import { DialogClose, DialogDescription } from "@radix-ui/react-dialog";
 
 import { useRouter } from "next/router";
-import { useEffect } from "react";
-import UnsavedChangesDialog from "@/components/shared/UnsavedChangesDialog";
+import { useEffect, useState } from "react";
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -29,7 +29,14 @@ const montserrat = Montserrat({
 export default function EmailEditor() {
   useIsLoggedIn();
 
-  const { isEditing, setIsEditing } = useEmailEditorStore();
+  const { isEditing, setIsEditing, didSaveContent, setDidSaveContent } = useEmailEditorStore();
+
+  const { navigate, routeAwayUrl, routeAwayConfirmationOpen, setRouteAwayConfirmationOpen } = useRouteHandler({
+    isEditing,
+    setIsEditing,
+    didSaveContent,
+    setDidSaveContent
+  })
 
   return (
     <Layout>
@@ -45,47 +52,95 @@ export default function EmailEditor() {
           <p>Last Edited: 11/10/2023</p>
           <p>By: Song Jie</p>
         </div>
-        {isEditing ? (
-          <Dialog>
-            <DialogTrigger asChild>
-              <Button
-                className="bg-white border-gray-300 border-2 border-solid rounded text-sm text-black hover:bg-[#ffefe0]"
-                // onClick={() => setIsEditing(false)}
-              >
-                Publish
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="py-14 px-10 gap-8">
-              <DialogHeader>
+        <Dialog open={routeAwayConfirmationOpen} onOpenChange={setRouteAwayConfirmationOpen}>
+          <DialogContent className="py-14 px-10 gap-8">
+            <DialogHeader>
                 <DialogTitle className="text-center">
-                  Would you like to publish the edited email?
+                  You have unsaved changes!
                 </DialogTitle>
-              </DialogHeader>
-              <DialogFooter className="min-w-full sm:justify-center gap-16">
-                <DialogClose asChild>
-                  <Button className="w-32 bg-white text-black hover:bg-gray-500 border-gray-300 border-2 border-solid rounded">
-                    Cancel
-                  </Button>
-                </DialogClose>
-                <DialogClose asChild>
+                <DialogDescription className='text-center'>
+                  Are you sure you want to leave this page?
+                </DialogDescription>
+            </DialogHeader>
+            <DialogTitle className="text-center">
+              Changes you have made will not be saved.
+            </DialogTitle>
+            <DialogFooter className="min-w-full sm:justify-center gap-16">
+              <DialogClose asChild>
+                <Button className="w-32 bg-white text-black hover:bg-gray-500 border-gray-300 border-2 border-solid rounded"
+                >
+                  Cancel
+                </Button>
+              </DialogClose>
+              <DialogClose asChild>
+                <Button
+                  type="button"
+                  className="w-32 bg-blue-500 hover:bg-blue-800"
+                  onClick={() => {
+                    setIsEditing(false)
+                    navigate(routeAwayUrl)
+                  }}
+                >
+                  Confirm
+                </Button>
+              </DialogClose>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+        {
+          isEditing
+            ? (
+              <Dialog>
+                <DialogTrigger asChild>
                   <Button
-                    type="button"
-                    className="w-32 bg-blue-500 hover:bg-blue-800"
+                    className="bg-white border-gray-300 border-2 border-solid rounded text-sm text-black hover:bg-[#ffefe0]"
+                    onClick={() => console.log(routeAwayConfirmationOpen)}
                   >
-                    Confirm
+                    Publish
                   </Button>
-                </DialogClose>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
-        ) : (
-          <Button
-            className="bg-white border-gray-300 border-2 border-solid rounded text-sm text-black hover:bg-[#ffefe0]"
-            onClick={() => setIsEditing(true)}
-          >
-            Edit Email
-          </Button>
-        )}
+                </DialogTrigger>
+                <DialogContent className="py-14 px-10 gap-8">
+                  <DialogHeader>
+                    <DialogTitle className="text-center">
+                      Would you like to publish the edited email?
+                    </DialogTitle>
+                  </DialogHeader>
+                  <DialogFooter className="min-w-full sm:justify-center gap-16">
+                    <DialogClose asChild>
+                      <Button className="w-32 bg-white text-black hover:bg-gray-500 border-gray-300 border-2 border-solid rounded"
+                        onClick={() => {
+                          setIsEditing(false)
+                          setDidSaveContent(false)
+                        }}
+                      >
+                        Cancel
+                      </Button>
+                    </DialogClose>
+                    <DialogClose asChild>
+                      <Button
+                        type="button"
+                        className="w-32 bg-blue-500 hover:bg-blue-800"
+                        onClick={() => {
+                          setIsEditing(false)
+                          setDidSaveContent(true)
+                        }}
+                      >
+                        Confirm
+                      </Button>
+                    </DialogClose>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
+            )
+            : (
+                <Button
+                  className="bg-white border-gray-300 border-2 border-solid rounded text-sm text-black hover:bg-[#ffefe0]"
+                  onClick={() => setIsEditing(true)}
+                >
+                  Edit Email
+                </Button>
+            )
+        }
       </div>
     </Layout>
   );
