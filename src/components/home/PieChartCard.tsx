@@ -48,7 +48,7 @@ export default function PieChartCard({
   selectorVals,
 }: CardProps) {
   return (
-    <div className="bg-white shadow rounded w-60 flex flex-col gap-4">
+    <div className="bg-white shadow rounded xl:w-56 w-60 flex flex-col gap-4">
       <div className={`${arabotoBold.className} pt-4 text-center text-2xl`}>
         {statistic}
       </div>
