@@ -28,7 +28,7 @@ type CardProps = {
 };
 export default function Card({ statistic, data, Icon, footerData }: CardProps) {
   return (
-    <div className="bg-white shadow rounded w-64 flex flex-col justify-between">
+    <div className="bg-white shadow rounded w-60 flex flex-col justify-between">
       <div className="pt-8 p-4 flex justify-between items-center h-full">
         <div>
           <div className={`${arabotoBold.className} text-3xl`}>{statistic}</div>

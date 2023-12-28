@@ -4,7 +4,10 @@ import {
   FileHeartIcon,
   HeartHandshakeIcon,
   SmileIcon,
+  ThumbsUpIcon,
 } from "lucide-react";
+import GraphCard from "./GraphCard";
+import PieChartCard from "./PieChartCard";
 
 export default function OverallStatistics() {
   return (
@@ -22,6 +25,20 @@ export default function OverallStatistics() {
         footerData="56 donors"
         Icon={FileHeartIcon}
       />
+      <div className="flex flex-col gap-4">
+        <Card
+          statistic="$20"
+          data="Most Popular Amount"
+          Icon={ThumbsUpIcon}
+          footerData="46 donors"
+        />
+        <PieChartCard
+          statistic="Donation Type"
+          selectorPlaceholder="Group"
+          selectorVals={["First", "Second", "Third"]}
+        />
+      </div>
+      <GraphCard />
     </div>
   );
 }
