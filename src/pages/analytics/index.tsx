@@ -1,3 +1,4 @@
+import Header from "@/components/analytics/Header";
 import Layout from "@/components/layout";
 import useIsLoggedIn from "@/lib/useIsLoggedIn";
 
@@ -6,7 +7,7 @@ export default function Analytics() {
 
   return (
     <Layout>
-      <div>hello</div>
+      <Header />
     </Layout>
   );
 }
