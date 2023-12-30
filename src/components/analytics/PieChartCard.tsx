@@ -20,6 +20,7 @@ type PieChartCardHeaderProps = {
   selectorValues: string[];
   startDate: Date;
   endDate: Date;
+  daysLeft: number; // Mock for now but will be calculated and not stored in db
 };
 
 type CardSelectorProps = {
@@ -41,6 +42,7 @@ const MOCK_CAMPAIGNS_DATA = [
     data: {
       startDate: new Date("2020-01-01"),
       endDate: new Date("2020-03-31"),
+      daysLeft: 80,
       totalDonation: 12000.45,
       topDonor: {
         donationAmt: 300,
@@ -54,6 +56,7 @@ const MOCK_CAMPAIGNS_DATA = [
     data: {
       startDate: new Date("2020-01-01"),
       endDate: new Date("2020-06-31"),
+      daysLeft: 73,
       totalDonation: 10023.5,
       topDonor: {
         donationAmt: 80,
@@ -67,6 +70,7 @@ const MOCK_CAMPAIGNS_DATA = [
     data: {
       startDate: new Date("2020-01-01"),
       endDate: new Date("2020-05-31"),
+      daysLeft: 60,
       totalDonation: 9503.5,
       topDonor: {
         donationAmt: 240,
@@ -80,6 +84,7 @@ const MOCK_CAMPAIGNS_DATA = [
     data: {
       startDate: new Date("2020-01-01"),
       endDate: new Date("2020-04-31"),
+      daysLeft: 45,
       totalDonation: 14321.5,
       topDonor: {
         donationAmt: 530,
@@ -89,7 +94,6 @@ const MOCK_CAMPAIGNS_DATA = [
     },
   },
 ];
-const MOCK_DAYS_LEFT = 45;
 const ALL_CAMPAIGNS_NAME = MOCK_CAMPAIGNS_DATA.map(
   (campaign) => campaign.campaignName
 );
@@ -115,6 +119,7 @@ export default function PieChartCard({
         selectorValues={ALL_CAMPAIGNS_NAME}
         startDate={campaignData.data.startDate}
         endDate={campaignData.data.endDate}
+        daysLeft={campaignData.data.daysLeft}
       />
       <PieChartCardBody
         totalDonation={campaignData.data.totalDonation}
@@ -132,6 +137,7 @@ function PieChartCardHeader({
   selectorValues,
   startDate,
   endDate,
+  daysLeft,
 }: PieChartCardHeaderProps) {
   return (
     <div className="flex justify-between items-center">
@@ -142,7 +148,7 @@ function PieChartCardHeader({
       />
       <div className="text-right">
         <p>
-          Days Left: <b>{MOCK_DAYS_LEFT}</b>
+          Days Left: <b>{daysLeft}</b>
         </p>
         <p className="text-xs">
           Duration: {ddmmyyyyFormatter(startDate)} -{" "}
