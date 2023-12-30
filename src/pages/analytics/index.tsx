@@ -5,6 +5,7 @@ import BarChartCard from "@/components/analytics/BarChartCard";
 import CampaignTable from "@/components/analytics/CampaignTable";
 import PopularTable from "@/components/analytics/PopularTable";
 import PieChartCard from "@/components/analytics/PieChartCard";
+import useAnalyticsStore from "@/stores/useAnalyticsStore";
 
 const dummyCampaignDetails = [
   {
@@ -79,6 +80,7 @@ const dummyPopularDetails = [
 
 export default function Analytics() {
   useIsLoggedIn();
+  const { pieChartCampaignOne, pieChartCampaignTwo } = useAnalyticsStore();
 
   const campaignDetails = dummyCampaignDetails.map((campaign) => ({
     xLabel: "",
@@ -94,7 +96,7 @@ export default function Analytics() {
   return (
     <Layout>
       <Header />
-      <div className="flex space-between w-full">
+      <div className="grid grid-cols-1 xl:grid-cols-2">
         <BarChartCard
           title="Campaigns"
           barChartDetails={campaignDetails}
@@ -107,10 +109,8 @@ export default function Analytics() {
           tableDetails={dummyPopularDetails}
           Table={PopularTable}
         />
-      </div>
-      <div className="flex space-between">
-        <PieChartCard campaignName="Charity Dinner 2020" />
-        <PieChartCard campaignName="Smell Good, Feel Good, Do Good" />
+        <PieChartCard pieChartId="1" campaignName={pieChartCampaignOne} />
+        <PieChartCard pieChartId="2" campaignName={pieChartCampaignTwo} />
       </div>
     </Layout>
   );

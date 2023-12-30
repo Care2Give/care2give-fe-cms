@@ -37,9 +37,9 @@ type CardSelectorProps = {
 };
 
 const MOCK_DATA = [
-  { title: "One", value: 10, color: "#E38627" },
-  { title: "Two", value: 15, color: "#C13C37" },
-  { title: "Three", value: 20, color: "#6A2135" },
+  { title: "One", value: 10, color: "#FFD694" },
+  { title: "Two", value: 15, color: "#FCE3BB" },
+  { title: "Three", value: 20, color: "#FCEBCF" },
 ];
 
 export default function PieChartCard({
@@ -53,7 +53,7 @@ export default function PieChartCard({
         {statistic}
       </div>
       <div className="h-40">
-        <PieChart data={MOCK_DATA} />
+        <PieChart data={MOCK_DATA} lineWidth={48} />
       </div>
       <div className={clsx("bg-[#ffefdf] flex justify-end items-center p-4")}>
         <CardSelector placeholder={selectorPlaceholder} values={selectorVals} />
@@ -71,7 +71,7 @@ function CardSelector({ placeholder, values }: CardSelectorProps) {
       <SelectContent>
         {values.map((val, i) => {
           return (
-            <SelectItem value={joinBlankspacedStringLowercased(val)} key={i}>
+            <SelectItem value={val} key={i}>
               {capitalizeFirstLetter(val)}
             </SelectItem>
           );

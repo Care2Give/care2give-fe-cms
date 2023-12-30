@@ -25,41 +25,43 @@ type CampaignProps = {
   amount: number;
   trend?: boolean;
   number_of_donors?: number;
-}
+};
 
 type BarChartProps = {
   xLabel: string;
   yLabel: string;
-  scale: number
-}
+  scale: number;
+};
 
 type BarChartCardProps = {
   title: string;
   barChartDetails: BarChartProps[];
   tableDetails: CampaignProps[];
   Table: any;
-}
+};
 
-
-export default function BarChartCard({ title, barChartDetails, tableDetails, Table }: BarChartCardProps) {
-
+export default function BarChartCard({
+  title,
+  barChartDetails,
+  tableDetails,
+  Table,
+}: BarChartCardProps) {
   return (
-    <div className="bg-white shadow rounded w-auto flex flex-col justify-between p-8 m-2">
-      <div className='flex justify-between'>
+    <div className="bg-white shadow rounded flex flex-col p-8 m-2">
+      <div className="flex justify-between">
         <div className={`${montserrat.className} text-1xl`}>{title}</div>
         <CardFrequencySelector />
       </div>
-      <div className='h-56 flex mt-10'>
-        <div className='h-full flex-initial mr-1'>
-          <BarChart {...barChartDetails}/>
+      <div className="h-56 flex mt-10">
+        <div className="h-full flex-initial mr-1">
+          <BarChart {...barChartDetails} />
         </div>
-        <div className='flex flex-1 ml-1 overflow-hidden'>
-          <Table {...tableDetails}/>
+        <div className="flex flex-1 ml-1 overflow-hidden">
+          <Table {...tableDetails} />
         </div>
       </div>
-      
     </div>
-  )
+  );
 }
 
 function CardFrequencySelector() {
