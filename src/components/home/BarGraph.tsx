@@ -1,4 +1,3 @@
-import useDemoConfig from "@/lib/useDemoConfig";
 import React from "react";
 import { AxisOptions } from "react-charts";
 
@@ -48,7 +47,7 @@ export default function BarGraph({ startDate, endDate }: BarGraphProps) {
       getValue: (datum) => datum.date,
     }),
     []
-  );
+  ) as AxisOptions<unknown>;
 
   const secondaryAxes = React.useMemo<
     AxisOptions<(typeof data)[number]["data"][number]>[]
@@ -59,7 +58,7 @@ export default function BarGraph({ startDate, endDate }: BarGraphProps) {
       },
     ],
     []
-  );
+  ) as AxisOptions<unknown>[];
 
   return (
     <div className="min-h-[350px]">

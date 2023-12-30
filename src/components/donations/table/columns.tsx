@@ -4,10 +4,10 @@ import { DataTableColumnHeader } from "./column-header";
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
 export type Donation = {
-  id: number;
+  id: number | string;
   date: string;
   donor: string;
-  amount: number;
+  amount: number | string;
   campaign: string;
   status: string;
   type: string;

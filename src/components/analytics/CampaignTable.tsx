@@ -33,8 +33,8 @@ export default function CampaignTable(data: CampaignTableProps[]) {
         </div>
       </div>
       {dataArray.map((item, idx) => (
-        <div>
-          <div key={idx} className="flex items-center">
+        <div key={idx}>
+          <div className="flex items-center">
             <div className={`${montserrat.className} text-xs w-1/12`}>{`${
               idx + 1
             }.`}</div>
@@ -56,7 +56,7 @@ export default function CampaignTable(data: CampaignTableProps[]) {
               )}
             </div>
           </div>
-          <div className="h-px bg-[#D9D9D9] mt-3 mb-1"></div>
+          <div className="h-px bg-gray-500 mt-3 mb-1"></div>
         </div>
       ))}
     </div>
