@@ -11,7 +11,7 @@ import MailIcon from "../../../public/icons/mail.svg";
 import UsersIcon from "../../../public/icons/users.svg";
 import CornerDownRightIcon from "../../../public/icons/corner-down-right.svg";
 import Logo from "../../../public/logo.png";
-import clsx from "clsx";
+import { cn } from "@/lib/utils";
 import Logout from "./Logout";
 import useAuthStore from "@/stores/useAuthStore";
 
@@ -106,7 +106,7 @@ function SideBarButton({
     <div className="py-1 px-3 w-full">
       <Button
         onClick={() => router.push(link)}
-        className={clsx(
+        className={cn(
           "w-full bg-white flex justify-start hover:bg-[#ffefe0] gap-4",
           { "bg-[#ffefe0]": link === firstLevelPath },
           { "h-5 pl-3 pr-8": isSmall }
@@ -121,7 +121,7 @@ function SideBarButton({
           />
         </span>
         <span
-          className={clsx("text-black whitespace-normal text-left", {
+          className={cn("text-black whitespace-normal text-left", {
             "text-xs": isSmall,
           })}
         >

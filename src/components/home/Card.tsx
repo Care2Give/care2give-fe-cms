@@ -8,7 +8,7 @@ import {
 import { LucideIcon } from "lucide-react";
 import localFont from "next/font/local";
 import { Montserrat } from "next/font/google";
-import clsx from "clsx";
+import { cn } from "@/lib/utils";
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -37,7 +37,7 @@ export default function Card({ statistic, data, Icon, footerData }: CardProps) {
         <Icon height={40} width={40} className="min-w-10" strokeWidth={1} />
       </div>
       <div
-        className={clsx("bg-[#ffefdf] flex justify-end items-center p-4", {
+        className={cn("bg-[#ffefdf] flex justify-end items-center p-4", {
           "justify-between": footerData,
         })}
       >

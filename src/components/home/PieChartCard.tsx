@@ -5,14 +5,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { LucideIcon } from "lucide-react";
 import localFont from "next/font/local";
 import { Montserrat } from "next/font/google";
-import clsx from "clsx";
-import {
-  capitalizeFirstLetter,
-  joinBlankspacedStringLowercased,
-} from "@/lib/utils";
+import { cn } from "@/lib/utils";
+import { capitalizeFirstLetter } from "@/lib/utils";
 import { PieChart } from "react-minimal-pie-chart";
 
 const montserrat = Montserrat({
@@ -55,7 +51,7 @@ export default function PieChartCard({
       <div className="h-40">
         <PieChart data={MOCK_DATA} lineWidth={48} />
       </div>
-      <div className={clsx("bg-[#ffefdf] flex justify-end items-center p-4")}>
+      <div className={cn("bg-[#ffefdf] flex justify-end items-center p-4")}>
         <CardSelector placeholder={selectorPlaceholder} values={selectorVals} />
       </div>
     </div>
