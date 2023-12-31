@@ -46,3 +46,7 @@ export function joinBlankspacedStringLowercased(string: String) {
 export function mmddFormatter(date: Date) {
   return format(date, "MM/dd");
 }
+
+export function ddmmyyyyFormatter(date: Date) {
+  return format(date, "dd/MM/yyyy");
+}
