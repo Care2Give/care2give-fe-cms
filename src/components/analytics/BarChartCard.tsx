@@ -5,7 +5,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Car, LucideIcon } from "lucide-react";
 import localFont from "next/font/local";
 import { Montserrat } from "next/font/google";
 import BarChart from "./BarChart";
@@ -14,10 +13,6 @@ const montserrat = Montserrat({
   subsets: ["latin"],
   style: ["normal"],
   weight: ["700"],
-});
-
-const arabotoBold = localFont({
-  src: "../../../public/fonts/araboto/Araboto Bold 400.ttf",
 });
 
 type CampaignProps = {
@@ -52,7 +47,7 @@ export default function BarChartCard({
         <div className={`${montserrat.className} text-1xl`}>{title}</div>
         <CardFrequencySelector />
       </div>
-      <div className="h-56 flex mt-10">
+      <div className="flex mt-10">
         <div className="h-full flex-initial mr-1">
           <BarChart {...barChartDetails} />
         </div>

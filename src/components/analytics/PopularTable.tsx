@@ -32,21 +32,18 @@ export default function PopularTable(data: PopularTableProps[]) {
         </div>
       </div>
       {dataArray.map((item, idx) => (
-        <div key={idx}>
-          <div className="flex items-center">
-            <div className={`${montserrat.className} text-xs w-3/12`}>
-              ${item.amount}
-            </div>
-            <div className={`${montserrat.className} text-xs w-7/12`}>
-              {item.campaign}
-            </div>
-            <div
-              className={`${montserrat.className} text-xs flex justify-center w-2/12`}
-            >
-              {item.numberOfDonors}
-            </div>
+        <div key={idx} className="flex items-center border-b py-2">
+          <div className={`${montserrat.className} text-xs w-3/12`}>
+            ${item.amount}
           </div>
-          <div className="h-px bg-gray-500 mt-3 mb-1"></div>
+          <div className={`${montserrat.className} text-xs w-7/12`}>
+            {item.campaign}
+          </div>
+          <div
+            className={`${montserrat.className} text-xs flex justify-center w-2/12`}
+          >
+            {item.numberOfDonors}
+          </div>
         </div>
       ))}
     </div>

@@ -8,7 +8,9 @@ const arabotoBold = localFont({
 export default function Header() {
   return (
     <div className="flex justify-end items-center w-full">
-      <p className={`${arabotoBold.className} text-gray-400`}>Admin Controls</p>
+      <p className={`${arabotoBold.className} text-gray-400 mr-2`}>
+        Admin Controls
+      </p>
       <div className="bg-white rounded-full w-11 h-11 flex justify-center items-center">
         <Bell />
       </div>
