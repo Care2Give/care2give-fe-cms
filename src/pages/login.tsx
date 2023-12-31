@@ -5,10 +5,11 @@ import LoginBg from "../../public/login/login-bg-wave.svg";
 import LoginForm from "@/components/LoginForm";
 import useAuthStore from "@/stores/useAuthStore";
 import { useRouter } from "next/router";
+import { Button } from "@/components/ui/button";
 // import { UserButton } from "@clerk/nextjs";
 
 export default function Login() {
-  const { toggleLoggedIn } = useAuthStore();
+  const { toggleLoggedIn, setRole } = useAuthStore();
   const router = useRouter();
   return (
     <div className="flex flex-col bg-[#FFEFE0] min-h-screen">
@@ -27,14 +28,35 @@ export default function Login() {
         </div>
         <div className="z-10">
           <LoginForm />
-          <button
-            onClick={() => {
-              toggleLoggedIn();
-              router.push("/");
-            }}
-          >
-            Secret login button for dev
-          </button>
+          <div className="flex flex-col gap-2">
+            <Button
+              onClick={() => {
+                toggleLoggedIn();
+                setRole("superuser");
+                router.push("/");
+              }}
+            >
+              Login button for dev (superuser)
+            </Button>
+            <Button
+              onClick={() => {
+                toggleLoggedIn();
+                setRole("donation-manager");
+                router.push("/");
+              }}
+            >
+              Login button for dev (donation manager)
+            </Button>
+            <Button
+              onClick={() => {
+                toggleLoggedIn();
+                setRole("campaign-manager");
+                router.push("/");
+              }}
+            >
+              Login button for dev (campaign manager)
+            </Button>
+          </div>
         </div>
       </div>
     </div>

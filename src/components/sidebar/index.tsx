@@ -13,8 +13,10 @@ import CornerDownRightIcon from "../../../public/icons/corner-down-right.svg";
 import Logo from "../../../public/logo.png";
 import clsx from "clsx";
 import Logout from "./Logout";
+import useAuthStore from "@/stores/useAuthStore";
 
 export default function SideBar() {
+  const { role } = useAuthStore();
   const ArchiveMenuButtons = [
     <SideBarButton
       key="archive-donations-button"
@@ -45,24 +47,32 @@ export default function SideBar() {
         />
         <SideBarButton icon={HomeIcon} text="Home" link="/" />
         <SideBarButton icon={BarChartIcon} text="Analytics" link="/analytics" />
-        <SideBarButton icon={GridIcon} text="Donations" link="/donations" />
+        {(role === "superuser" || role === "donation-manager") && (
+          <SideBarButton icon={GridIcon} text="Donations" link="/donations" />
+        )}
         <SideBarButton
           icon={FileHeartIcon}
           text="Campaigns"
           link="/campaigns"
         />
         <SideBarDivider />
-        <SideBarButton
-          icon={MailIcon}
-          text="Email Editor"
-          link="/email-editor"
-        />
-        <SideBarButton
-          icon={UsersIcon}
-          text="Admin Controls"
-          link="/admin-controls"
-        />
-        <SideBarDivider />
+        {(role === "superuser" || role === "donation-manager") && (
+          <>
+            <SideBarButton
+              icon={MailIcon}
+              text="Email Editor"
+              link="/email-editor"
+            />
+            {role === "superuser" && (
+              <SideBarButton
+                icon={UsersIcon}
+                text="Admin Controls"
+                link="/admin-controls"
+              />
+            )}
+            <SideBarDivider />
+          </>
+        )}
         <div className="flex flex-col gap-1 mt-2">
           <span className="w-full text-left px-5 text-xs font-semibold">
             Archive

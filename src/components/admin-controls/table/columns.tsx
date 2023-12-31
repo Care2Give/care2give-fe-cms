@@ -1,13 +1,8 @@
 import { createColumnHelper } from "@tanstack/react-table";
 import RoleDropdown from "./RoleDropdown";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { InfoIcon, PlusIcon } from "lucide-react";
+import { PlusIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import RoleTooltip from "./RoleTooltip";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -27,21 +22,7 @@ export const columns = [
   }),
   columnHelper.accessor("role", {
     cell: (props) => <RoleDropdown {...props} />,
-    header: () => (
-      <div className="font-bold text-black flex items-center gap-2">
-        <span>Role</span>
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger>
-              <InfoIcon height={16} width={16} />
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>Role Tooltip</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-      </div>
-    ),
+    header: () => <RoleTooltip />,
   }),
   columnHelper.display({
     id: "actions",

@@ -14,7 +14,6 @@ import { useState } from "react";
 export default function RoleDropdown(props: CellContext<User, string>) {
   const [currentRole, setCurrentRole] = useState(props.getValue());
   const handleRoleChange = (role: string) => {
-    // console.log(e.target);
     setCurrentRole(role);
   };
   return (
@@ -23,7 +22,8 @@ export default function RoleDropdown(props: CellContext<User, string>) {
         <span>{currentRole}</span>
         <ChevronDownIcon stroke="gray" height={16} width={16} />
       </DropdownMenuTrigger>
-      <DropdownMenuContent>
+      <DropdownMenuContent className="shadow-lg w-56 text-gray-700">
+        <DropdownMenuLabel>Change Role</DropdownMenuLabel>
         <DropdownMenuItem onClick={() => handleRoleChange("Superuser")}>
           Superuser
         </DropdownMenuItem>
