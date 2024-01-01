@@ -8,7 +8,7 @@ import Link from "next/link";
 export default function Table() {
   const tableRef = useRef(null);
   return (
-    <div className="container mx-auto py-10">
+    <div className="container mx-auto">
       <DataTable columns={columns} data={data} innerRef={tableRef} />
       <div className="w-full flex justify-end mt-4">
         <Link href="/donations/export-data">
