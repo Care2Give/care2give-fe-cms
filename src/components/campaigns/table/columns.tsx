@@ -31,7 +31,7 @@ export const columns = [
       <p
         className={`${arabotoBold.className} text-black text-center text-[18px] pt-2`}
       >
-        Last edit
+        Last edited by
       </p>
     ),
   }),

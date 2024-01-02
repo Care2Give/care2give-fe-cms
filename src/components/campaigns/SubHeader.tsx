@@ -11,7 +11,7 @@ const montserrat = Montserrat({
 
 export default function SubHeader() {
   return (
-    <div className="flex justify-between items-center">
+    <div className="flex justify-between items-center px-2">
       <div>
         <p className={`${arabotoBold.className} text-2xl`}>Your campaigns</p>
       </div>
