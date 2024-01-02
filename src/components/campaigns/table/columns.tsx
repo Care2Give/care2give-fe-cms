@@ -75,6 +75,8 @@ export const columns = [
   }),
   columnHelper.display({
     id: "edit",
-    cell: () => <EditIcon />,
+    cell: () => (
+      <EditIcon className="hover:cursor-pointer hover:stroke-[#3872FC]" />
+    ),
   }),
 ];
