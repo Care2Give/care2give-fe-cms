@@ -2,7 +2,7 @@ import * as React from "react";
 import { CalendarDaysIcon } from "lucide-react";
 import DatePicker from "./DatePicker";
 import { Montserrat } from "next/font/google";
-import localFont from "next/font/local";
+import { arabotoBold } from "@/lib/font";
 import useHomeStore from "@/stores/useHomeStore";
 import { SelectSingleEventHandler } from "react-day-picker";
 import BarGraph from "./BarGraph";
@@ -11,10 +11,6 @@ const montserrat = Montserrat({
   subsets: ["latin"],
   style: ["normal"],
   weight: ["400"],
-});
-
-const arabotoBold = localFont({
-  src: "../../../public/fonts/araboto/Araboto Bold 400.ttf",
 });
 
 type GraphHeaderProps = {
