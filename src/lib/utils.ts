@@ -47,6 +47,11 @@ export function mmddFormatter(date: Date) {
   return format(date, "MM/dd");
 }
 
+/**
+ * Formats Date object to dd/MM/yyyy format
+ * @param date Date
+ * @returns MM/dd string
+ */
 export function ddmmyyyyFormatter(date: Date) {
   return format(date, "dd/MM/yyyy");
 }

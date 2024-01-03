@@ -1,9 +1,5 @@
 import { Bell } from "lucide-react";
-import localFont from "next/font/local";
-
-const arabotoBold = localFont({
-  src: "../../../../public/fonts/araboto/Araboto Bold 400.ttf",
-});
+import { arabotoBold } from "@/lib/font";
 
 export default function Header() {
   return (
