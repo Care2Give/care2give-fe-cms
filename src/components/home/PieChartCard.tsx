@@ -5,7 +5,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import localFont from "next/font/local";
+import { arabotoBold } from "@/lib/font";
 import { Montserrat } from "next/font/google";
 import { cn } from "@/lib/utils";
 import { capitalizeFirstLetter } from "@/lib/utils";
@@ -15,10 +15,6 @@ const montserrat = Montserrat({
   subsets: ["latin"],
   style: ["normal"],
   weight: ["400"],
-});
-
-const arabotoBold = localFont({
-  src: "../../../public/fonts/araboto/Araboto Bold 400.ttf",
 });
 
 type CardProps = {
