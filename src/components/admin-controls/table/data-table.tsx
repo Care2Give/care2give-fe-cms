@@ -13,15 +13,18 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { RefObject } from "react";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  innerRef: RefObject<HTMLDivElement>;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  innerRef,
 }: DataTableProps<TData, TValue>) {
   const table = useReactTable({
     data,
@@ -30,7 +33,7 @@ export function DataTable<TData, TValue>({
   });
 
   return (
-    <div className="rounded-md">
+    <div className="rounded-md" ref={innerRef}>
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (

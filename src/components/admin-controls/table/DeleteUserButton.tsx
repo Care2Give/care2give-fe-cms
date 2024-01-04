@@ -24,10 +24,11 @@ export default function DeleteUserButton(props: CellContext<User, unknown>) {
         try {
           mutate("/api/users", deleteUser(props.row.original.id), {
             populateCache: (_, users) => {
-              const filteredData = users.filter(
+              console.log("users", users);
+              const filteredData = users?.filter(
                 (user: UserResource) => user.id !== props.row.original.id
               );
-              return [...filteredData];
+              return [...filteredData] || [];
             },
           });
         } catch (e) {

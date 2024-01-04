@@ -22,7 +22,7 @@ export default function AddUserButton() {
       onClick={async () => {
         let i = 0;
         const roles = ["superuser", "donation-manager", "campaign-manager"];
-        while (i < 10) {
+        while (i < 50) {
           const body = {
             externalId: `user_${i}`,
             firstName: `Test ${i}`,
@@ -32,11 +32,7 @@ export default function AddUserButton() {
             publicMetadata: { role: roles[i % 3] },
           };
           try {
-            mutate("/api/users", addUser(JSON.stringify(body)), {
-              populateCache: (user, users) => {
-                return [user, ...users];
-              },
-            });
+            mutate("/api/users", addUser(JSON.stringify(body)));
           } catch (err) {
             console.log(err);
           }
