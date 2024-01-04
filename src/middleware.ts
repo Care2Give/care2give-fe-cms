@@ -1,4 +1,4 @@
-import { authMiddleware } from "@clerk/nextjs";
+import { authMiddleware, redirectToSignIn } from "@clerk/nextjs";
 import { NextResponse } from "next/server";
 
 // This example protects all routes including api/trpc routes
@@ -10,6 +10,10 @@ const DONATION_MANAGER_PATHS = ["/email-editor", "/donations"];
 
 export default authMiddleware({
   afterAuth(auth, req, evt) {
+    if (!auth.userId && !auth.isPublicRoute) {
+      return NextResponse.redirect(new URL("/login", req.url));
+    }
+
     const role = (auth?.sessionClaims?.public_metadata as { role: string })
       ?.role;
     if (
