@@ -48,6 +48,7 @@ const Body = () => {
         setBodyContent(editor.getHTML());
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [editor, isEditing, didSaveContent]);
 
   return (

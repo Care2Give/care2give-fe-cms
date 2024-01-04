@@ -6,44 +6,56 @@ type routeHandlerProps = {
   setIsEditing: Function;
   didSaveContent: boolean;
   setDidSaveContent: Function;
-}
+};
 
-const useRouteHandler = ({ isEditing, setIsEditing, didSaveContent, setDidSaveContent }: routeHandlerProps) => {
-  const router = useRouter()
+const useRouteHandler = ({
+  isEditing,
+  setIsEditing,
+  didSaveContent,
+  setDidSaveContent,
+}: routeHandlerProps) => {
+  const router = useRouter();
 
-  const [routeAwayConfirmationOpen, setRouteAwayConfirmationOpen] = useState(false)
-  const [routeAwayUrl, setRouteAwayUrl] = useState("")
+  const [routeAwayConfirmationOpen, setRouteAwayConfirmationOpen] =
+    useState(false);
+  const [routeAwayUrl, setRouteAwayUrl] = useState("");
 
   const navigate = (path: string) => {
-    return router.push(path)
-  }
+    return router.push(path);
+  };
 
   useEffect(() => {
-    setDidSaveContent(false)
+    setDidSaveContent(false);
     const handleRouteChange = (url: string) => {
       // if re-routing back to current page or user is not editing.
-      if (url == '/email-editor' || !isEditing) {
-        return
+      if (url == "/email-editor" || !isEditing) {
+        return;
       }
       if (didSaveContent) {
         // Continue with the navigation
-        setIsEditing(false)
+        setIsEditing(false);
       } else {
         // Cancel the navigation
-        setRouteAwayConfirmationOpen(true)
-        setRouteAwayUrl(url)
-        throw('cancelled route change')
+        setRouteAwayConfirmationOpen(true);
+        setRouteAwayUrl(url);
+        throw "cancelled route change";
       }
-    }
+    };
 
-    router.events.on('routeChangeStart', handleRouteChange)
+    router.events.on("routeChangeStart", handleRouteChange);
 
     return () => {
-      router.events.off('routeChangeStart', handleRouteChange)
-    }
-  }, [router.events, isEditing])
+      router.events.off("routeChangeStart", handleRouteChange);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [router.events, isEditing]);
 
-  return { navigate, routeAwayUrl, routeAwayConfirmationOpen, setRouteAwayConfirmationOpen }
-}
+  return {
+    navigate,
+    routeAwayUrl,
+    routeAwayConfirmationOpen,
+    setRouteAwayConfirmationOpen,
+  };
+};
 
-export default useRouteHandler
+export default useRouteHandler;

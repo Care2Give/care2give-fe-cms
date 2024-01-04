@@ -32,6 +32,7 @@ const Subject = () => {
         editor.commands.setContent(subjectContent);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [editor, isEditing, didSaveContent]);
 
   return (

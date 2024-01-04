@@ -164,7 +164,7 @@ function SideBarProfile({ user }: { user: UserResource }) {
       />
       <span className="flex flex-col">
         <span className="font-bold">
-          {firstName} {lastName}
+          {firstName || ""} {lastName || ""}
         </span>
         <span className="text-xs font-light">{role}</span>
       </span>
