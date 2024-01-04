@@ -13,7 +13,15 @@ export default async function handler(
   }
 
   if (req.method === "GET") {
-    const users = user ? await clerkClient.users.getUserList() : null;
+    // const { offset } = req.query;
+
+    const users = user
+      ? await clerkClient.users.getUserList({
+          // offset: (parseInt(offset as string) || 0) * 10,
+          limit: 100,
+        })
+      : null;
+
     return res.status(200).json(users);
   } else if (req.method === "PATCH") {
     const { id, role } = JSON.parse(req.body);
