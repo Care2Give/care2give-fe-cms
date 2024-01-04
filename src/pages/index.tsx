@@ -1,11 +1,9 @@
 import Header from "@/components/home/Header";
 import OverallStatistics from "@/components/home/OverallStatistics";
 import Layout from "@/components/layout";
-import useIsLoggedIn from "@/lib/useIsLoggedIn";
+import { useUser } from "@clerk/nextjs";
 
 export default function Home() {
-  useIsLoggedIn();
-
   return (
     <Layout>
       <Header />

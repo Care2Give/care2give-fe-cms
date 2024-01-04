@@ -1,6 +1,5 @@
 import Header from "@/components/analytics/Header";
 import Layout from "@/components/layout";
-import useIsLoggedIn from "@/lib/useIsLoggedIn";
 import BarChartCard from "@/components/analytics/BarChartCard";
 import CampaignTable from "@/components/analytics/CampaignTable";
 import PopularTable from "@/components/analytics/PopularTable";
@@ -79,7 +78,6 @@ const dummyPopularDetails = [
 ];
 
 export default function Analytics() {
-  useIsLoggedIn();
   const { pieChartCampaignOne, pieChartCampaignTwo } = useAnalyticsStore();
 
   const campaignDetails = dummyCampaignDetails.map((campaign) => ({

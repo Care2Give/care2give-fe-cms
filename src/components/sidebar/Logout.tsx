@@ -13,6 +13,7 @@ import { LogOutIcon } from "lucide-react";
 import { useRouter } from "next/router";
 import useAuthStore from "@/stores/useAuthStore";
 import { useToast } from "@/components/ui/use-toast";
+import { SignOutButton } from "@clerk/nextjs";
 
 export default function Logout() {
   const router = useRouter();
@@ -39,19 +40,21 @@ export default function Logout() {
             </Button>
           </DialogClose>
           <DialogClose asChild>
-            <Button
-              type="button"
-              className="w-32 bg-blue-500 hover:bg-blue-800"
-              onClick={() => {
-                toggleLoggedIn();
-                router.push("/login");
-                toast({
-                  title: "You have been logged out successfully.",
-                });
-              }}
-            >
-              Confirm
-            </Button>
+            <SignOutButton>
+              <Button
+                type="button"
+                className="w-32 bg-blue-500 hover:bg-blue-800"
+                onClick={() => {
+                  toggleLoggedIn();
+                  router.push("/login");
+                  toast({
+                    title: "You have been logged out successfully.",
+                  });
+                }}
+              >
+                Confirm
+              </Button>
+            </SignOutButton>
           </DialogClose>
         </DialogFooter>
       </DialogContent>

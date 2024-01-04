@@ -1,10 +1,11 @@
-import useAuthStore from "@/stores/useAuthStore";
 import { useEffect } from "react";
 import { useRouter } from "next/router";
+import { useUser } from "@clerk/nextjs";
 
 const useIsSuperuser = () => {
   const router = useRouter();
-  const { role } = useAuthStore();
+  const { user } = useUser();
+  const role = user?.publicMetadata.role;
 
   useEffect(() => {
     if (role !== "superuser") {

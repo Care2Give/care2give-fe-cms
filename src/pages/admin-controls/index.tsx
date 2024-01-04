@@ -1,12 +1,11 @@
 import Header from "@/components/admin-controls/Header";
 import Table from "@/components/admin-controls/table";
 import Layout from "@/components/layout";
-import useIsLoggedIn from "@/lib/useIsLoggedIn";
+import useClerkSWR from "@/lib/useClerkSWR";
 import useIsSuperuser from "@/lib/useIsSuperuser";
 
 export default function AdminControls() {
-  useIsLoggedIn();
-  useIsSuperuser();
+  // useIsSuperuser();
 
   return (
     <Layout>

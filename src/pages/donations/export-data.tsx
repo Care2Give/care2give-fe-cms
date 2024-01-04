@@ -1,6 +1,5 @@
 import MultiSelect from "@/components/shared/MultiSelect";
 import Layout from "@/components/layout";
-import useIsLoggedIn from "@/lib/useIsLoggedIn";
 import DatePicker from "@/components/home/DatePicker";
 import useDonationStore from "@/stores/useDonationStore";
 import { Button } from "@/components/ui/button";
@@ -8,7 +7,7 @@ import Header from "@/components/donations/Header";
 
 export default function ExportData() {
   const { startDate, setStartDate, endDate, setEndDate } = useDonationStore();
-  useIsLoggedIn();
+
   return (
     <Layout>
       <Header isExportData />

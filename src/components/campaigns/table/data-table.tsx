@@ -30,7 +30,7 @@ export function DataTable<TData, TValue>({
   });
 
   return (
-    <div className="shadow-[0_10px_30px_0px_rgba(0,0,0,0.1)] rounded-md">
+    <div className="shadow-md rounded-md">
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (

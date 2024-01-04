@@ -3,38 +3,57 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { CellContext } from "@tanstack/react-table";
 import { User } from "./columns";
 import { ChevronDownIcon } from "lucide-react";
 import { useState } from "react";
+import { capitalizeFirstLetter } from "@/lib/utils";
 
 export default function RoleDropdown(props: CellContext<User, string>) {
   const [currentRole, setCurrentRole] = useState(props.getValue());
-  const handleRoleChange = (role: string) => {
+
+  const handleRoleChange = async (role: string) => {
+    const body = {
+      id: props.row.original.id,
+      role: role,
+    };
+    await fetch("/api/users", {
+      method: "PATCH",
+      body: JSON.stringify(body),
+    });
     setCurrentRole(role);
   };
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="shadow-lg flex items-center justify-between px-3 py-2 w-56 rounded bg-[#FFEFE0]">
-        <span>{currentRole}</span>
+        <span>
+          {capitalizeFirstLetter(
+            ((currentRole as string) || "").replace("-", " ")
+          )}
+        </span>
         <ChevronDownIcon stroke="gray" height={16} width={16} />
       </DropdownMenuTrigger>
       <DropdownMenuContent className="shadow-lg w-56 text-gray-700">
         <DropdownMenuLabel>Change Role</DropdownMenuLabel>
-        <DropdownMenuItem onClick={() => handleRoleChange("Superuser")}>
+        <DropdownMenuItem
+          onClick={() => handleRoleChange("superuser")}
+          className="cursor-pointer"
+        >
           Superuser
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => handleRoleChange("Donation Manager")}>
+        <DropdownMenuItem
+          onClick={() => handleRoleChange("donation-manager")}
+          className="cursor-pointer"
+        >
           Donation Manager
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => handleRoleChange("Campaign Manager")}>
+        <DropdownMenuItem
+          onClick={() => handleRoleChange("campaign-manager")}
+          className="cursor-pointer"
+        >
           Campaign Manager
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => handleRoleChange(props.getValue())}>
-          {props.getValue()}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
