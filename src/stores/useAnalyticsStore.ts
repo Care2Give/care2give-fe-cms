@@ -50,7 +50,7 @@ interface AnalyticsState {
   setGraphType: (type: GraphType) => void;
 }
 
-export const useAnalyticsStore = create<AnalyticsState>()((set) => ({
+const useAnalyticsStore = create<AnalyticsState>()((set) => ({
   pieChartCampaignOne: "Charity Dinner 2020",
   pieChartCampaignTwo: "Smell Good, Feel Good, Do Good",
   setPieChartCampaignOne: (name) => set((_) => ({ pieChartCampaignOne: name })),
