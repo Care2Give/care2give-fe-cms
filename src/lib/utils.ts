@@ -55,3 +55,16 @@ export function mmddFormatter(date: Date) {
 export function ddmmyyyyFormatter(date: Date) {
   return format(date, "dd/MM/yyyy");
 }
+
+/**
+ * Returns true if role is valid
+ * @param role string
+ * @returns boolean
+ */
+export function isValidRole(role: string) {
+  return (
+    role === "superuser" ||
+    role === "donation-manager" ||
+    role === "campaign-manager"
+  );
+}

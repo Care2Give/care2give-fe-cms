@@ -1,5 +1,6 @@
 import { authMiddleware } from "@clerk/nextjs";
 import { NextResponse } from "next/server";
+import { isValidRole } from "./lib/utils";
 
 // This example protects all routes including api/trpc routes
 // Please edit this to allow other routes to be public as needed.
@@ -16,6 +17,14 @@ export default authMiddleware({
 
     const role = (auth?.sessionClaims?.public_metadata as { role: string })
       ?.role;
+
+    if (
+      auth.userId &&
+      req.nextUrl.pathname !== "/error/no-role" &&
+      (!role || !isValidRole(role))
+    ) {
+      return NextResponse.redirect(new URL("/error/no-role", req.url));
+    }
     if (
       role !== "superuser" &&
       SUPERUSER_PATHS.includes(req.nextUrl.pathname)
