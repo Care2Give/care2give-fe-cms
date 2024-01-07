@@ -1,25 +1,27 @@
 import { arabotoBold } from "@/lib/font";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+import {Button} from "@/components/ui/button";
 
 
-interface Crumb {
+export interface Crumb {
     display: string;
-    link: string;
+    onClick: () => void;
 }
 
-export default function BreadCrumbs({allCrumbs, currentCrumb, separator}:
-    {allCrumbs: Crumb[], currentCrumb: Crumb, separator: string}) {
+export default function BreadCrumbs({allCrumbs, currentCrumbIndex, separator}:
+    {allCrumbs: Crumb[], currentCrumbIndex: number, separator: string}) {
     return (
         <span>
             {allCrumbs.map((crumb, index) => {
                 return (
                 <span key={crumb.display}>
                     {index != 0 && <span>{separator}</span>}
-                    <Link href={crumb.link}
-                          className={cn({[`${arabotoBold.className}`]: crumb.link === currentCrumb.link})}>
+                    <Button variant="link"
+                            onClick={crumb.onClick}
+                          className={cn("p-0", {[`${arabotoBold.className}`]: index === currentCrumbIndex})}>
                         {crumb.display}
-                    </Link>
+                    </Button>
                 </span>);
             })}
         </span>
