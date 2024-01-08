@@ -2,7 +2,7 @@ import {UseFormReturn} from "react-hook-form";
 import React, {useEffect, useState} from "react";
 import {createColumnHelper} from "@tanstack/react-table";
 import {arabotoBold} from "@/lib/font";
-import {EditIcon, Trash2} from "lucide-react";
+import {EditIcon, PlusCircle, Trash2} from "lucide-react";
 import {Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import {Button} from "@/components/ui/button";
 import {z} from "zod";
@@ -146,7 +146,9 @@ export default function DonationAmountsForm({form} : {form: UseFormReturn}) {
             <AccordionContent>
                 <DataTable columns={columns} data={data} />
                 <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-                    <Button variant="outline" onClick={() => setIsDialogOpen(true)}>Add donation option</Button>
+                    <div className="flex flex-row items-center justify-end">
+                        <Button className="m-2" onClick={() => setIsDialogOpen(true)}><PlusCircle className="mr-2"/>Add donation option</Button>
+                    </div>
                     <DialogContent>
                         <DialogHeader>
                             <DialogTitle>{editOption.isEdit ? "Edit" : "Add"} donation option</DialogTitle>
