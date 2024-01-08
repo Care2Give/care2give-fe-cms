@@ -19,7 +19,7 @@ import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover";
 import {format} from "date-fns";
 import {cn} from "@/lib/utils";
 import {Calendar} from "@/components/ui/calendar";
-import {CalendarIcon, EditIcon} from "lucide-react";
+import {CalendarIcon, DeleteIcon, EditIcon, Trash2} from "lucide-react";
 import {ErrorMessage} from "@hookform/error-message";
 import {DataTable} from "@/components/campaigns/table/data-table";
 import {createColumnHelper} from "@tanstack/react-table";
@@ -34,6 +34,7 @@ import {
     DialogTrigger
 } from "@/components/ui/dialog";
 import {Label} from "@/components/ui/label";
+import {PopoverClose} from "@radix-ui/react-popover";
 
 function FormFieldInput({form, name, label, placeholder, type} :
                             {form: UseFormReturn, name: string, label: string, placeholder: string, type: string | undefined}) {
@@ -177,6 +178,11 @@ function DonationAmountsForm({form} : {form: UseFormReturn}) {
         setNewDonationOption(data[index]);
     }
 
+    const onDelete = (index: number) => {
+        data.splice(index, 1);
+        setData([...data]);
+    }
+
     const columnHelper = createColumnHelper<DonationOption>();
 
     const columns = [
@@ -203,12 +209,35 @@ function DonationAmountsForm({form} : {form: UseFormReturn}) {
         columnHelper.display({
             id: "edit",
             cell: ({cell}) => (
-                <DialogTrigger><EditIcon onClick={() => onEdit(cell.row.index)} className="hover:cursor-pointer hover:stroke-[#3872FC]" /></DialogTrigger>
+                <DialogTrigger>
+                    <EditIcon onClick={() => onEdit(cell.row.index)} className="hover:cursor-pointer hover:stroke-[#3872FC]" />
+                </DialogTrigger>
+            ),
+        }),
+        columnHelper.display({
+            id: "delete",
+            cell: ({cell}) => (
+                <Popover>
+                    <PopoverTrigger asChild>
+                        <Trash2/>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-80">
+                        <div>Are you sure you want to delete this option?</div>
+                        <div className="flex justify-end">
+                            <PopoverClose>
+                                <Button variant="ghost">Cancel</Button>
+                            </PopoverClose>
+                            <PopoverClose>
+                                <Button onClick={() => onDelete(cell.row.index)}>Confirm</Button>
+                            </PopoverClose>
+                        </div>
+                    </PopoverContent>
+                </Popover>
             ),
         }),
     ];
 
-    const addDonationOption = () => {
+    const modifyDonationOption = () => {
         if (editOption.isEdit) {
             data[editOption.index] = newDonationOption;
             setData([...data]);
@@ -273,7 +302,7 @@ function DonationAmountsForm({form} : {form: UseFormReturn}) {
                         <DialogFooter>
                             <DialogClose>
                                 <Button variant="ghost">Cancel</Button>
-                                <Button type="submit" onClick={addDonationOption}>Save</Button>
+                                <Button type="submit" onClick={modifyDonationOption}>Save</Button>
                             </DialogClose>
                         </DialogFooter>
                     </DialogContent>
