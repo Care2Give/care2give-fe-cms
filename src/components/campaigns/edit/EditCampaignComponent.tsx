@@ -228,9 +228,9 @@ function DonationAmountsForm({form} : {form: UseFormReturn}) {
                     </DialogTrigger>
                     <DialogContent>
                         <DialogHeader>
-                            <DialogTitle>Add donation option</DialogTitle>
+                            <DialogTitle>{editOption.isEdit ? "Edit" : "Add"} donation option</DialogTitle>
                             <DialogDescription>
-                                Add an option for donors to choose.
+                                {editOption.isEdit ? "Edit" : "Add"} options for donors to choose from.
                             </DialogDescription>
                         </DialogHeader>
                         <div className="grid gap-4 py-4">
