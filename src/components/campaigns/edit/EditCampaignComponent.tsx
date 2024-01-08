@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Accordion, AccordionContent, AccordionItem, AccordionTrigger} from "@/components/ui/accordion";
 import {useForm, UseFormReturn} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
@@ -168,6 +168,10 @@ function DonationAmountsForm({form} : {form: UseFormReturn}) {
         index: 0
     })
 
+    useEffect(() => {
+        form.setValue("donation_options", data);
+    }, [data])
+
     const onEdit = (index: number) => {
         setEditOption({isEdit: true, index: index});
         setNewDonationOption(data[index]);
@@ -288,7 +292,8 @@ export default function EditCampaignComponent() {
         duration: z.object({
             from: z.coerce.date(),
             to: z.coerce.date(),
-        })
+        }),
+        donation_options: z.array(z.object({amount: z.coerce.number(), description: z.string()}))
     })
 
     const form = useForm({
@@ -301,7 +306,8 @@ export default function EditCampaignComponent() {
             duration: {
                 from: "",
                 to: ""
-            }
+            },
+            donation_options: []
         }
     })
     const onSubmit = (data) => console.log(data);
