@@ -103,7 +103,7 @@ function FormFieldDatePicker({form}: {form: UseFormReturn}) {
     />);
 }
 
-function getCampaignStatusForm(form: UseFormReturn) {
+function CampaignStatusForm({form} : {form: UseFormReturn}) {
     return <AccordionItem value="campaign-status">
         <AccordionTrigger>Campaign Status</AccordionTrigger>
         <AccordionContent>
@@ -131,7 +131,7 @@ function getCampaignStatusForm(form: UseFormReturn) {
     </AccordionItem>;
 }
 
-function getCampaignDetailsForm(form: UseFormReturn) {
+function CampaignDetailsForm({form}: {form: UseFormReturn}) {
     return <AccordionItem value="campaign-details">
         <AccordionTrigger>Campaign Details</AccordionTrigger>
         <AccordionContent>
@@ -177,8 +177,8 @@ export default function EditCampaign() {
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
                 <Accordion type="multiple" collapsible="true">
-                    {getCampaignStatusForm(form)}
-                    {getCampaignDetailsForm(form)}
+                    <CampaignStatusForm form={form}/>
+                    <CampaignDetailsForm form={form}/>
                     <DonationAmountsForm form={form}/>
                 </Accordion>
                 <Button type="submit">Submit</Button>
