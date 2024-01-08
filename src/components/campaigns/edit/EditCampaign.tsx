@@ -21,20 +21,7 @@ import {cn} from "@/lib/utils";
 import {Calendar} from "@/components/ui/calendar";
 import {CalendarIcon, DeleteIcon, EditIcon, Trash2} from "lucide-react";
 import {ErrorMessage} from "@hookform/error-message";
-import {DataTable} from "@/components/campaigns/table/data-table";
-import {createColumnHelper} from "@tanstack/react-table";
-import {arabotoBold} from "@/lib/font";
-import {
-    Dialog, DialogClose,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger
-} from "@/components/ui/dialog";
-import {Label} from "@/components/ui/label";
-import {PopoverClose} from "@radix-ui/react-popover";
+import DonationAmountsForm from "@/components/campaigns/edit/DonationOptionForm";
 
 function FormFieldInput({form, name, label, placeholder, type} :
                             {form: UseFormReturn, name: string, label: string, placeholder: string, type: string | undefined}) {
@@ -156,163 +143,7 @@ function getCampaignDetailsForm(form: UseFormReturn) {
     </AccordionItem>;
 }
 
-type DonationOption = {
-    amount: number,
-    description: string
-}
-
-function DonationAmountsForm({form} : {form: UseFormReturn}) {
-    const [data, setData] = useState([]);
-    const [newDonationOption, setNewDonationOption] = useState({amount: 0, description: ""});
-    const [editOption, setEditOption] = useState({
-        isEdit: false,
-        index: 0
-    })
-
-    useEffect(() => {
-        form.setValue("donation_options", data);
-    }, [data])
-
-    const onEdit = (index: number) => {
-        setEditOption({isEdit: true, index: index});
-        setNewDonationOption(data[index]);
-    }
-
-    const onDelete = (index: number) => {
-        data.splice(index, 1);
-        setData([...data]);
-    }
-
-    const columnHelper = createColumnHelper<DonationOption>();
-
-    const columns = [
-        columnHelper.accessor("amount", {
-            cell: (props) => <p className="text-center">{props.getValue()}</p>,
-            header: () => (
-                <p
-                    className={`${arabotoBold.className} text-black text-center text-[18px] pt-2`}
-                >
-                    Amount
-                </p>
-            ),
-        }),
-        columnHelper.accessor("description", {
-            cell: (props) => <p className="text-center">{props.getValue()}</p>,
-            header: () => (
-                <p
-                    className={`${arabotoBold.className} text-black text-center text-[18px] pt-2`}
-                >
-                    Description
-                </p>
-            ),
-        }),
-        columnHelper.display({
-            id: "edit",
-            cell: ({cell}) => (
-                <DialogTrigger>
-                    <EditIcon onClick={() => onEdit(cell.row.index)} className="hover:cursor-pointer hover:stroke-[#3872FC]" />
-                </DialogTrigger>
-            ),
-        }),
-        columnHelper.display({
-            id: "delete",
-            cell: ({cell}) => (
-                <Popover>
-                    <PopoverTrigger asChild>
-                        <Trash2/>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-80">
-                        <div>Are you sure you want to delete this option?</div>
-                        <div className="flex justify-end">
-                            <PopoverClose>
-                                <Button variant="ghost">Cancel</Button>
-                            </PopoverClose>
-                            <PopoverClose>
-                                <Button onClick={() => onDelete(cell.row.index)}>Confirm</Button>
-                            </PopoverClose>
-                        </div>
-                    </PopoverContent>
-                </Popover>
-            ),
-        }),
-    ];
-
-    const modifyDonationOption = () => {
-        if (editOption.isEdit) {
-            data[editOption.index] = newDonationOption;
-            setData([...data]);
-        } else {
-            setData([...data, newDonationOption]);
-        }
-        setNewDonationOption({
-            amount: 0, description: ""
-        });
-        setEditOption({isEdit: false, index: 0});
-    }
-
-    return (
-        <AccordionItem value="donation-amounts">
-            <AccordionTrigger>Donation Amount</AccordionTrigger>
-            <AccordionContent>
-                <Dialog>
-                    <DataTable columns={columns} data={data} />
-                    <DialogTrigger asChild>
-                        <Button variant="outline">Add donation option</Button>
-                    </DialogTrigger>
-                    <DialogContent>
-                        <DialogHeader>
-                            <DialogTitle>{editOption.isEdit ? "Edit" : "Add"} donation option</DialogTitle>
-                            <DialogDescription>
-                                {editOption.isEdit ? "Edit" : "Add"} options for donors to choose from.
-                            </DialogDescription>
-                        </DialogHeader>
-                        <div className="grid gap-4 py-4">
-                            <div className="grid grid-cols-4 items-center gap-4">
-                                <Label htmlFor="amount" className="text-right">
-                                    Donation amount
-                                </Label>
-                                <Input
-                                    type="number"
-                                    id="amount"
-                                    defaultValue={0}
-                                    className="col-span-3"
-                                    value={newDonationOption.amount}
-                                    onChange={(event) => setNewDonationOption({
-                                        amount: parseInt(event.target.value),
-                                        description: newDonationOption.description
-                                    })}
-                                />
-                            </div>
-                            <div className="grid grid-cols-4 items-center gap-4">
-                                <Label htmlFor="description" className="text-right">
-                                    Description
-                                </Label>
-                                <Input
-                                    id="description"
-                                    defaultValue=""
-                                    className="col-span-3"
-                                    value={newDonationOption.description}
-                                    onChange={(event) => setNewDonationOption({
-                                        amount: newDonationOption.amount,
-                                        description: event.target.value
-                                    })}
-                                />
-                            </div>
-                        </div>
-                        <DialogFooter>
-                            <DialogClose>
-                                <Button variant="ghost">Cancel</Button>
-                                <Button type="submit" onClick={modifyDonationOption}>Save</Button>
-                            </DialogClose>
-                        </DialogFooter>
-                    </DialogContent>
-                </Dialog>
-            </AccordionContent>
-        </AccordionItem>
-    );
-}
-
-export default function EditCampaignComponent() {
+export default function EditCampaign() {
     const validationSchema = z.object({
         is_active: z.boolean(),
         title: z.string().min(2),
@@ -339,6 +170,7 @@ export default function EditCampaignComponent() {
             donation_options: []
         }
     })
+
     const onSubmit = (data) => console.log(data);
 
     return (
