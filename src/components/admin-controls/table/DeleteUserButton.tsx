@@ -4,6 +4,7 @@ import { User } from "./columns";
 import { useAuth } from "@clerk/nextjs";
 import { useSWRConfig } from "swr";
 import { UserResource } from "@clerk/types";
+import { toast } from "sonner";
 
 export default function DeleteUserButton(props: CellContext<User, unknown>) {
   const { getToken } = useAuth();
@@ -21,7 +22,7 @@ export default function DeleteUserButton(props: CellContext<User, unknown>) {
     <Button
       className="text-black bg-red-200 hover:bg-red-400"
       onClick={async () => {
-        try {
+        const promise = () =>
           mutate("/api/users", deleteUser(props.row.original.id), {
             populateCache: (_, users) => {
               console.log("users", users);
@@ -31,9 +32,11 @@ export default function DeleteUserButton(props: CellContext<User, unknown>) {
               return [...filteredData] || [];
             },
           });
-        } catch (e) {
-          console.log(e);
-        }
+        toast.promise(promise, {
+          loading: "Deleting user...",
+          success: "User deleted successfully.",
+          error: "Something went wrong.",
+        });
       }}
     >
       Remove

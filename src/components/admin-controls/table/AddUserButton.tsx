@@ -1,8 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@clerk/nextjs";
 import { PlusIcon } from "lucide-react";
-import { use } from "react";
 import { useSWRConfig } from "swr";
+
+// COMPONENT IS DEPRECATED
 
 export default function AddUserButton() {
   const { getToken } = useAuth();

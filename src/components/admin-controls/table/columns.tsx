@@ -41,6 +41,5 @@ export const columns = [
   columnHelper.display({
     id: "actions",
     cell: (props) => <DeleteUserButton {...props} />,
-    header: () => <AddUserButton />,
   }),
 ];
