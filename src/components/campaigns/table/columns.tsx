@@ -1,6 +1,6 @@
 import { createColumnHelper } from "@tanstack/react-table";
 import { arabotoBold } from "@/lib/font";
-import { capitalizeFirstLetter } from "@/lib/utils";
+import { capitalizeFirstLetter, dateOptions } from "@/lib/utils";
 import { EditIcon } from "lucide-react";
 import { CampaignTable } from "@/types/campaigns/CampaignTable";
 import Image from "next/image";
@@ -60,7 +60,7 @@ export const columns = [
   columnHelper.accessor("startDate", {
     cell: (props) => (
       <p className="text-center">
-        {new Date(props.getValue()).toLocaleDateString("en-SG")}
+        {new Date(props.getValue()).toLocaleDateString("en-SG", dateOptions)}
       </p>
     ),
     header: () => (

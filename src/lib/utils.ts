@@ -68,3 +68,9 @@ export function isValidRole(role: string) {
     role === "campaign-manager"
   );
 }
+
+export const dateOptions: Intl.DateTimeFormatOptions = {
+  year: "numeric",
+  month: "short",
+  day: "numeric",
+};
