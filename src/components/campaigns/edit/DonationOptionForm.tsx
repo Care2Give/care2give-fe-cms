@@ -19,6 +19,7 @@ import {
 import {Label} from "@/components/ui/label";
 import {Input} from "@/components/ui/input";
 import {PopoverClose} from "@radix-ui/react-popover";
+import {ErrorMessage} from "@hookform/error-message";
 
 type DonationOption = {
     amount: number,
@@ -145,6 +146,7 @@ export default function DonationAmountsForm({form} : {form: UseFormReturn}) {
             <AccordionTrigger>Donation Amount</AccordionTrigger>
             <AccordionContent>
                 <DataTable columns={columns} data={data} />
+                <ErrorMessage name="donation_options" errors={form.formState.errors}/>
                 <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                     <div className="flex flex-row items-center justify-end">
                         <Button className="m-2" onClick={() => setIsDialogOpen(true)}><PlusCircle className="mr-2"/>Add donation option</Button>
