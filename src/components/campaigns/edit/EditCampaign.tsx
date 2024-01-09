@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {Accordion, AccordionContent, AccordionItem, AccordionTrigger} from "@/components/ui/accordion";
-import {useForm, UseFormReturn} from "react-hook-form";
+import {useForm, UseFormReturn, get} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Button } from "@/components/ui/button"
@@ -84,7 +84,8 @@ function FormFieldDatePicker({form}: {form: UseFormReturn}) {
                             </Button>
                         </FormControl>
                     </PopoverTrigger>
-                    <ErrorMessage name="duration" errors={form.formState.errors}/>
+                    {form.formState.errors && <div>From date: {get(form.formState.errors, "duration.from").message}</div>}
+                    {form.formState.errors && <div>To date: {get(form.formState.errors, "duration.to").message}</div>}
                     </span>
                     <PopoverContent className="w-auto p-0" align="start">
                         <Calendar
@@ -97,7 +98,6 @@ function FormFieldDatePicker({form}: {form: UseFormReturn}) {
                         />
                     </PopoverContent>
                 </Popover>
-                <FormMessage />
             </FormItem>
         )}
     />);
@@ -154,6 +154,7 @@ export default function EditCampaign() {
             to: z.coerce.date(),
         }),
         donation_options: z.array(z.object({amount: z.coerce.number(), description: z.string()}))
+            .min(1, "At least one donation option must be specified")
     })
 
     const form = useForm({
