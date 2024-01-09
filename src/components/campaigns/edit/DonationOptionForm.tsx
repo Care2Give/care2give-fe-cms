@@ -21,7 +21,7 @@ import {Input} from "@/components/ui/input";
 import {PopoverClose} from "@radix-ui/react-popover";
 import {ErrorMessage} from "@hookform/error-message";
 
-type DonationOption = {
+export type DonationOption = {
     amount: number,
     description: string
 }
@@ -142,7 +142,7 @@ export default function DonationAmountsForm({form} : {form: UseFormReturn}) {
     }
 
     return (
-        <AccordionItem value="donation-amounts">
+        <AccordionItem value="donation-options">
             <AccordionTrigger>Donation Amount</AccordionTrigger>
             <AccordionContent>
                 <DataTable columns={columns} data={data} />

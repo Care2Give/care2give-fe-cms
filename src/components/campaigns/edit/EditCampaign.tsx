@@ -11,7 +11,6 @@ import {
     FormField,
     FormItem,
     FormLabel,
-    FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import {Switch} from "@/components/ui/switch";
@@ -22,6 +21,7 @@ import {Calendar} from "@/components/ui/calendar";
 import {CalendarIcon, DeleteIcon, EditIcon, Trash2} from "lucide-react";
 import {ErrorMessage} from "@hookform/error-message";
 import DonationAmountsForm from "@/components/campaigns/edit/DonationOptionForm";
+import { EditStage } from "@/pages/campaigns/edit/edit-stage";
 
 function FormFieldInput({form, name, label, placeholder, type} :
                             {form: UseFormReturn, name: string, label: string, placeholder: string, type: string | undefined}) {
@@ -84,8 +84,8 @@ function FormFieldDatePicker({form}: {form: UseFormReturn}) {
                             </Button>
                         </FormControl>
                     </PopoverTrigger>
-                    {form.formState.errors && <div>From date: {get(form.formState.errors, "duration.from").message}</div>}
-                    {form.formState.errors && <div>To date: {get(form.formState.errors, "duration.to").message}</div>}
+                    {form.formState.errors && get(form.formState.errors, "duration.from") && <div>From date: {get(form.formState.errors, "duration.from").message}</div>}
+                    {form.formState.errors && get(form.formState.errors, "duration.to") && <div>To date: {get(form.formState.errors, "duration.to").message}</div>}
                     </span>
                     <PopoverContent className="w-auto p-0" align="start">
                         <Calendar
@@ -109,7 +109,7 @@ function CampaignStatusForm({form} : {form: UseFormReturn}) {
         <AccordionContent>
             <FormField
                 control={form.control}
-                name="is_active"
+                name="isActive"
                 render={({field}) => (
                     <FormItem className="flex flex-row items-center justify-between">
                         <div className="space-y-0.5">
@@ -137,52 +137,76 @@ function CampaignDetailsForm({form}: {form: UseFormReturn}) {
         <AccordionContent>
             <FormFieldInput form={form} name="title" label="Title" placeholder="Enter the title of the campaign" />
             <FormFieldInput form={form} name="description" label="Description" placeholder="Enter the description of the campaign" />
-            <FormFieldInput form={form} name="target_amount" label="Donation target amount" placeholder="Enter the donation target amount" type="number"/>
+            <FormFieldInput form={form} name="targetAmount" label="Donation target amount" placeholder="Enter the donation target amount" type="number"/>
             <FormFieldDatePicker form={form} />
         </AccordionContent>
     </AccordionItem>;
 }
 
-export default function EditCampaign() {
+export default function EditCampaign({setEditStage}: {setEditStage: (EditStage) => void,}) {
     const validationSchema = z.object({
-        is_active: z.boolean(),
+        isActive: z.boolean(),
         title: z.string().min(2),
         description: z.string().min(2),
-        target_amount: z.coerce.number().min(1),
+        targetAmount: z.coerce.number().min(1),
         duration: z.object({
             from: z.coerce.date(),
             to: z.coerce.date(),
         }),
-        donation_options: z.array(z.object({amount: z.coerce.number(), description: z.string()}))
+        donationOptions: z.array(z.object({amount: z.coerce.number(), description: z.string()}))
             .min(1, "At least one donation option must be specified")
     })
 
     const form = useForm({
         resolver: zodResolver(validationSchema),
         defaultValues: {
-            is_active: true,
+            isActive: true,
             title: "",
             description: "",
-            target_amount: "",
+            targetAmount: "",
             duration: {
                 from: "",
                 to: ""
             },
-            donation_options: []
-        }
+            donationOptions: []
+        },
     })
 
-    const onSubmit = (data) => console.log(data);
+    const [expandedItems, setExpandedItems ] = useState([]);
+
+    useEffect(() => {
+        const attrToAccordionMap: Map<string, string> = new Map<string, string>([
+            ["isActive", "campaign-status"],
+            ["title", "campaign-details"],
+            ["description", "campaign-details"],
+            ["targetAmount", "campaign-details"],
+            ["duration", "campaign-details"],
+            ["donationOptions", "donation-options"],
+        ]);
+        const newExpandedItems = [];
+        for (const attr in form.formState.errors) {
+            const accordionValue = attrToAccordionMap.get(attr);
+            if (newExpandedItems.includes(accordionValue)) {
+                continue;
+            }
+            newExpandedItems.push(accordionValue);
+        }
+        setExpandedItems(newExpandedItems);
+    }, [form.formState.errors])
+
+    const onSubmit = (data) => {
+        console.log(setEditStage);
+        setEditStage(EditStage.Preview);
+    };
 
     return (
-        <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-                <Accordion type="multiple" collapsible="true">
+        <Form {...form} >
+            <form id="edit-campaign-form" onSubmit={form.handleSubmit(onSubmit)} className="space-y-8" >
+                <Accordion type="multiple" collapsible="true" value={expandedItems} onValueChange={setExpandedItems}>
                     <CampaignStatusForm form={form}/>
                     <CampaignDetailsForm form={form}/>
                     <DonationAmountsForm form={form}/>
                 </Accordion>
-                <Button type="submit">Submit</Button>
             </form>
         </Form>
     )
