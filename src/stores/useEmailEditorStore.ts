@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { devtools } from "zustand/middleware";
 
 interface EmailEditorState {
   isEditing: boolean;
@@ -11,15 +12,20 @@ interface EmailEditorState {
   setDidSaveContent: (didSaveContent: boolean) => void;
 }
 
-const useEmailEditorStore = create<EmailEditorState>()((set) => ({
-  isEditing: false,
-  setIsEditing: (isEditing) => set({ isEditing }),
-  subjectContent: "<p>Thank you for donating to Caregivers Alliance!</p>",
-  setSubjectContent: (subjectContent) => set({ subjectContent }),
-  bodyContent: "<p>Warm Regards, Caregivers Alliance</p>",
-  setBodyContent: (bodyContent) => set({ bodyContent }),
-  didSaveContent: false,
-  setDidSaveContent: (didSaveContent) => set({ didSaveContent }),
-}));
+const useEmailEditorStore = create<EmailEditorState>()(
+  devtools(
+    (set) => ({
+      isEditing: false,
+      setIsEditing: (isEditing) => set({ isEditing }),
+      subjectContent: "",
+      setSubjectContent: (subjectContent) => set({ subjectContent }),
+      bodyContent: "",
+      setBodyContent: (bodyContent) => set({ bodyContent }),
+      didSaveContent: false,
+      setDidSaveContent: (didSaveContent) => set({ didSaveContent }),
+    }),
+    { name: "EmailEditorStore" }
+  )
+);
 
 export default useEmailEditorStore;

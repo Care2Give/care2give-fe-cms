@@ -2,19 +2,20 @@ import Body from "@/components/email-editor/Body";
 import Header from "@/components/email-editor/Header";
 import Subject from "@/components/email-editor/Subject";
 import Layout from "@/components/layout";
-import { Button } from "@/components/ui/button";
-import useRouteHandler from "@/lib/useRouteHandler";
 import { Montserrat } from "next/font/google";
 import useEmailEditorStore from "@/stores/useEmailEditorStore";
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { DialogClose, DialogDescription } from "@radix-ui/react-dialog";
+import { dateOptions } from "@/lib/utils";
+import useClerkSWR from "@/lib/useClerkSWR";
+import EditEmailButton from "@/components/email-editor/EditEmailButton";
+import { useEditor } from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
+import Underline from "@tiptap/extension-underline";
+import { Color } from "@tiptap/extension-color";
+import TextStyle from "@tiptap/extension-text-style";
+import Link from "@tiptap/extension-link";
+import TextAlign from "@tiptap/extension-text-align";
+import { useAuth } from "@clerk/nextjs";
+import httpPost from "@/lib/httpPost";
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -23,123 +24,90 @@ const montserrat = Montserrat({
 });
 
 export default function EmailEditor() {
-  const { isEditing, setIsEditing, didSaveContent, setDidSaveContent } =
-    useEmailEditorStore();
+  const { data, error, mutate } = useClerkSWR(
+    `${process.env.NEXT_PUBLIC_API_URL}/v1/cms/email-editor`
+  );
 
+  const { getToken, userId } = useAuth();
   const {
-    navigate,
-    routeAwayUrl,
-    routeAwayConfirmationOpen,
-    setRouteAwayConfirmationOpen,
-  } = useRouteHandler({
     isEditing,
     setIsEditing,
     didSaveContent,
     setDidSaveContent,
+    subjectContent,
+    bodyContent,
+  } = useEmailEditorStore();
+
+  const subjectEditor = useEditor({
+    extensions: [StarterKit],
+    editorProps: {
+      attributes: {
+        class:
+          "p-3 border-gray-300 border-2 border-solid rounded text-sm bg-white",
+      },
+    },
+  });
+  const bodyEditor = useEditor({
+    extensions: [
+      StarterKit,
+      Underline,
+      TextStyle,
+      Color,
+      Link.configure({
+        openOnClick: false,
+        protocols: ["http", "https"],
+        autolink: true,
+      }),
+      TextAlign.configure({
+        types: ["heading", "paragraph"],
+      }),
+    ],
+    editorProps: {
+      attributes: {
+        class:
+          "p-3 border-gray-300 border-2 border-solid rounded text-sm bg-white",
+      },
+    },
   });
 
+  const handleSubmitEmail = async () => {
+    setIsEditing(false);
+    setDidSaveContent(true);
+    const data = {
+      subject: subjectEditor?.getHTML(),
+      content: bodyEditor?.getHTML(),
+      editedBy: userId,
+    };
+    const res = await httpPost(
+      `${process.env.NEXT_PUBLIC_API_URL}/v1/cms/email-editor`,
+      await getToken(),
+      JSON.stringify(data)
+    );
+    mutate(res);
+  };
+
+  if (error) return null;
+  if (!data) return <h2>Loading</h2>;
+
+  const { subject, content, updatedAt, firstName } = data;
   return (
     <Layout>
       <Header />
       <div className="flex flex-col gap-6">
-        <Subject />
-        <Body />
+        <Subject editor={subjectEditor} subject={subject} />
+        <Body editor={bodyEditor} body={content} />
       </div>
       <div
         className={`${montserrat.className} text-xs text-gray-500 flex justify-between items-center`}
       >
         <div>
-          <p>Last Edited: 11/10/2023</p>
-          <p>By: Song Jie</p>
+          <p>
+            Last Edited:{" "}
+            {new Date(updatedAt).toLocaleDateString("en-SG", dateOptions)}
+          </p>
+          <p>By: {firstName}</p>
         </div>
-        <Dialog
-          open={routeAwayConfirmationOpen}
-          onOpenChange={setRouteAwayConfirmationOpen}
-        >
-          <DialogContent className="py-14 px-10 gap-8">
-            <DialogHeader>
-              <DialogTitle className="text-center">
-                You have unsaved changes!
-              </DialogTitle>
-              <DialogDescription className="text-center">
-                Are you sure you want to leave this page?
-              </DialogDescription>
-            </DialogHeader>
-            <DialogTitle className="text-center">
-              Changes you have made will not be saved.
-            </DialogTitle>
-            <DialogFooter className="min-w-full sm:justify-center gap-16">
-              <DialogClose asChild>
-                <Button className="w-32 bg-white text-black hover:bg-gray-500 border-gray-300 border-2 border-solid rounded">
-                  Cancel
-                </Button>
-              </DialogClose>
-              <DialogClose asChild>
-                <Button
-                  type="button"
-                  className="w-32 bg-blue-500 hover:bg-blue-800"
-                  onClick={() => {
-                    setIsEditing(false);
-                    navigate(routeAwayUrl);
-                  }}
-                >
-                  Confirm
-                </Button>
-              </DialogClose>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
-        {isEditing ? (
-          <Dialog>
-            <DialogTrigger asChild>
-              <Button
-                className="bg-white border-gray-300 border-2 border-solid rounded text-sm text-black hover:bg-[#ffefe0]"
-                onClick={() => console.log(routeAwayConfirmationOpen)}
-              >
-                Publish
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="py-14 px-10 gap-8">
-              <DialogHeader>
-                <DialogTitle className="text-center">
-                  Would you like to publish the edited email?
-                </DialogTitle>
-              </DialogHeader>
-              <DialogFooter className="min-w-full sm:justify-center gap-16">
-                <DialogClose asChild>
-                  <Button
-                    className="w-32 bg-white text-black hover:bg-gray-500 border-gray-300 border-2 border-solid rounded"
-                    onClick={() => {
-                      setIsEditing(false);
-                      setDidSaveContent(false);
-                    }}
-                  >
-                    Cancel
-                  </Button>
-                </DialogClose>
-                <DialogClose asChild>
-                  <Button
-                    type="button"
-                    className="w-32 bg-blue-500 hover:bg-blue-800"
-                    onClick={() => {
-                      setIsEditing(false);
-                      setDidSaveContent(true);
-                    }}
-                  >
-                    Confirm
-                  </Button>
-                </DialogClose>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
-        ) : (
-          <Button
-            className="bg-white border-gray-300 border-2 border-solid rounded text-sm text-black hover:bg-[#ffefe0]"
-            onClick={() => setIsEditing(true)}
-          >
-            Edit Email
-          </Button>
-        )}
+        <EditEmailButton handleSubmitEmail={handleSubmitEmail} />
       </div>
     </Layout>
   );
