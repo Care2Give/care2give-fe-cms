@@ -55,7 +55,7 @@ const Body = () => {
     <div className="flex flex-col gap-2">
       <p>Body:</p>
       {isEditing && <MenuBar editor={editor} />}
-      <EditorContent editor={editor} />
+      <EditorContent editor={editor} className="bg-white" />
     </div>
   );
 };

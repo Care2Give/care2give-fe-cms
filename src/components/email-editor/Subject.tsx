@@ -38,7 +38,7 @@ const Subject = () => {
   return (
     <div className="flex flex-col gap-2">
       <p>Subject:</p>
-      <EditorContent editor={editor} />
+      <EditorContent editor={editor} className="bg-white" />
     </div>
   );
 };

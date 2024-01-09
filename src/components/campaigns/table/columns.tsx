@@ -2,17 +2,10 @@ import { createColumnHelper } from "@tanstack/react-table";
 import { arabotoBold } from "@/lib/font";
 import { capitalizeFirstLetter } from "@/lib/utils";
 import { EditIcon } from "lucide-react";
+import { CampaignTable } from "@/types/campaigns/CampaignTable";
+import Image from "next/image";
 
-export type Campaign = {
-  id: number;
-  title: string;
-  lastEditBy: string;
-  status: string; // can narrow
-  startDate: string; // Date type not allowed for Tanstack table accessor
-  endDate: string;
-};
-
-const columnHelper = createColumnHelper<Campaign>();
+const columnHelper = createColumnHelper<CampaignTable>();
 
 export const columns = [
   columnHelper.accessor("title", {
@@ -25,8 +18,19 @@ export const columns = [
       </p>
     ),
   }),
-  columnHelper.accessor("lastEditBy", {
-    cell: (props) => <p className="text-center">{props.getValue()}</p>,
+  columnHelper.accessor("editedBy", {
+    cell: (props) => (
+      <p className="flex items-center gap-2 justify-center">
+        <Image
+          src={props.row.original.userImageUrl}
+          alt={props.getValue()}
+          height={32}
+          width={32}
+          className="rounded-full"
+        />
+        <span>{props.row.original.firstName}</span>
+      </p>
+    ),
     header: () => (
       <p
         className={`${arabotoBold.className} text-black text-center text-[18px] pt-2`}
@@ -39,7 +43,7 @@ export const columns = [
     cell: (props) => (
       <div
         className={`${
-          props.getValue() === "active" ? "bg-green-200" : "bg-red-200"
+          props.getValue() === "ACTIVE" ? "bg-green-200" : "bg-red-200"
         } text-center py-2 px-4 rounded-2xl`}
       >
         {capitalizeFirstLetter(props.getValue())}
@@ -54,7 +58,11 @@ export const columns = [
     ),
   }),
   columnHelper.accessor("startDate", {
-    cell: (props) => <p className="text-center">{props.getValue()}</p>,
+    cell: (props) => (
+      <p className="text-center">
+        {new Date(props.getValue()).toLocaleDateString("en-SG")}
+      </p>
+    ),
     header: () => (
       <p
         className={`${arabotoBold.className} text-black text-center text-[18px] pt-2`}
@@ -64,7 +72,11 @@ export const columns = [
     ),
   }),
   columnHelper.accessor("endDate", {
-    cell: (props) => <p className="text-center">{props.getValue()}</p>,
+    cell: (props) => (
+      <p className="text-center">
+        {new Date(props.getValue()).toLocaleDateString("en-SG")}
+      </p>
+    ),
     header: () => (
       <p
         className={`${arabotoBold.className} text-black text-center text-[18px] pt-2`}

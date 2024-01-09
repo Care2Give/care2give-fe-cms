@@ -33,7 +33,7 @@ export function DataTable<TData, TValue>({
   });
 
   return (
-    <div className="rounded-md" ref={innerRef}>
+    <div className="rounded-md bg-white p-8 shadow" ref={innerRef}>
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (

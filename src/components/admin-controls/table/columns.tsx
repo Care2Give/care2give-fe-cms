@@ -1,10 +1,7 @@
 import { createColumnHelper } from "@tanstack/react-table";
 import RoleDropdown from "./RoleDropdown";
-import { PlusIcon } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import RoleTooltip from "./RoleTooltip";
 import DeleteUserButton from "./DeleteUserButton";
-import AddUserButton from "./AddUserButton";
 import Image from "next/image";
 
 // This type is used to define the shape of our data.

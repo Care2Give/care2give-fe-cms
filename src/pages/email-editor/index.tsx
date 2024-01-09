@@ -16,9 +16,6 @@ import {
 } from "@/components/ui/dialog";
 import { DialogClose, DialogDescription } from "@radix-ui/react-dialog";
 
-import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
-
 const montserrat = Montserrat({
   subsets: ["latin"],
   style: ["normal"],
