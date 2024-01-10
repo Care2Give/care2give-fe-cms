@@ -23,25 +23,36 @@ interface CampaignEditorState {
     setDonationOptions: (donationOptions: DonationOption[]) => void;
     images: CampaignImage[];
     setImages: (images: CampaignImage[]) => void;
+    reset: () => void;
 }
 
 const useCampaignEditorStore = create<CampaignEditorState>()((set) => ({
     isActive: true,
     setIsActive: (isActive) => set({ isActive }),
-    title: "123",
+    title: "",
     setTitle: (title) => set({title}),
-    description: "123",
+    description: "",
     setDescription: (description) => set({description}),
-    targetAmount: 123,
+    targetAmount: 0,
     setTargetAmount: (targetAmount) => set({targetAmount}),
     startDate: new Date(),
     setStartDate: (startDate) => set({startDate}),
     endDate: new Date(),
     setEndDate: (endDate) => set({endDate}),
-    donationOptions: [{amount: 1, description: "123"}],
+    donationOptions: [],
     setDonationOptions: (donationOptions) => set({donationOptions}),
     images: [],
     setImages: (images: CampaignImage[]) => set({images}),
+    reset: () => set({
+        isActive: true,
+        title: "",
+        description: "",
+        targetAmount: 0,
+        startDate: new Date(),
+        endDate: new Date(),
+        donationOptions: [],
+        images: [],
+    }),
 }));
 
 export default useCampaignEditorStore;
