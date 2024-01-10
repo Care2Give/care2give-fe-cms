@@ -1,5 +1,7 @@
 import useCampaignEditorStore from "@/stores/useCampaignEditorStore";
 import {DonationOption} from "@/components/campaigns/edit/DonationOptionForm";
+import {Button} from "@/components/ui/button";
+import {EditStage} from "@/pages/campaigns/edit/edit-stage";
 
 function buildPreviewLink(campaignState): URL {
     const campaignWebsite = "http://localhost:3001";
@@ -23,9 +25,21 @@ function buildPreviewLink(campaignState): URL {
     return urlObj;
 }
 
-export default function PreviewSite() {
+
+export default function PreviewSite({setEditStage}) {
     const previewLink = buildPreviewLink(useCampaignEditorStore.getState()).href;
+    function Banner() {
+        return (
+            <div className="flex justify-end bg-slate-50">
+                <Button className="m-2" onClick={() => setEditStage(EditStage.Publish)}>Close Preview</Button>
+            </div>
+        );
+    }
+
     return (
-        <iframe className="w-full h-screen" src={previewLink} title="Preview link"></iframe>
+        <div>
+            <Banner />
+            <iframe className="w-full h-screen" src={previewLink} title="Preview link"></iframe>
+        </div>
     );
 }
