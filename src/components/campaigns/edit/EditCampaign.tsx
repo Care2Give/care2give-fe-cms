@@ -18,10 +18,12 @@ import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover";
 import {format} from "date-fns";
 import {cn} from "@/lib/utils";
 import {Calendar} from "@/components/ui/calendar";
-import {CalendarIcon, DeleteIcon, EditIcon, Trash2} from "lucide-react";
+import {CalendarIcon, Cross, DeleteIcon, EditIcon, Trash2, X} from "lucide-react";
 import {ErrorMessage} from "@hookform/error-message";
 import DonationAmountsForm from "@/components/campaigns/edit/DonationOptionForm";
 import { EditStage } from "@/pages/campaigns/edit/edit-stage";
+import useCampaignEditorStore, {CampaignImage} from "@/stores/useCampaignEditorStore";
+import Image from "next/image";
 
 function FormFieldInput({form, name, label, placeholder, type} :
                             {form: UseFormReturn, name: string, label: string, placeholder: string, type: string | undefined}) {
@@ -143,6 +145,53 @@ function CampaignDetailsForm({form}: {form: UseFormReturn}) {
     </AccordionItem>;
 }
 
+function CampaignMediaCard({image, onDelete}: {
+    image: CampaignImage,
+    onDelete: () => void
+}) {
+    return (
+        <div className="flex justify-between border rounded-md items-center mx-10 my-2">
+            <div className="flex items-center">
+                <Image width="50" height="50" src={image.url} alt={image.name}/>
+                <span className="m-2">{image.name}</span>
+            </div>
+            <X onClick={onDelete}/>
+        </div>
+    );
+}
+
+function CampaignMediaForm({form}: {form: UseFormReturn}) {
+    const [ images, setImages ] = useState<CampaignImage[]>([]);
+    const setImagesStore = useCampaignEditorStore((state) => state.setImages)
+    const onImageUpload = (image) => {
+        const imageUrl = URL.createObjectURL(image);
+        const imageTitle = image.name;
+        images.push({
+            url: imageUrl,
+            name: imageTitle,
+        });
+        setImages([...images]);
+        setImagesStore(images);
+    }
+
+    const onDelete = (index: number) => {
+        images.splice(index, 1);
+        setImages([...images]);
+        setImagesStore(images);
+    }
+
+    return (
+        <AccordionItem value="campaign-media">
+            <AccordionTrigger>Campaign Media</AccordionTrigger>
+            <AccordionContent>
+                <Input type="file" onInput={(event) => onImageUpload(event.target.files[0])}/>
+                {images.map((image, index) =>
+                    <CampaignMediaCard key={image.url} image={image} onDelete={() => onDelete(index)} />)}
+            </AccordionContent>
+        </AccordionItem>
+    );
+}
+
 export default function EditCampaign({setEditStage}: {setEditStage: (EditStage) => void,}) {
     const validationSchema = z.object({
         isActive: z.boolean(),
@@ -160,19 +209,34 @@ export default function EditCampaign({setEditStage}: {setEditStage: (EditStage) 
     const form = useForm({
         resolver: zodResolver(validationSchema),
         defaultValues: {
-            isActive: true,
-            title: "",
-            description: "",
-            targetAmount: "",
+            isActive: useCampaignEditorStore((state) => state.isActive),
+            title: useCampaignEditorStore((state) => state.title),
+            description: useCampaignEditorStore((state) => state.description),
+            targetAmount: useCampaignEditorStore((state) => state.targetAmount),
             duration: {
-                from: "",
-                to: ""
+                from: useCampaignEditorStore((state) => state.startDate),
+                to: useCampaignEditorStore((state) => state.endDate)
             },
-            donationOptions: []
+            donationOptions: useCampaignEditorStore((state) => state.donationOptions)
         },
     })
 
     const [expandedItems, setExpandedItems ] = useState([]);
+
+    useEffect(() => {
+        const formValues = form.getValues();
+        console.log(formValues);
+        const newState = {
+            isActive: formValues["isActive"],
+            title: formValues["title"],
+            description: formValues["description"],
+            targetAmount: formValues["targetAmount"],
+            startDate: formValues["duration"]["from"],
+            endDate: formValues["duration"]["to"],
+            donationOptions: formValues["donationOptions"]
+        };
+        useCampaignEditorStore.setState(newState);
+    }, [form, form.getValues()])
 
     useEffect(() => {
         const attrToAccordionMap: Map<string, string> = new Map<string, string>([
@@ -195,7 +259,6 @@ export default function EditCampaign({setEditStage}: {setEditStage: (EditStage) 
     }, [form.formState.errors])
 
     const onSubmit = (data) => {
-        console.log(setEditStage);
         setEditStage(EditStage.Preview);
     };
 
@@ -203,9 +266,10 @@ export default function EditCampaign({setEditStage}: {setEditStage: (EditStage) 
         <Form {...form} >
             <form id="edit-campaign-form" onSubmit={form.handleSubmit(onSubmit)} className="space-y-8" >
                 <Accordion type="multiple" collapsible="true" value={expandedItems} onValueChange={setExpandedItems}>
-                    <CampaignStatusForm form={form}/>
-                    <CampaignDetailsForm form={form}/>
-                    <DonationAmountsForm form={form}/>
+                    <CampaignStatusForm form={form} />
+                    <CampaignDetailsForm form={form} />
+                    <CampaignMediaForm form={form} />
+                    <DonationAmountsForm form={form} />
                 </Accordion>
             </form>
         </Form>

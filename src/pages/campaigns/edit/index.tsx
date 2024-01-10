@@ -4,15 +4,19 @@ import SubHeader from "@/components/campaigns/edit/SubHeader"
 import Footer from "@/components/campaigns/edit/Footer";
 import {useState} from "react";
 import { EditStage } from "./edit-stage";
+import EditCampaign from "@/components/campaigns/edit/EditCampaign";
+import PreviewSite from "@/components/campaigns/edit/PreviewSite";
 
 export default function Index() {
     const [editStage, setEditStage] = useState(EditStage.Edit);
-
     return (
         <Layout>
             <Header />
             <SubHeader editStage={editStage} setEditStage={setEditStage}/>
-            <div>This is the page to edit campaigns</div>
+            {
+                editStage === EditStage.Edit && <EditCampaign setEditStage={setEditStage}/>
+            }
+            { editStage === EditStage.Preview && <PreviewSite />}
             <Footer editStage={editStage} setEditStage={setEditStage}/>
         </Layout>
     );

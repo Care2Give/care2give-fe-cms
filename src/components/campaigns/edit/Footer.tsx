@@ -20,7 +20,7 @@ export default function Footer({editStage, setEditStage}: {
             </li>
             <li className="px-2">
                 <Button className="bg-[#5185FF] hover:bg-[#3872FC]"
-                        onClick={() => setEditStage(getNextEditStage(editStage))}>
+                        type="submit" form="edit-campaign-form">
                     {getDisplay(getNextEditStage(editStage))}
                 </Button>
             </li>

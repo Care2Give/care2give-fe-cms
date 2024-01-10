@@ -20,6 +20,7 @@ import {Label} from "@/components/ui/label";
 import {Input} from "@/components/ui/input";
 import {PopoverClose} from "@radix-ui/react-popover";
 import {ErrorMessage} from "@hookform/error-message";
+import useCampaignEditorStore from "@/stores/useCampaignEditorStore";
 
 export type DonationOption = {
     amount: number,
@@ -91,9 +92,11 @@ export default function DonationAmountsForm({form} : {form: UseFormReturn}) {
     })
     const [ errors, setErrors ] = useState({});
     const [ isDialogOpen, setIsDialogOpen ] = useState(false);
+    const setDonationOptions = useCampaignEditorStore((state) => state.setDonationOptions);
 
     useEffect(() => {
-        form.setValue("donation_options", data);
+        form.setValue("donationOptions", data);
+        setDonationOptions(data);
     }, [data])
 
     const onEdit = (index: number) => {
