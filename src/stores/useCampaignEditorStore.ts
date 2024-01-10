@@ -15,10 +15,10 @@ interface CampaignEditorState {
     setDescription: (description: string) => void;
     targetAmount: number;
     setTargetAmount: (targetAmount: number) => void;
-    startDate: string;
-    setStartDate: (startDate: string) => void;
-    endDate: string;
-    setEndDate: (endDate: string) => void;
+    startDate: Date;
+    setStartDate: (startDate: Date) => void;
+    endDate: Date;
+    setEndDate: (endDate: Date) => void;
     donationOptions: DonationOption[];
     setDonationOptions: (donationOptions: DonationOption[]) => void;
     images: CampaignImage[];
@@ -34,9 +34,9 @@ const useCampaignEditorStore = create<CampaignEditorState>()((set) => ({
     setDescription: (description) => set({description}),
     targetAmount: 123,
     setTargetAmount: (targetAmount) => set({targetAmount}),
-    startDate: "",
+    startDate: new Date(),
     setStartDate: (startDate) => set({startDate}),
-    endDate: "",
+    endDate: new Date(),
     setEndDate: (endDate) => set({endDate}),
     donationOptions: [{amount: 1, description: "123"}],
     setDonationOptions: (donationOptions) => set({donationOptions}),
