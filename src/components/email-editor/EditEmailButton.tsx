@@ -97,7 +97,7 @@ export default function EditEmailButton({
         </Dialog>
       ) : (
         <Button
-          className="bg-white border-gray-300 border-2 border-solid rounded text-sm text-black hover:bg-[#ffefe0]"
+          className="bg-blue-500 rounded text-sm text-white hover:bg-blue-700"
           onClick={() => setIsEditing(true)}
         >
           Edit Email

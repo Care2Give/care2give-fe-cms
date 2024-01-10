@@ -1,3 +1,4 @@
+import Link from "next/link";
 import Body from "@/components/email-editor/Body";
 import Header from "@/components/email-editor/Header";
 import Subject from "@/components/email-editor/Subject";
@@ -12,11 +13,12 @@ import StarterKit from "@tiptap/starter-kit";
 import Underline from "@tiptap/extension-underline";
 import { Color } from "@tiptap/extension-color";
 import TextStyle from "@tiptap/extension-text-style";
-import Link from "@tiptap/extension-link";
+import TiptapLink from "@tiptap/extension-link";
 import TextAlign from "@tiptap/extension-text-align";
 import { useAuth } from "@clerk/nextjs";
 import httpPost from "@/lib/httpPost";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from "@/components/ui/button";
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -47,7 +49,7 @@ export default function EmailEditor() {
       Underline,
       TextStyle,
       Color,
-      Link.configure({
+      TiptapLink.configure({
         openOnClick: false,
         protocols: ["http", "https"],
         autolink: true,
@@ -97,10 +99,10 @@ export default function EmailEditor() {
         )}
       </div>
       {data ? (
-        <div
-          className={`${montserrat.className} text-xs text-gray-500 flex justify-between items-center`}
-        >
-          <div>
+        <>
+          <div
+            className={`${montserrat.className} text-xs text-gray-500 flex flex-col`}
+          >
             <p>
               Last Edited:{" "}
               {new Date(data.updatedAt).toLocaleDateString(
@@ -110,8 +112,17 @@ export default function EmailEditor() {
             </p>
             <p>By: {data.firstName}</p>
           </div>
-          <EditEmailButton handleSubmitEmail={handleSubmitEmail} />
-        </div>
+          <div
+            className={`${montserrat.className} text-xs text-gray-500 flex justify-between items-center`}
+          >
+            <Link href="/email-editor/version-history">
+              <Button className="bg-white border-gray-300 border-2 border-solid rounded text-sm text-black hover:bg-[#ffefe0]">
+                Version History
+              </Button>
+            </Link>
+            <EditEmailButton handleSubmitEmail={handleSubmitEmail} />
+          </div>
+        </>
       ) : (
         <Skeleton className="w-full h-8 rounded-full mt-8" />
       )}
