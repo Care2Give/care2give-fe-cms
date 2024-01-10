@@ -19,7 +19,9 @@ export default function SubHeader() {
         <p className={`${arabotoBold.className} text-2xl`}>Your campaigns</p>
       </div>
       <div>
-        <Button className="bg-[#5185FF] hover:bg-[#3872FC] flex items-center pl-3" onClick={() => router.push("campaigns/edit")}>
+        <Button className="bg-[#5185FF] hover:bg-[#3872FC] flex items-center pl-3"
+                onClick={() => router.push("campaigns/edit")}
+        >
           <PlusIcon className="h-4" />
           <div>
             <span className={`${montserrat.className}`}>Create campaign</span>

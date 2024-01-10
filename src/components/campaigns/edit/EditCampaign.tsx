@@ -172,7 +172,7 @@ function CampaignMediaCard({image, onDelete}: {
 }
 
 function CampaignMediaForm({form}: {form: UseFormReturn}) {
-    const [ images, setImages ] = useState<CampaignImage[]>([]);
+    const [ images, setImages ] = useState<CampaignImage[]>(useCampaignEditorStore(state => state.images));
     const setImagesStore = useCampaignEditorStore((state) => state.setImages);
 
     useEffect(() => {

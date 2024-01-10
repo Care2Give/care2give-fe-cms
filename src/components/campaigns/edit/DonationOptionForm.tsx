@@ -84,7 +84,7 @@ function getColumns(onEdit: (index: number) => void, onDelete: (index: number) =
 }
 
 export default function DonationAmountsForm({form} : {form: UseFormReturn}) {
-    const [data, setData] = useState([]);
+    const [data, setData] = useState(useCampaignEditorStore(state => state.donationOptions));
     const [newDonationOption, setNewDonationOption] = useState({amount: 0, description: ""});
     const [editOption, setEditOption] = useState({
         isEdit: false,

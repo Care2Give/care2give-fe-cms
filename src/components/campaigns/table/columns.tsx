@@ -2,19 +2,26 @@ import { createColumnHelper } from "@tanstack/react-table";
 import { arabotoBold } from "@/lib/font";
 import { capitalizeFirstLetter } from "@/lib/utils";
 import { EditIcon } from "lucide-react";
+import data from "./MOCK_DATA";
+import useCampaignEditorStore, {CampaignImage} from "@/stores/useCampaignEditorStore";
+import {DonationOption} from "@/components/campaigns/edit/DonationOptionForm";
 
 export type Campaign = {
   id: number;
   title: string;
   lastEditBy: string;
-  status: string; // can narrow
+  isActive: boolean;
   startDate: string; // Date type not allowed for Tanstack table accessor
   endDate: string;
+  description: string;
+  targetAmount: number;
+  donationOptions: DonationOption[];
+  images: CampaignImage[];
 };
 
 const columnHelper = createColumnHelper<Campaign>();
 
-export const columns = [
+export const getColumns = (onEdit) => [
   columnHelper.accessor("title", {
     cell: (props) => <p className="text-center">{props.getValue()}</p>,
     header: () => (
@@ -35,14 +42,14 @@ export const columns = [
       </p>
     ),
   }),
-  columnHelper.accessor("status", {
+  columnHelper.accessor("isActive", {
     cell: (props) => (
       <div
         className={`${
-          props.getValue() === "active" ? "bg-green-200" : "bg-red-200"
+          props.getValue() ? "bg-green-200" : "bg-red-200"
         } text-center py-2 px-4 rounded-2xl`}
       >
-        {capitalizeFirstLetter(props.getValue())}
+        {props.getValue() ? "Active" : "Inactive"}
       </div>
     ),
     header: () => (
@@ -75,8 +82,8 @@ export const columns = [
   }),
   columnHelper.display({
     id: "edit",
-    cell: () => (
-      <EditIcon className="hover:cursor-pointer hover:stroke-[#3872FC]" />
+    cell: (cell) => (
+      <EditIcon onClick={() => onEdit(cell.row.index)} className="hover:cursor-pointer hover:stroke-[#3872FC]" />
     ),
   }),
 ];
