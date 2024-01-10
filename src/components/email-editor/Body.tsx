@@ -9,7 +9,7 @@ type BodyProps = {
 };
 
 const Body = ({ editor, body }: BodyProps) => {
-  const { isEditing, didSaveContent } = useEmailEditorStore();
+  const { isEditing } = useEmailEditorStore();
 
   useEffect(() => {
     if (editor) {
@@ -18,19 +18,14 @@ const Body = ({ editor, body }: BodyProps) => {
       } else {
         editor.setOptions({ editable: false });
       }
-
-      // if (!isEditing && didSaveContent) {
-      //   setBodyContent(editor.getHTML());
-      // }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [editor, isEditing, didSaveContent]);
+  }, [editor, isEditing]);
 
   useEffect(() => {
     if (editor) {
       editor.commands.setContent(body);
     }
-  }, []);
+  }, [editor]);
 
   return (
     <div className="flex flex-col gap-2">

@@ -16,6 +16,7 @@ import Link from "@tiptap/extension-link";
 import TextAlign from "@tiptap/extension-text-align";
 import { useAuth } from "@clerk/nextjs";
 import httpPost from "@/lib/httpPost";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -29,14 +30,7 @@ export default function EmailEditor() {
   );
 
   const { getToken, userId } = useAuth();
-  const {
-    isEditing,
-    setIsEditing,
-    didSaveContent,
-    setDidSaveContent,
-    subjectContent,
-    bodyContent,
-  } = useEmailEditorStore();
+  const { setIsEditing } = useEmailEditorStore();
 
   const subjectEditor = useEditor({
     extensions: [StarterKit],
@@ -72,7 +66,6 @@ export default function EmailEditor() {
 
   const handleSubmitEmail = async () => {
     setIsEditing(false);
-    setDidSaveContent(true);
     const data = {
       subject: subjectEditor?.getHTML(),
       content: bodyEditor?.getHTML(),
@@ -87,28 +80,41 @@ export default function EmailEditor() {
   };
 
   if (error) return null;
-  if (!data) return <h2>Loading</h2>;
 
-  const { subject, content, updatedAt, firstName } = data;
   return (
     <Layout>
       <Header />
       <div className="flex flex-col gap-6">
-        <Subject editor={subjectEditor} subject={subject} />
-        <Body editor={bodyEditor} body={content} />
+        {data ? (
+          <Subject editor={subjectEditor} subject={data.subject} />
+        ) : (
+          <Skeleton className="w-full h-10 rounded-full mt-8" />
+        )}
+        {data ? (
+          <Body editor={bodyEditor} body={data.content} />
+        ) : (
+          <Skeleton className="w-full h-24 rounded-full mt-8" />
+        )}
       </div>
-      <div
-        className={`${montserrat.className} text-xs text-gray-500 flex justify-between items-center`}
-      >
-        <div>
-          <p>
-            Last Edited:{" "}
-            {new Date(updatedAt).toLocaleDateString("en-SG", dateOptions)}
-          </p>
-          <p>By: {firstName}</p>
+      {data ? (
+        <div
+          className={`${montserrat.className} text-xs text-gray-500 flex justify-between items-center`}
+        >
+          <div>
+            <p>
+              Last Edited:{" "}
+              {new Date(data.updatedAt).toLocaleDateString(
+                "en-SG",
+                dateOptions
+              )}
+            </p>
+            <p>By: {data.firstName}</p>
+          </div>
+          <EditEmailButton handleSubmitEmail={handleSubmitEmail} />
         </div>
-        <EditEmailButton handleSubmitEmail={handleSubmitEmail} />
-      </div>
+      ) : (
+        <Skeleton className="w-full h-8 rounded-full mt-8" />
+      )}
     </Layout>
   );
 }

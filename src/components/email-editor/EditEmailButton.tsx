@@ -16,20 +16,14 @@ export default function EditEmailButton({
 }: {
   handleSubmitEmail: () => Promise<void>;
 }) {
-  const { isEditing, setIsEditing, didSaveContent, setDidSaveContent } =
-    useEmailEditorStore();
+  const { isEditing, setIsEditing } = useEmailEditorStore();
 
   const {
     navigate,
     routeAwayUrl,
     routeAwayConfirmationOpen,
     setRouteAwayConfirmationOpen,
-  } = useRouteHandler({
-    isEditing,
-    setIsEditing,
-    didSaveContent,
-    setDidSaveContent,
-  });
+  } = useRouteHandler();
 
   return (
     <>
@@ -85,13 +79,7 @@ export default function EditEmailButton({
             </DialogHeader>
             <DialogFooter className="min-w-full sm:justify-center gap-16">
               <DialogClose asChild>
-                <Button
-                  className="w-32 bg-white text-black hover:bg-gray-500 border-gray-300 border-2 border-solid rounded"
-                  onClick={() => {
-                    setIsEditing(false);
-                    setDidSaveContent(false);
-                  }}
-                >
+                <Button className="w-32 bg-white text-black hover:bg-gray-500 border-gray-300 border-2 border-solid rounded">
                   Cancel
                 </Button>
               </DialogClose>

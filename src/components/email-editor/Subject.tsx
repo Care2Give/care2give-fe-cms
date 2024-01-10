@@ -8,7 +8,7 @@ type SubjectProps = {
 };
 
 const Subject = ({ editor, subject }: SubjectProps) => {
-  const { isEditing, didSaveContent } = useEmailEditorStore();
+  const { isEditing } = useEmailEditorStore();
 
   useEffect(() => {
     if (editor) {
@@ -17,22 +17,14 @@ const Subject = ({ editor, subject }: SubjectProps) => {
       } else {
         editor.setOptions({ editable: false });
       }
-
-      // if (!isEditing && didSaveContent) {
-      //   setSubjectContent(editor.getHTML());
-      // }
-      // if (!isEditing && !didSaveContent) {
-      //   editor.commands.setContent(subjectContent);
-      // }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [editor, isEditing, didSaveContent]);
+  }, [editor, isEditing]);
+
   useEffect(() => {
-    console.log("subject", subject);
     if (editor) {
       editor.commands.setContent(subject);
     }
-  }, []);
+  }, [editor]);
 
   return (
     <div className="flex flex-col gap-2">

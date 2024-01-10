@@ -25,7 +25,6 @@ export default function DeleteUserButton(props: CellContext<User, unknown>) {
         const promise = () =>
           mutate("/api/users", deleteUser(props.row.original.id), {
             populateCache: (_, users) => {
-              console.log("users", users);
               const filteredData = users?.filter(
                 (user: UserResource) => user.id !== props.row.original.id
               );
