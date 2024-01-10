@@ -225,7 +225,6 @@ export default function EditCampaign({setEditStage}: {setEditStage: (EditStage) 
 
     useEffect(() => {
         const formValues = form.getValues();
-        console.log(formValues);
         const newState = {
             isActive: formValues["isActive"],
             title: formValues["title"],
@@ -239,6 +238,9 @@ export default function EditCampaign({setEditStage}: {setEditStage: (EditStage) 
     }, [form, form.getValues()])
 
     useEffect(() => {
+        if (Object.keys(form.formState.errors).length == 0) {
+            return;
+        }
         const attrToAccordionMap: Map<string, string> = new Map<string, string>([
             ["isActive", "campaign-status"],
             ["title", "campaign-details"],
