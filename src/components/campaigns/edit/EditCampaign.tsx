@@ -162,7 +162,13 @@ function CampaignMediaCard({image, onDelete}: {
 
 function CampaignMediaForm({form}: {form: UseFormReturn}) {
     const [ images, setImages ] = useState<CampaignImage[]>([]);
-    const setImagesStore = useCampaignEditorStore((state) => state.setImages)
+    const setImagesStore = useCampaignEditorStore((state) => state.setImages);
+
+    useEffect(() => {
+        setImagesStore(images);
+        form.setValue("images", images);
+    }, [images])
+
     const onImageUpload = (image) => {
         const imageUrl = URL.createObjectURL(image);
         const imageTitle = image.name;
@@ -171,13 +177,11 @@ function CampaignMediaForm({form}: {form: UseFormReturn}) {
             name: imageTitle,
         });
         setImages([...images]);
-        setImagesStore(images);
     }
 
     const onDelete = (index: number) => {
         images.splice(index, 1);
         setImages([...images]);
-        setImagesStore(images);
     }
 
     return (
@@ -187,6 +191,7 @@ function CampaignMediaForm({form}: {form: UseFormReturn}) {
                 <Input type="file" onInput={(event) => onImageUpload(event.target.files[0])}/>
                 {images.map((image, index) =>
                     <CampaignMediaCard key={image.url} image={image} onDelete={() => onDelete(index)} />)}
+                <ErrorMessage name="images" errors={form.formState.errors}/>
             </AccordionContent>
         </AccordionItem>
     );
@@ -203,7 +208,9 @@ export default function EditCampaign({setEditStage}: {setEditStage: (EditStage) 
             to: z.coerce.date(),
         }),
         donationOptions: z.array(z.object({amount: z.coerce.number(), description: z.string()}))
-            .min(1, "At least one donation option must be specified")
+            .min(1, "At least one donation option must be specified"),
+        images: z.array(z.object({url: z.string(), name: z.string()}))
+            .min(1, "At least one campaign image must be uploaded"),
     })
 
     const form = useForm({
@@ -217,7 +224,8 @@ export default function EditCampaign({setEditStage}: {setEditStage: (EditStage) 
                 from: useCampaignEditorStore((state) => state.startDate),
                 to: useCampaignEditorStore((state) => state.endDate)
             },
-            donationOptions: useCampaignEditorStore((state) => state.donationOptions)
+            donationOptions: useCampaignEditorStore((state) => state.donationOptions),
+            images: useCampaignEditorStore(state => state.images)
         },
     })
 
@@ -232,7 +240,8 @@ export default function EditCampaign({setEditStage}: {setEditStage: (EditStage) 
             targetAmount: formValues["targetAmount"],
             startDate: formValues["duration"]["from"],
             endDate: formValues["duration"]["to"],
-            donationOptions: formValues["donationOptions"]
+            donationOptions: formValues["donationOptions"],
+            images: formValues["images"],
         };
         useCampaignEditorStore.setState(newState);
     }, [form, form.getValues()])
@@ -248,6 +257,7 @@ export default function EditCampaign({setEditStage}: {setEditStage: (EditStage) 
             ["targetAmount", "campaign-details"],
             ["duration", "campaign-details"],
             ["donationOptions", "donation-options"],
+            ["images", "campaign-media"]
         ]);
         const newExpandedItems = [];
         for (const attr in form.formState.errors) {
