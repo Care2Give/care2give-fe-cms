@@ -15,7 +15,7 @@ import {
 import { Input } from "@/components/ui/input"
 import {Switch} from "@/components/ui/switch";
 import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover";
-import {format} from "date-fns";
+import {addDays, format} from "date-fns";
 import {cn} from "@/lib/utils";
 import {Calendar} from "@/components/ui/calendar";
 import {CalendarIcon, Cross, DeleteIcon, EditIcon, Trash2, X} from "lucide-react";
@@ -24,6 +24,7 @@ import DonationAmountsForm from "@/components/campaigns/edit/DonationOptionForm"
 import { EditStage } from "@/pages/campaigns/edit/edit-stage";
 import useCampaignEditorStore, {CampaignImage} from "@/stores/useCampaignEditorStore";
 import Image from "next/image";
+import {DateRange} from "react-day-picker";
 
 function FormFieldInput({form, name, label, placeholder, type} :
                             {form: UseFormReturn, name: string, label: string, placeholder: string, type: string | undefined}) {
@@ -52,57 +53,67 @@ function FormFieldInput({form, name, label, placeholder, type} :
 }
 
 function FormFieldDatePicker({form}: {form: UseFormReturn}) {
-    return (<FormField
-        control={form.control}
-        name="duration"
-        render={({ field }) => (
-            <FormItem className="flex flex-row items-center justify-between">
-                <FormLabel className="text-base ps-10">Duration</FormLabel>
-                <Popover>
-                    <span className="w-1/2">
-                    <PopoverTrigger asChild>
-                        <FormControl>
-                            <Button
-                                id="date"
-                                variant={"outline"}
-                                className={cn(
-                                    "w-full justify-start text-left font-normal",
-                                    !field.value && "text-muted-foreground"
-                                )}
-                            >
-                                <CalendarIcon className="mr-2 h-4 w-4" />
-                                    {field.value?.from ? (
-                                        field.value.to ? (
-                                            <>
-                                                {format(field.value.from, "LLL dd, y")} -{" "}
-                                                {format(field.value.to, "LLL dd, y")}
-                                            </>
-                                        ) : (
-                                            format(field.value.from, "LLL dd, y")
-                                        )
-                                    ) : (
-                                        <span>Pick a date</span>
-                                    )}
-                            </Button>
-                        </FormControl>
-                    </PopoverTrigger>
-                    {form.formState.errors && get(form.formState.errors, "duration.from") && <div>From date: {get(form.formState.errors, "duration.from").message}</div>}
-                    {form.formState.errors && get(form.formState.errors, "duration.to") && <div>To date: {get(form.formState.errors, "duration.to").message}</div>}
-                    </span>
-                    <PopoverContent className="w-auto p-0" align="start">
-                        <Calendar
-                            initialFocus
-                            mode="range"
-                            defaultMonth={field.value?.from}
-                            selected={field.value}
-                            onSelect={field.onChange}
-                            numberOfMonths={2}
-                        />
-                    </PopoverContent>
-                </Popover>
-            </FormItem>
-        )}
-    />);
+    const [date, setDate] = React.useState<DateRange>({
+        from: new Date(),
+        to: addDays(new Date(), 20),
+    })
+
+    const setEndDate = useCampaignEditorStore(state => state.setEndDate);
+    const setStartDate = useCampaignEditorStore(state => state.setStartDate);
+
+    useEffect(() => {
+        form.setValue("startDate", date?.from);
+        form.setValue("endDate", date?.to);
+        setEndDate(date.to as Date);
+        setStartDate(date.from as Date);
+    }, [JSON.stringify(date)])
+
+    return (
+        <div className="my-2 flex flex-row items-center justify-between">
+            <FormLabel className="text-base ps-10">Duration</FormLabel>
+            <Popover>
+            <span className="w-1/2">
+            <PopoverTrigger asChild>
+                <FormControl>
+                    <Button
+                        id="date"
+                        variant={"outline"}
+                        className={cn(
+                            "w-full justify-start text-left font-normal",
+                            !date && "text-muted-foreground"
+                        )}
+                    >
+                        <CalendarIcon className="mr-2 h-4 w-4" />
+                            {date?.from ? (
+                                date.to ? (
+                                    <>
+                                        {format(date.from, "LLL dd, y")} -{" "}
+                                        {format(date.to, "LLL dd, y")}
+                                    </>
+                                ) : (
+                                    format(date.from, "LLL dd, y")
+                                )
+                            ) : (
+                                <span>Pick a date</span>
+                            )}
+                    </Button>
+                </FormControl>
+            </PopoverTrigger>
+            {form.formState.errors && get(form.formState.errors, "startDate") && <div>From date: {get(form.formState.errors, "startDate").message}</div>}
+            {form.formState.errors && get(form.formState.errors, "endDate") && <div>To date: {get(form.formState.errors, "endDate").message}</div>}
+            </span>
+            <PopoverContent className="w-auto p-0" align="start">
+                <Calendar
+                    initialFocus
+                    mode="range"
+                    defaultMonth={date?.from}
+                    selected={date}
+                    onSelect={setDate}
+                    numberOfMonths={2}
+                />
+            </PopoverContent>
+        </Popover>
+    </div>);
 }
 
 function CampaignStatusForm({form} : {form: UseFormReturn}) {
@@ -170,6 +181,8 @@ function CampaignMediaForm({form}: {form: UseFormReturn}) {
     }, [images])
 
     const onImageUpload = (image) => {
+        // TODO change this to create an image url which is saved somewhere so that the campaign site can access
+        // Currently creates a local url which campaign site cannot access
         const imageUrl = URL.createObjectURL(image);
         const imageTitle = image.name;
         images.push({
@@ -203,10 +216,8 @@ export default function EditCampaign({setEditStage}: {setEditStage: (EditStage) 
         title: z.string().min(2),
         description: z.string().min(2),
         targetAmount: z.coerce.number().min(1),
-        duration: z.object({
-            from: z.coerce.date(),
-            to: z.coerce.date(),
-        }),
+        startDate: z.coerce.date(),
+        endDate: z.coerce.date(),
         donationOptions: z.array(z.object({amount: z.coerce.number(), description: z.string()}))
             .min(1, "At least one donation option must be specified"),
         images: z.array(z.object({url: z.string(), name: z.string()}))
@@ -220,10 +231,8 @@ export default function EditCampaign({setEditStage}: {setEditStage: (EditStage) 
             title: useCampaignEditorStore((state) => state.title),
             description: useCampaignEditorStore((state) => state.description),
             targetAmount: useCampaignEditorStore((state) => state.targetAmount),
-            duration: {
-                from: useCampaignEditorStore((state) => state.startDate),
-                to: useCampaignEditorStore((state) => state.endDate)
-            },
+            startDate: useCampaignEditorStore(state => state.startDate),
+            endDate: useCampaignEditorStore(state => state.endDate),
             donationOptions: useCampaignEditorStore((state) => state.donationOptions),
             images: useCampaignEditorStore(state => state.images)
         },
@@ -238,13 +247,13 @@ export default function EditCampaign({setEditStage}: {setEditStage: (EditStage) 
             title: formValues["title"],
             description: formValues["description"],
             targetAmount: formValues["targetAmount"],
-            startDate: formValues["duration"]["from"],
-            endDate: formValues["duration"]["to"],
+            startDate: formValues["startDate"],
+            endDate: formValues["endDate"],
             donationOptions: formValues["donationOptions"],
             images: formValues["images"],
         };
         useCampaignEditorStore.setState(newState);
-    }, [form, form.getValues()])
+    }, [form, JSON.stringify(form.getValues())])
 
     useEffect(() => {
         if (Object.keys(form.formState.errors).length == 0) {
@@ -255,7 +264,8 @@ export default function EditCampaign({setEditStage}: {setEditStage: (EditStage) 
             ["title", "campaign-details"],
             ["description", "campaign-details"],
             ["targetAmount", "campaign-details"],
-            ["duration", "campaign-details"],
+            ["startDate", "campaign-details"],
+            ["endDate", "campaign-details"],
             ["donationOptions", "donation-options"],
             ["images", "campaign-media"]
         ]);
