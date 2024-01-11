@@ -5,7 +5,7 @@ import Subject from "@/components/email-editor/Subject";
 import Layout from "@/components/layout";
 import { Montserrat } from "next/font/google";
 import useEmailEditorStore from "@/stores/useEmailEditorStore";
-import { dateOptions } from "@/lib/utils";
+import { cn, dateOptions } from "@/lib/utils";
 import useClerkSWR from "@/lib/useClerkSWR";
 import EditEmailButton from "@/components/email-editor/EditEmailButton";
 import { useEditor } from "@tiptap/react";
@@ -32,7 +32,7 @@ export default function EmailEditor() {
   );
 
   const { getToken, userId } = useAuth();
-  const { setIsEditing } = useEmailEditorStore();
+  const { setIsEditing, isEditing } = useEmailEditorStore();
 
   const subjectEditor = useEditor({
     extensions: [StarterKit],
@@ -103,23 +103,34 @@ export default function EmailEditor() {
           <div
             className={`${montserrat.className} text-xs text-gray-500 flex flex-col`}
           >
-            <p>
-              Last Edited:{" "}
-              {new Date(data.updatedAt).toLocaleDateString(
-                "en-SG",
-                dateOptions
-              )}
-            </p>
-            <p>By: {data.firstName}</p>
+            {!isEditing && (
+              <>
+                <p>
+                  Last Edited:{" "}
+                  {new Date(data.updatedAt).toLocaleDateString(
+                    "en-SG",
+                    dateOptions
+                  )}
+                </p>
+                <p>By: {data.firstName}</p>
+              </>
+            )}
           </div>
           <div
-            className={`${montserrat.className} text-xs text-gray-500 flex justify-between items-center`}
+            className={cn(
+              `${montserrat.className} text-xs text-gray-500 flex justify-end items-center`,
+              {
+                "justify-between": !isEditing,
+              }
+            )}
           >
-            <Link href="/email-editor/version-history">
-              <Button className="bg-white border-gray-300 border-2 border-solid rounded text-sm text-black hover:bg-[#ffefe0]">
-                Version History
-              </Button>
-            </Link>
+            {!isEditing && (
+              <Link href="/email-editor/version-history">
+                <Button className="bg-white border-gray-300 border-2 border-solid rounded text-sm text-black hover:bg-[#ffefe0]">
+                  Version History
+                </Button>
+              </Link>
+            )}
             <EditEmailButton handleSubmitEmail={handleSubmitEmail} />
           </div>
         </>

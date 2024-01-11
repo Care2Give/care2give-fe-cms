@@ -2,8 +2,10 @@ import { ArrowLeft, Bell } from "lucide-react";
 import { arabotoBold } from "@/lib/font";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/router";
+import useEmailEditorStore from "@/stores/useEmailEditorStore";
 
 export default function Header() {
+  const { setIsEditing } = useEmailEditorStore();
   const router = useRouter();
   return (
     <div className="flex justify-between items-center w-full">
@@ -11,7 +13,8 @@ export default function Header() {
         variant="ghost"
         size="icon"
         onClick={() => {
-          router.back();
+          router.replace("/email-editor");
+          setIsEditing(false);
         }}
       >
         <ArrowLeft />
