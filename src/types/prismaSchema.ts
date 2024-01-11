@@ -54,3 +54,13 @@ export enum DonationType {
   GROUP_WITH_TAX_DEDUCTION = "Group with tax deduction",
   WITHOUT_TAX_DEDUCTION = "Without tax deduction",
 }
+
+export interface Email {
+  id: string;
+  editedBy: string;
+  createdAt: Date;
+  updatedAt: Date;
+  subject: string;
+  content: string;
+  version: number;
+}

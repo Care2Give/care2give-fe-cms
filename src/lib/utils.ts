@@ -74,3 +74,16 @@ export const dateOptions: Intl.DateTimeFormatOptions = {
   month: "short",
   day: "numeric",
 };
+
+export function getFormattedDateTime(date: Date) {
+  return `${new Date(date).toLocaleDateString("en-SG", {
+    year: "numeric",
+    month: "numeric",
+    day: "numeric",
+  })}
+  -
+  ${new Date(date).toLocaleTimeString("en-SG", {
+    hour: "2-digit",
+    minute: "2-digit",
+  })}`;
+}
