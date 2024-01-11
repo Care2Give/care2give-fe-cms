@@ -22,13 +22,13 @@ export const columns = [
     cell: (props) => (
       <p className="flex items-center gap-2 justify-center">
         <Image
-          src={props.row.original.userImageUrl}
+          src={props.row.original.userImageUrl || "/logo.png"}
           alt={props.getValue()}
           height={32}
           width={32}
           className="rounded-full"
         />
-        <span>{props.row.original.firstName}</span>
+        <span>{props.row.original.firstName || "NO NAME"}</span>
       </p>
     ),
     header: () => (

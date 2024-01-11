@@ -11,6 +11,14 @@ import { useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { useRouter } from "next/router";
 import TiptapLink from "@tiptap/extension-link";
+import { dateOptions } from "@/lib/utils";
+import { Montserrat } from "next/font/google";
+
+const montserrat = Montserrat({
+  subsets: ["latin"],
+  style: ["normal"],
+  weight: ["400"],
+});
 
 export default function ViewOnlyEmailPage() {
   const router = useRouter();
@@ -57,6 +65,12 @@ export default function ViewOnlyEmailPage() {
       <Header />
       <Subject editor={subjectEditor} subject={email.subject} />
       <Body editor={bodyEditor} body={email.content} />
+      <p
+        className={`${montserrat.className} text-xs text-gray-500 flex flex-col`}
+      >
+        Last edited by: {email.firstName} at{" "}
+        {new Date(email.updatedAt).toLocaleDateString("en-SG", dateOptions)}
+      </p>
     </Layout>
   );
 }
