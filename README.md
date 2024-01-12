@@ -1,4 +1,4 @@
-Uses node `v20.9.0`. Use `nvm` to manage node versions.
+Uses node `v20.10.0`. Use `nvm` to manage node versions.
 
 ## Getting Started
 
