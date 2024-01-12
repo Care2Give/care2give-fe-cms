@@ -3,6 +3,7 @@ import { DataTableColumnHeader } from "./column-header";
 import { DonationTable } from "@/types/donations/DonationTable";
 import { capitalizeFirstLetter, getFormattedDateTime } from "@/lib/utils";
 import { DonationType } from "@/types/prismaSchema";
+import Nric from "./Nric";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -96,7 +97,7 @@ export const columns = [
     ),
   }),
   columnHelper.accessor("nric", {
-    cell: (props) => props.getValue(),
+    cell: (props) => <Nric nric={props.getValue()} />,
     header: ({ column, table }) => (
       <DataTableColumnHeader column={column} table={table} title="NRIC" />
     ),
