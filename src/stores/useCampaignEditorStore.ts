@@ -7,6 +7,8 @@ export type CampaignImage = {
 }
 
 interface CampaignEditorState {
+    id: string,
+    setId: (id: string) => void;
     status: CampaignStatus;
     setStatus: (status: CampaignStatus) => void;
     title: string;
@@ -27,6 +29,8 @@ interface CampaignEditorState {
 }
 
 const useCampaignEditorStore = create<CampaignEditorState>()((set) => ({
+    id: "",
+    setId: (id) => set({id}),
     status: CampaignStatus.ACTIVE,
     setStatus: (status) => set({ status }),
     title: "",
