@@ -257,7 +257,6 @@ export default function EditCampaign({setEditStage}: {setEditStage: (EditStage) 
         if (Object.keys(form.formState.errors).length == 0) {
             return;
         }
-        console.log(form.formState.errors);
         const attrToAccordionMap: Map<string, string> = new Map<string, string>([
             ["status", "campaign-status"],
             ["title", "campaign-details"],

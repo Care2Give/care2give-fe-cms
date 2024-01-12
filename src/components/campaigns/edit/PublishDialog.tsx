@@ -1,3 +1,4 @@
+import React, {useState} from "react";
 import { Button } from "@/components/ui/button"
 import {
     Dialog,
@@ -41,10 +42,11 @@ export function PublishDialog({setEditStage}) {
                 method: isEdit ? "PATCH" : "POST",
                 headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json",},
                 body: JSON.stringify(bodyObj),
-            }).then((res) => res.json()).then(response => {
-                router.push("/campaigns");
-            }).catch(error => {
-
+            }).then(res => {
+                if (res.ok) {
+                    router.push("/campaigns");
+                    return;
+                }
             })
         })
 
