@@ -20,7 +20,7 @@ export const columns = [
     cell: (props) => (
       <p className="flex items-center gap-2">
         <Image
-          src={props.row.original.imageUrl}
+          src={props.row.original.imageUrl || "/logo.png"}
           alt={props.getValue()}
           height={32}
           width={32}

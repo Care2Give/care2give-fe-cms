@@ -112,7 +112,7 @@ function SideBarButton({
       <Button
         onClick={() => router.push(link)}
         className={cn(
-          "w-full bg-white flex justify-start hover:bg-[#ffefe0] gap-4",
+          "w-full bg-white flex justify-start hover:bg-[#ffefe0] gap-4 cursor-pointer",
           { "bg-[#ffefe0]": link === firstLevelPath },
           { "h-5 pl-3 pr-8": isSmall }
         )}
