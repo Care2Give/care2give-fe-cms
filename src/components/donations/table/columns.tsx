@@ -1,5 +1,8 @@
 import { createColumnHelper } from "@tanstack/react-table";
 import { DataTableColumnHeader } from "./column-header";
+import { DonationTable } from "@/types/donations/DonationTable";
+import { capitalizeFirstLetter, getFormattedDateTime } from "@/lib/utils";
+import { DonationType } from "@/types/prismaSchema";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -16,7 +19,7 @@ export type Donation = {
   trainings?: string | null;
 };
 
-const columnHelper = createColumnHelper<Donation>();
+const columnHelper = createColumnHelper<DonationTable>();
 
 export const columns = [
   columnHelper.accessor("id", {
@@ -25,47 +28,59 @@ export const columns = [
       <DataTableColumnHeader column={column} table={table} title="ID" />
     ),
   }),
-  columnHelper.accessor("date", {
-    cell: (props) => props.getValue(),
+  columnHelper.accessor("createdAt", {
+    cell: (props) => <p>{getFormattedDateTime(props.getValue())}</p>,
     header: ({ column, table }) => (
       <DataTableColumnHeader column={column} table={table} title="Date" />
     ),
   }),
-  columnHelper.accessor("donor", {
+  columnHelper.accessor("donorFirstName", {
     cell: (props) => props.getValue(),
     header: ({ column, table }) => (
       <DataTableColumnHeader column={column} table={table} title="Donor" />
     ),
   }),
-  columnHelper.accessor("amount", {
+  columnHelper.accessor("dollars", {
     cell: ({ row }) => {
-      const amount = parseFloat(row.getValue("amount"));
+      const { dollars, cents } = row.original;
+      const amount = dollars + cents / 100;
       const formatted = new Intl.NumberFormat("en-SG", {
         style: "currency",
         currency: "SGD",
       }).format(amount);
 
-      return <div>{formatted}</div>;
+      return formatted;
     },
     header: ({ column, table }) => (
       <DataTableColumnHeader column={column} table={table} title="Amount" />
     ),
   }),
-  columnHelper.accessor("campaign", {
+  columnHelper.accessor("campaign.title", {
     cell: (props) => props.getValue(),
     header: ({ column, table }) => (
       <DataTableColumnHeader column={column} table={table} title="Campaign" />
     ),
   }),
 
-  columnHelper.accessor("status", {
-    cell: (props) => props.getValue(),
+  columnHelper.accessor("campaign.status", {
+    cell: (props) => <p>{capitalizeFirstLetter(props.getValue())}</p>,
     header: ({ column, table }) => (
       <DataTableColumnHeader column={column} table={table} title="Status" />
     ),
   }),
-  columnHelper.accessor("type", {
-    cell: (props) => props.getValue(),
+  columnHelper.accessor("donationType", {
+    cell: (props) => {
+      const val = props.getValue();
+      if (val === DonationType.INDIVIDUAL_WITH_TAX_DEDUCTION) {
+        return "Individual";
+      } else if (val === DonationType.ANONYMOUS) {
+        return "Anonymous";
+      } else if (val === DonationType.WITHOUT_TAX_DEDUCTION) {
+        return "Individual w/o Tax Deduction";
+      } else if (val === DonationType.GROUP_WITH_TAX_DEDUCTION) {
+        return "Group";
+      }
+    },
     header: ({ column, table }) => (
       <DataTableColumnHeader
         column={column}
@@ -74,7 +89,7 @@ export const columns = [
       />
     ),
   }),
-  columnHelper.accessor("email", {
+  columnHelper.accessor("donorEmail", {
     cell: (props) => props.getValue(),
     header: ({ column, table }) => (
       <DataTableColumnHeader column={column} table={table} title="Email" />
@@ -87,8 +102,8 @@ export const columns = [
     ),
   }),
 
-  columnHelper.accessor("trainings", {
-    cell: (props) => props.getValue(),
+  columnHelper.accessor("donorTrainingPrograms", {
+    cell: (props) => props.getValue()?.join(", "),
     header: ({ column, table }) => (
       <DataTableColumnHeader
         column={column}

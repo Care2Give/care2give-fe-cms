@@ -49,10 +49,10 @@ export interface Donation {
 }
 
 export enum DonationType {
-  ANONYMOUS = "Anonymous",
-  INDIVIDUAL_WITH_TAX_DEDUCTION = "Individual with tax deduction",
-  GROUP_WITH_TAX_DEDUCTION = "Group with tax deduction",
-  WITHOUT_TAX_DEDUCTION = "Without tax deduction",
+  ANONYMOUS = "ANONYMOUS",
+  INDIVIDUAL_WITH_TAX_DEDUCTION = "INDIVIDUAL_WITH_TAX_DEDUCTION",
+  GROUP_WITH_TAX_DEDUCTION = "GROUP_WITH_TAX_DEDUCTION",
+  WITHOUT_TAX_DEDUCTION = "WITHOUT_TAX_DEDUCTION",
 }
 
 export interface Email {
