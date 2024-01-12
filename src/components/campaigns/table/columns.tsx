@@ -1,25 +1,12 @@
 import { createColumnHelper } from "@tanstack/react-table";
 import { arabotoBold } from "@/lib/font";
-import { capitalizeFirstLetter } from "@/lib/utils";
+import { capitalizeFirstLetter, dateOptions } from "@/lib/utils";
 import { EditIcon } from "lucide-react";
-import data from "./MOCK_DATA";
-import useCampaignEditorStore, {CampaignImage} from "@/stores/useCampaignEditorStore";
-import {DonationOption} from "@/components/campaigns/edit/DonationOptionForm";
+import { CampaignTable } from "@/types/campaigns/CampaignTable";
+import Image from "next/image";
+import { Button } from "@/components/ui/button";
 
-export type Campaign = {
-  id: number;
-  title: string;
-  lastEditBy: string;
-  isActive: boolean;
-  startDate: string; // Date type not allowed for Tanstack table accessor
-  endDate: string;
-  description: string;
-  targetAmount: number;
-  donationOptions: DonationOption[];
-  images: CampaignImage[];
-};
-
-const columnHelper = createColumnHelper<Campaign>();
+const columnHelper = createColumnHelper<CampaignTable>();
 
 export const getColumns = (onEdit) => [
   columnHelper.accessor("title", {
@@ -32,8 +19,19 @@ export const getColumns = (onEdit) => [
       </p>
     ),
   }),
-  columnHelper.accessor("lastEditBy", {
-    cell: (props) => <p className="text-center">{props.getValue()}</p>,
+  columnHelper.accessor("editedBy", {
+    cell: (props) => (
+      <p className="flex items-center gap-2 justify-center">
+        <Image
+          src={props.row.original.userImageUrl || "/logo.png"}
+          alt={props.getValue()}
+          height={32}
+          width={32}
+          className="rounded-full"
+        />
+        <span>{props.row.original.firstName || "NO NAME"}</span>
+      </p>
+    ),
     header: () => (
       <p
         className={`${arabotoBold.className} text-black text-center text-[18px] pt-2`}
@@ -42,14 +40,14 @@ export const getColumns = (onEdit) => [
       </p>
     ),
   }),
-  columnHelper.accessor("isActive", {
+  columnHelper.accessor("status", {
     cell: (props) => (
       <div
         className={`${
-          props.getValue() ? "bg-green-200" : "bg-red-200"
+          props.getValue() === "ACTIVE" ? "bg-green-200" : "bg-red-200"
         } text-center py-2 px-4 rounded-2xl`}
       >
-        {props.getValue() ? "Active" : "Inactive"}
+        {props.getValue() === "ACTIVE" ? "Active" : "Inactive"}
       </div>
     ),
     header: () => (
@@ -61,7 +59,11 @@ export const getColumns = (onEdit) => [
     ),
   }),
   columnHelper.accessor("startDate", {
-    cell: (props) => <p className="text-center">{props.getValue()}</p>,
+    cell: (props) => (
+      <p className="text-center">
+        {new Date(props.getValue()).toLocaleDateString("en-SG", dateOptions)}
+      </p>
+    ),
     header: () => (
       <p
         className={`${arabotoBold.className} text-black text-center text-[18px] pt-2`}
@@ -71,7 +73,11 @@ export const getColumns = (onEdit) => [
     ),
   }),
   columnHelper.accessor("endDate", {
-    cell: (props) => <p className="text-center">{props.getValue()}</p>,
+    cell: (props) => (
+      <p className="text-center">
+        {new Date(props.getValue()).toLocaleDateString("en-SG")}
+      </p>
+    ),
     header: () => (
       <p
         className={`${arabotoBold.className} text-black text-center text-[18px] pt-2`}
@@ -83,7 +89,9 @@ export const getColumns = (onEdit) => [
   columnHelper.display({
     id: "edit",
     cell: (cell) => (
-      <EditIcon onClick={() => onEdit(cell.row.index)} className="hover:cursor-pointer hover:stroke-[#3872FC]" />
+      <Button variant="ghost" onClick={() => onEdit(cell.row.index)}>
+        <EditIcon />
+      </Button>
     ),
   }),
 ];

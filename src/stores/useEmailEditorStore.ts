@@ -1,25 +1,24 @@
+import { Email } from "@/types/email-editor/Email";
 import { create } from "zustand";
+import { devtools } from "zustand/middleware";
 
 interface EmailEditorState {
   isEditing: boolean;
   setIsEditing: (isEditing: boolean) => void;
-  subjectContent: string;
-  setSubjectContent: (subjectContent: string) => void;
-  bodyContent: string;
-  setBodyContent: (bodyContent: string) => void;
-  didSaveContent: boolean;
-  setDidSaveContent: (didSaveContent: boolean) => void;
+  emails: Email[];
+  setEmails: (emails: Email[]) => void;
 }
 
-const useEmailEditorStore = create<EmailEditorState>()((set) => ({
-  isEditing: false,
-  setIsEditing: (isEditing) => set({ isEditing }),
-  subjectContent: "<p>Thank you for donating to Caregivers Alliance!</p>",
-  setSubjectContent: (subjectContent) => set({ subjectContent }),
-  bodyContent: "<p>Warm Regards, Caregivers Alliance</p>",
-  setBodyContent: (bodyContent) => set({ bodyContent }),
-  didSaveContent: false,
-  setDidSaveContent: (didSaveContent) => set({ didSaveContent }),
-}));
+const useEmailEditorStore = create<EmailEditorState>()(
+  devtools(
+    (set) => ({
+      isEditing: false,
+      setIsEditing: (isEditing) => set({ isEditing }),
+      emails: [],
+      setEmails: (emails) => set({ emails }),
+    }),
+    { name: "EmailEditorStore" }
+  )
+);
 
 export default useEmailEditorStore;

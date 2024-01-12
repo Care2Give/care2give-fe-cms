@@ -30,7 +30,7 @@ export default function RoleDropdown(props: CellContext<User, string>) {
       <DropdownMenuTrigger className="shadow-lg flex items-center justify-between px-3 py-2 w-56 rounded bg-[#FFEFE0]">
         <span>
           {capitalizeFirstLetter(
-            ((currentRole as string) || "").replace("-", " ")
+            ((currentRole as string) || "No Role").replace("-", " ")
           )}
         </span>
         <ChevronDownIcon stroke="gray" height={16} width={16} />

@@ -5,6 +5,7 @@ import CampaignTable from "@/components/analytics/CampaignTable";
 import PopularTable from "@/components/analytics/PopularTable";
 import PieChartCard from "@/components/analytics/PieChartCard";
 import useAnalyticsStore from "@/stores/useAnalyticsStore";
+import GraphCard from "@/components/analytics/GraphCard";
 
 const dummyCampaignDetails = [
   {
@@ -107,6 +108,9 @@ export default function Analytics() {
           tableDetails={dummyPopularDetails}
           Table={PopularTable}
         />
+      </div>
+      <GraphCard />
+      <div className="grid grid-cols-1 xl:grid-cols-2">
         <PieChartCard pieChartId="1" campaignName={pieChartCampaignOne} />
         <PieChartCard pieChartId="2" campaignName={pieChartCampaignTwo} />
       </div>

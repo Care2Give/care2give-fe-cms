@@ -55,3 +55,35 @@ export function mmddFormatter(date: Date) {
 export function ddmmyyyyFormatter(date: Date) {
   return format(date, "dd/MM/yyyy");
 }
+
+/**
+ * Returns true if role is valid
+ * @param role string
+ * @returns boolean
+ */
+export function isValidRole(role: string) {
+  return (
+    role === "superuser" ||
+    role === "donation-manager" ||
+    role === "campaign-manager"
+  );
+}
+
+export const dateOptions: Intl.DateTimeFormatOptions = {
+  year: "numeric",
+  month: "short",
+  day: "numeric",
+};
+
+export function getFormattedDateTime(date: Date) {
+  return `${new Date(date).toLocaleDateString("en-SG", {
+    year: "numeric",
+    month: "numeric",
+    day: "numeric",
+  })}
+  -
+  ${new Date(date).toLocaleTimeString("en-SG", {
+    hour: "2-digit",
+    minute: "2-digit",
+  })}`;
+}

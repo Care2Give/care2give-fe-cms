@@ -1,7 +1,7 @@
 import useCampaignEditorStore from "@/stores/useCampaignEditorStore";
-import {DonationOption} from "@/components/campaigns/edit/DonationOptionForm";
 import {Button} from "@/components/ui/button";
 import {EditStage} from "@/pages/campaigns/edit/edit-stage";
+import {CampaignDonationAmount} from "@/types/prismaSchema";
 
 function buildPreviewLink(campaignState): URL {
     const campaignWebsite = "http://localhost:3001";
@@ -13,9 +13,9 @@ function buildPreviewLink(campaignState): URL {
     urlObj.searchParams.append("targetDate", new Date(campaignState.endDate).toTimeString());
     urlObj.searchParams.append("slug", campaignState.title);
     urlObj.searchParams.append("description", campaignState.description);
-    const donationOptions: DonationOption[] = campaignState.donationOptions;
+    const donationOptions: CampaignDonationAmount[] = campaignState.donationOptions;
     for (let i = 0; i < donationOptions.length; i++) {
-        urlObj.searchParams.append("donationOptionValue", donationOptions[i].amount.toString());
+        urlObj.searchParams.append("donationOptionValue", donationOptions[i].value.toString());
         urlObj.searchParams.append("donationOptionDescription", donationOptions[i].description);
     }
     const images = campaignState.images;

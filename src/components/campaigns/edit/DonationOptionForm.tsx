@@ -21,17 +21,13 @@ import {Input} from "@/components/ui/input";
 import {PopoverClose} from "@radix-ui/react-popover";
 import {ErrorMessage} from "@hookform/error-message";
 import useCampaignEditorStore from "@/stores/useCampaignEditorStore";
-
-export type DonationOption = {
-    amount: number,
-    description: string
-}
+import {CampaignDonationAmount} from "@/types/prismaSchema";
 
 function getColumns(onEdit: (index: number) => void, onDelete: (index: number) => void) {
-    const columnHelper = createColumnHelper<DonationOption>();
+    const columnHelper = createColumnHelper<CampaignDonationAmount>();
 
     const columns = [
-        columnHelper.accessor("amount", {
+        columnHelper.accessor("value", {
             cell: (props) => <p className="text-center">{props.getValue()}</p>,
             header: () => (
                 <p
@@ -85,7 +81,7 @@ function getColumns(onEdit: (index: number) => void, onDelete: (index: number) =
 
 export default function DonationAmountsForm({form} : {form: UseFormReturn}) {
     const [data, setData] = useState(useCampaignEditorStore(state => state.donationOptions));
-    const [newDonationOption, setNewDonationOption] = useState({amount: 0, description: ""});
+    const [newDonationOption, setNewDonationOption] = useState({value: 0, description: ""});
     const [editOption, setEditOption] = useState({
         isEdit: false,
         index: 0
@@ -114,7 +110,7 @@ export default function DonationAmountsForm({form} : {form: UseFormReturn}) {
         setIsDialogOpen(false);
         setErrors({});
         setNewDonationOption({
-            amount: 0, description: ""
+            value: 0, description: ""
         });
     }
     const columns = getColumns(onEdit, onDelete);
@@ -139,7 +135,7 @@ export default function DonationAmountsForm({form} : {form: UseFormReturn}) {
             setData([...data, newDonationOption]);
         }
         setNewDonationOption({
-            amount: 0, description: ""
+            value: 0, description: ""
         });
         setEditOption({isEdit: false, index: 0});
     }
@@ -173,7 +169,7 @@ export default function DonationAmountsForm({form} : {form: UseFormReturn}) {
                                     className="col-span-3"
                                     value={newDonationOption.amount}
                                     onChange={(event) => setNewDonationOption({
-                                        amount: parseInt(event.target.value),
+                                        value: parseFloat(event.target.value),
                                         description: newDonationOption.description
                                     })}
                                 />
@@ -189,7 +185,7 @@ export default function DonationAmountsForm({form} : {form: UseFormReturn}) {
                                     className="col-span-3"
                                     value={newDonationOption.description}
                                     onChange={(event) => setNewDonationOption({
-                                        amount: newDonationOption.amount,
+                                        value: newDonationOption.amount,
                                         description: event.target.value
                                     })}
                                 />

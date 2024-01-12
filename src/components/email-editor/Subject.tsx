@@ -1,21 +1,14 @@
 import useEmailEditorStore from "@/stores/useEmailEditorStore";
-import { useEditor, EditorContent } from "@tiptap/react";
-import StarterKit from "@tiptap/starter-kit";
+import { EditorContent, Editor } from "@tiptap/react";
 import { useEffect } from "react";
 
-const Subject = () => {
-  const { isEditing, subjectContent, setSubjectContent, didSaveContent } =
-    useEmailEditorStore();
+type SubjectProps = {
+  editor: Editor | null;
+  subject: string;
+};
 
-  const editor = useEditor({
-    extensions: [StarterKit],
-    content: subjectContent,
-    editorProps: {
-      attributes: {
-        class: "p-3 border-gray-300 border-2 border-solid rounded text-sm",
-      },
-    },
-  });
+const Subject = ({ editor, subject }: SubjectProps) => {
+  const { isEditing } = useEmailEditorStore();
 
   useEffect(() => {
     if (editor) {
@@ -24,16 +17,14 @@ const Subject = () => {
       } else {
         editor.setOptions({ editable: false });
       }
-
-      if (!isEditing && didSaveContent) {
-        setSubjectContent(editor.getHTML());
-      }
-      if (!isEditing && !didSaveContent) {
-        editor.commands.setContent(subjectContent);
-      }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [editor, isEditing, didSaveContent]);
+  }, [editor, isEditing]);
+
+  useEffect(() => {
+    if (editor) {
+      editor.commands.setContent(subject);
+    }
+  }, [editor]);
 
   return (
     <div className="flex flex-col gap-2">

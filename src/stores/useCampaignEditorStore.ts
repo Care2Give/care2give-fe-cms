@@ -1,5 +1,5 @@
-import { create } from "zustand";
-import {DonationOption} from "@/components/campaigns/edit/DonationOptionForm";
+import {create} from "zustand";
+import {CampaignDonationAmount, CampaignStatus} from "@/types/prismaSchema";
 
 export type CampaignImage = {
     url: string;
@@ -7,8 +7,8 @@ export type CampaignImage = {
 }
 
 interface CampaignEditorState {
-    isActive: boolean;
-    setIsActive: (isActive: boolean) => void;
+    status: CampaignStatus;
+    setStatus: (status: CampaignStatus) => void;
     title: string;
     setTitle: (title: string) => void;
     description: string;
@@ -19,16 +19,16 @@ interface CampaignEditorState {
     setStartDate: (startDate: Date) => void;
     endDate: Date;
     setEndDate: (endDate: Date) => void;
-    donationOptions: DonationOption[];
-    setDonationOptions: (donationOptions: DonationOption[]) => void;
+    donationOptions: CampaignDonationAmount[];
+    setDonationOptions: (donationOptions: CampaignDonationAmount[]) => void;
     images: CampaignImage[];
     setImages: (images: CampaignImage[]) => void;
     reset: () => void;
 }
 
 const useCampaignEditorStore = create<CampaignEditorState>()((set) => ({
-    isActive: true,
-    setIsActive: (isActive) => set({ isActive }),
+    status: CampaignStatus.ACTIVE,
+    setStatus: (status) => set({ status }),
     title: "",
     setTitle: (title) => set({title}),
     description: "",
@@ -44,7 +44,7 @@ const useCampaignEditorStore = create<CampaignEditorState>()((set) => ({
     images: [],
     setImages: (images: CampaignImage[]) => set({images}),
     reset: () => set({
-        isActive: true,
+        status: CampaignStatus.ACTIVE,
         title: "",
         description: "",
         targetAmount: 0,

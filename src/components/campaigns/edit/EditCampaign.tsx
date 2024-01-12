@@ -1,30 +1,24 @@
 import React, {useEffect, useState} from "react";
 import {Accordion, AccordionContent, AccordionItem, AccordionTrigger} from "@/components/ui/accordion";
-import {useForm, UseFormReturn, get} from "react-hook-form";
+import {get, useForm, UseFormReturn} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { Button } from "@/components/ui/button"
-import {
-    Form,
-    FormControl,
-    FormDescription,
-    FormField,
-    FormItem,
-    FormLabel,
-} from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
+import {z} from "zod";
+import {Button} from "@/components/ui/button"
+import {Form, FormControl, FormDescription, FormField, FormItem, FormLabel,} from "@/components/ui/form"
+import {Input} from "@/components/ui/input"
 import {Switch} from "@/components/ui/switch";
 import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover";
 import {addDays, format} from "date-fns";
 import {cn} from "@/lib/utils";
 import {Calendar} from "@/components/ui/calendar";
-import {CalendarIcon, Cross, DeleteIcon, EditIcon, Trash2, X} from "lucide-react";
+import {CalendarIcon, X} from "lucide-react";
 import {ErrorMessage} from "@hookform/error-message";
 import DonationAmountsForm from "@/components/campaigns/edit/DonationOptionForm";
-import { EditStage } from "@/pages/campaigns/edit/edit-stage";
+import {EditStage} from "@/pages/campaigns/edit/edit-stage";
 import useCampaignEditorStore, {CampaignImage} from "@/stores/useCampaignEditorStore";
 import Image from "next/image";
 import {DateRange} from "react-day-picker";
+import {CampaignStatus} from "@/types/prismaSchema";
 
 function FormFieldInput({form, name, label, placeholder, type} :
                             {form: UseFormReturn, name: string, label: string, placeholder: string, type: string | undefined}) {
@@ -99,8 +93,12 @@ function FormFieldDatePicker({form}: {form: UseFormReturn}) {
                     </Button>
                 </FormControl>
             </PopoverTrigger>
-            {form.formState.errors && get(form.formState.errors, "startDate") && <div>From date: {get(form.formState.errors, "startDate").message}</div>}
-            {form.formState.errors && get(form.formState.errors, "endDate") && <div>To date: {get(form.formState.errors, "endDate").message}</div>}
+            {form.formState.errors
+                && get(form.formState.errors, "startDate")
+                && <div>From date: {get(form.formState.errors, "startDate").message}</div>}
+            {form.formState.errors
+                && get(form.formState.errors, "endDate")
+                && <div>To date: {get(form.formState.errors, "endDate").message}</div>}
             </span>
             <PopoverContent className="w-auto p-0" align="start">
                 <Calendar
@@ -122,7 +120,7 @@ function CampaignStatusForm({form} : {form: UseFormReturn}) {
         <AccordionContent>
             <FormField
                 control={form.control}
-                name="isActive"
+                name="status"
                 render={({field}) => (
                     <FormItem className="flex flex-row items-center justify-between">
                         <div className="space-y-0.5">
@@ -133,8 +131,8 @@ function CampaignStatusForm({form} : {form: UseFormReturn}) {
                         </div>
                         <FormControl>
                             <Switch
-                                checked={field.value}
-                                onCheckedChange={field.onChange}
+                                checked={field.value === CampaignStatus.ACTIVE}
+                                onCheckedChange={(isActive) => field.onChange(isActive ? CampaignStatus.ACTIVE : CampaignStatus.INACTIVE)}
                             />
                         </FormControl>
                     </FormItem>
@@ -212,13 +210,13 @@ function CampaignMediaForm({form}: {form: UseFormReturn}) {
 
 export default function EditCampaign({setEditStage}: {setEditStage: (EditStage) => void,}) {
     const validationSchema = z.object({
-        isActive: z.boolean(),
+        status: z.nativeEnum(CampaignStatus),
         title: z.string().min(2),
         description: z.string().min(2),
         targetAmount: z.coerce.number().min(1),
         startDate: z.coerce.date(),
         endDate: z.coerce.date(),
-        donationOptions: z.array(z.object({amount: z.coerce.number(), description: z.string()}))
+        donationOptions: z.array(z.object({value: z.coerce.number(), description: z.string()}))
             .min(1, "At least one donation option must be specified"),
         images: z.array(z.object({url: z.string(), name: z.string()}))
             .min(1, "At least one campaign image must be uploaded"),
@@ -259,6 +257,7 @@ export default function EditCampaign({setEditStage}: {setEditStage: (EditStage) 
         if (Object.keys(form.formState.errors).length == 0) {
             return;
         }
+        console.log(form.formState.errors);
         const attrToAccordionMap: Map<string, string> = new Map<string, string>([
             ["isActive", "campaign-status"],
             ["title", "campaign-details"],
