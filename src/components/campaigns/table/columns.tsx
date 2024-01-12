@@ -4,6 +4,7 @@ import { capitalizeFirstLetter, dateOptions } from "@/lib/utils";
 import { EditIcon } from "lucide-react";
 import { CampaignTable } from "@/types/campaigns/CampaignTable";
 import Image from "next/image";
+import { Button } from "@/components/ui/button";
 
 const columnHelper = createColumnHelper<CampaignTable>();
 
@@ -88,7 +89,9 @@ export const columns = [
   columnHelper.display({
     id: "edit",
     cell: () => (
-      <EditIcon className="hover:cursor-pointer hover:stroke-[#3872FC]" />
+      <Button variant="ghost">
+        <EditIcon />
+      </Button>
     ),
   }),
 ];

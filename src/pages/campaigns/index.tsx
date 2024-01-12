@@ -1,31 +1,28 @@
 import Header from "@/components/campaigns/Header";
 import Table from "@/components/campaigns/table";
 import Layout from "@/components/layout";
-import { CampaignTable } from "@/types/campaigns/CampaignTable";
-import { GetServerSideProps, InferGetServerSidePropsType } from "next";
+import { Skeleton } from "@/components/ui/skeleton";
+import useClerkSWR from "@/lib/useClerkSWR";
 
-export default function Campaigns({
-  campaigns,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+export default function Campaigns() {
+  const { data, error } = useClerkSWR(
+    `${process.env.NEXT_PUBLIC_API_URL}/v1/cms/campaigns`
+  );
+
+  if (error) return null;
+
   return (
     <Layout>
       <Header />
-      <Table campaigns={campaigns} />
+      {data ? (
+        <Table campaigns={data} />
+      ) : (
+        <>
+          {Array.from({ length: 5 }).map((_, i) => (
+            <Skeleton key={i} className="w-full h-16 rounded-xl" />
+          ))}
+        </>
+      )}
     </Layout>
   );
 }
-
-export const getServerSideProps = (async (context) => {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/v1/cms/campaigns`,
-    {
-      headers: {
-        Authorization: `Bearer ${context.req.cookies["__session"]}`,
-      },
-    }
-  );
-
-  const campaigns: CampaignTable[] = await res.json();
-
-  return { props: { campaigns } };
-}) satisfies GetServerSideProps<{ campaigns: CampaignTable[] }>;
