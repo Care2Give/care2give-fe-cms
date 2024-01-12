@@ -16,9 +16,9 @@ export interface Campaign {
 }
 
 export enum CampaignStatus {
-  ACTIVE = "Active",
-  INACTIVE = "Inactive",
-  ARCHIVED = "Archived",
+  ACTIVE = "ACTIVE",
+  INACTIVE = "INACTIVE",
+  ARCHIVED = "ARCHIVED",
 }
 
 export interface CampaignDonationAmount {
