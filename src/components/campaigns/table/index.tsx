@@ -1,17 +1,16 @@
-import { CampaignTable } from "@/types/campaigns/CampaignTable";
+import {CampaignTable} from "@/types/campaigns/CampaignTable";
 import SubHeader from "../SubHeader";
-import { getColumns } from "./columns";
-import { DataTable } from "./data-table";
+import {getColumns} from "./columns";
+import {DataTable} from "./data-table";
 import useCampaignEditorStore from "@/stores/useCampaignEditorStore";
 import {useRouter} from "next/router";
 import {ColumnDef} from "@tanstack/react-table";
-import {ca} from "date-fns/locale";
-import useClerkSWR from "@/lib/useClerkSWR";
 import {useAuth} from "@clerk/nextjs";
-import { Campaign } from "@/types/prismaSchema"
+import {Campaign, CampaignStatus} from "@/types/prismaSchema"
 
 export default function Table({ campaigns }: { campaigns: CampaignTable[] }) {
     const router = useRouter();
+    const setId = useCampaignEditorStore(state => state.setId);
     const setStartDate = useCampaignEditorStore(state => state.setStartDate);
     const setEndDate = useCampaignEditorStore(state => state.setEndDate);
     const setDonationOptions = useCampaignEditorStore(state => state.setDonationOptions);
@@ -30,13 +29,13 @@ export default function Table({ campaigns }: { campaigns: CampaignTable[] }) {
                 headers: { Authorization: `Bearer ${token}` },
             }).then((res) => res.json()).then((response) => {
                 const campaign: Campaign = response;
-                console.log(campaign);
+                setId(campaign.id);
                 setStartDate(new Date(campaign.startDate));
                 setEndDate(new Date(campaign.endDate));
                 setTitle(campaign.title);
                 setDonationOptions(campaign.donationAmounts);
                 setDescription(campaign.description || "");
-                // TODO change database to store the name of image
+                // TODO change database to store the name of image if needed
                 setImages(campaign.imageUrl.map(imageUrl => {
                     return (
                         {
@@ -45,7 +44,9 @@ export default function Table({ campaigns }: { campaigns: CampaignTable[] }) {
                         }
                     );
                 }));
-                setStatus(campaign.status);
+                // TODO does this need to be changed? Current BE only returns active campaigns but CMS might need inactive campaigns as well
+                // BE only returns active campaigns
+                setStatus(CampaignStatus.ACTIVE);
                 setTargetAmount(campaign.targetAmount);
                 router.push("/campaigns/edit");
             })
