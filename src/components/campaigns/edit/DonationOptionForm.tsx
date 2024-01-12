@@ -116,7 +116,7 @@ export default function DonationAmountsForm({form} : {form: UseFormReturn}) {
     const columns = getColumns(onEdit, onDelete);
 
     const donationOptionSchema = z.object({
-        amount: z.coerce.number().min(1),
+        value: z.coerce.number().min(1),
         description: z.string().min(1)
     })
 
@@ -159,21 +159,21 @@ export default function DonationAmountsForm({form} : {form: UseFormReturn}) {
                         </DialogHeader>
                         <div className="grid gap-4 py-4">
                             <div className="grid grid-cols-4 items-center gap-4">
-                                <Label htmlFor="amount" className="text-right">
+                                <Label htmlFor="value" className="text-right">
                                     Donation amount
                                 </Label>
                                 <Input
-                                    type="number"
-                                    id="amount"
+                                    type="value"
+                                    id="value"
                                     defaultValue={0}
                                     className="col-span-3"
-                                    value={newDonationOption.amount}
+                                    value={newDonationOption.value}
                                     onChange={(event) => setNewDonationOption({
                                         value: parseFloat(event.target.value),
                                         description: newDonationOption.description
                                     })}
                                 />
-                                {errors["amount"] && <p className="col-start-2 col-span-3">{errors["amount"]._errors.join(`\n`)}</p>}
+                                {errors["value"] && <p className="col-start-2 col-span-3">{errors["value"]._errors.join(`\n`)}</p>}
                             </div>
                             <div className="grid grid-cols-4 items-center gap-4">
                                 <Label htmlFor="description" className="text-right">
@@ -185,7 +185,7 @@ export default function DonationAmountsForm({form} : {form: UseFormReturn}) {
                                     className="col-span-3"
                                     value={newDonationOption.description}
                                     onChange={(event) => setNewDonationOption({
-                                        value: newDonationOption.amount,
+                                        value: newDonationOption.value,
                                         description: event.target.value
                                     })}
                                 />
