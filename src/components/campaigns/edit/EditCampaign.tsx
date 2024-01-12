@@ -225,7 +225,7 @@ export default function EditCampaign({setEditStage}: {setEditStage: (EditStage) 
     const form = useForm({
         resolver: zodResolver(validationSchema),
         defaultValues: {
-            isActive: useCampaignEditorStore((state) => state.isActive),
+            status: useCampaignEditorStore((state) => state.status),
             title: useCampaignEditorStore((state) => state.title),
             description: useCampaignEditorStore((state) => state.description),
             targetAmount: useCampaignEditorStore((state) => state.targetAmount),
@@ -241,7 +241,7 @@ export default function EditCampaign({setEditStage}: {setEditStage: (EditStage) 
     useEffect(() => {
         const formValues = form.getValues();
         const newState = {
-            isActive: formValues["isActive"],
+            status: formValues["status"],
             title: formValues["title"],
             description: formValues["description"],
             targetAmount: formValues["targetAmount"],
@@ -259,7 +259,7 @@ export default function EditCampaign({setEditStage}: {setEditStage: (EditStage) 
         }
         console.log(form.formState.errors);
         const attrToAccordionMap: Map<string, string> = new Map<string, string>([
-            ["isActive", "campaign-status"],
+            ["status", "campaign-status"],
             ["title", "campaign-details"],
             ["description", "campaign-details"],
             ["targetAmount", "campaign-details"],
