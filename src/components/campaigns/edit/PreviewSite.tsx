@@ -4,7 +4,7 @@ import {EditStage} from "@/pages/campaigns/edit/edit-stage";
 import {CampaignDonationAmount} from "@/types/prismaSchema";
 
 function buildPreviewLink(campaignState): URL {
-    const campaignWebsite = "http://localhost:3001";
+    const campaignWebsite = process.env.NEXT_PUBLIC_CAMPAIGN_WEBSITE;
     const urlObj = new URL(campaignWebsite + "/campaigns/preview");
     urlObj.searchParams.append("title", campaignState.title);
     urlObj.searchParams.append("donors", "0");
