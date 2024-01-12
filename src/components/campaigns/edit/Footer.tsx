@@ -1,11 +1,13 @@
 import {CheckCircle2} from "lucide-react";
 import {Button} from "@/components/ui/button";
 import { EditStage, getNextEditStage, getDisplay, getPreviousEditStage } from "@/pages/campaigns/edit/edit-stage"
+import {useRouter} from "next/router";
 
 export default function Footer({editStage, setEditStage}: {
     editStage: EditStage,
     setEditStage: (EditStage) => void,
 }) {
+    const router = useRouter();
     // TODO change this to get actual time
     const lastSaved: string = "1 min";
 
@@ -16,7 +18,7 @@ export default function Footer({editStage, setEditStage}: {
         </span>
         <ul className="flex flex-wrap items-center mt-3 text-sm font-medium text-gray-500 dark:text-gray-400 sm:mt-0">
             <li className="px-2">
-                <Button variant="ghost" onClick={() => setEditStage(getPreviousEditStage(editStage))}>Back</Button>
+                <Button variant="ghost" onClick={() => router.push("/campaigns")}>Back</Button>
             </li>
             <li className="px-2">
                 <Button className="bg-[#5185FF] hover:bg-[#3872FC]"
