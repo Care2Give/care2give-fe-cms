@@ -1,4 +1,3 @@
-import { UseFormReturn } from "react-hook-form";
 import React, { useEffect, useState } from "react";
 import { createColumnHelper } from "@tanstack/react-table";
 import { arabotoBold } from "@/lib/font";
@@ -28,9 +27,9 @@ import {
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { PopoverClose } from "@radix-ui/react-popover";
-import { ErrorMessage } from "@hookform/error-message";
 import useCampaignEditorStore from "@/stores/useCampaignEditorStore";
 import { CampaignDonationAmount } from "@/types/prismaSchema";
+import ErrorMessage from "./ErrorMessage";
 
 function getColumns(
   onEdit: (index: number) => void,
@@ -95,11 +94,13 @@ function getColumns(
   return columns;
 }
 
-export default function DonationAmountsForm({ form }: { form: UseFormReturn }) {
-  const [data, setData] = useState(
-    useCampaignEditorStore((state) => state.donationOptions)
-  );
-  const [newDonationOption, setNewDonationOption] = useState({
+export default function DonationAmountsForm({ form }: { form: any }) {
+  const { donationOptions, setDonationOptions } = useCampaignEditorStore();
+  const [data, setData] = useState(donationOptions);
+  const [newDonationOption, setNewDonationOption] = useState<{
+    value: number;
+    description: string;
+  }>({
     value: 0,
     description: "",
   });
@@ -109,9 +110,6 @@ export default function DonationAmountsForm({ form }: { form: UseFormReturn }) {
   });
   const [errors, setErrors] = useState({});
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const setDonationOptions = useCampaignEditorStore(
-    (state) => state.setDonationOptions
-  );
 
   useEffect(() => {
     form.setValue("donationOptions", data);
@@ -121,7 +119,8 @@ export default function DonationAmountsForm({ form }: { form: UseFormReturn }) {
   const onEdit = (index: number) => {
     setIsDialogOpen(true);
     setEditOption({ isEdit: true, index: index });
-    setNewDonationOption(data[index]);
+    const { value, description } = data[index];
+    setNewDonationOption({ value, description: description || "" });
   };
 
   const onDelete = (index: number) => {
@@ -166,7 +165,10 @@ export default function DonationAmountsForm({ form }: { form: UseFormReturn }) {
   };
 
   return (
-    <AccordionItem value="donation-options">
+    <AccordionItem
+      value="donation-options"
+      className="bg-white/50 px-4 rounded border-0"
+    >
       <AccordionTrigger>Donation Amount</AccordionTrigger>
       <AccordionContent>
         <DataTable columns={columns} data={data} />

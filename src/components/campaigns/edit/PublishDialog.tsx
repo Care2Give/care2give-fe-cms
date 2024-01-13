@@ -10,63 +10,74 @@ import { useRouter } from "next/router";
 import { EditStage } from "@/components/campaigns/edit/edit-stage";
 import useCampaignEditorStore from "@/stores/useCampaignEditorStore";
 import { useAuth } from "@clerk/nextjs";
+import httpPost from "@/lib/httpPost";
+import httpPatch from "@/lib/httpPatch";
+import { Campaign } from "@/types/prismaSchema";
 
-export function PublishDialog({ setEditStage }) {
+export function PublishDialog({
+  setEditStage,
+}: {
+  setEditStage: (arg0: EditStage) => void;
+}) {
   const router = useRouter();
-  const campaignEditState = useCampaignEditorStore.getState();
+  const {
+    id,
+    status,
+    startDate,
+    endDate,
+    title,
+    description,
+    targetAmount,
+    images,
+  } = useCampaignEditorStore();
   const { getToken, userId } = useAuth();
 
-  const publishCampaign = () => {
-    const campaignId = campaignEditState.id;
+  const publishCampaign = async () => {
+    const campaignId = id;
     const isEdit = campaignId !== "";
-    const bodyObj = {
-      status: campaignEditState.status,
-      startDate: campaignEditState.startDate.toISOString(),
-      endDate: campaignEditState.endDate.toISOString(),
-      title: campaignEditState.title,
-      description: campaignEditState.description,
-      currency: "SGD",
-      dollars: Math.floor(campaignEditState.targetAmount),
-      cents:
-        campaignEditState.targetAmount -
-        Math.floor(campaignEditState.targetAmount),
-      editedBy: userId,
-      // TODO change to not convert CampaignImage to just its URL when database is updated
-      imageUrl: campaignEditState.images.map(
-        (campaignImage) => campaignImage.url
-      ),
-    };
 
-    if (!isEdit) {
-      bodyObj.createdBy = userId;
+    if (userId) {
+      const bodyObj: Campaign = {
+        status,
+        startDate,
+        endDate,
+        title,
+        description,
+        currency: "SGD",
+        dollars: Math.floor(targetAmount),
+        cents: targetAmount - Math.floor(targetAmount),
+        editedBy: userId,
+        // TODO change to not convert CampaignImage to just its URL when database is updated
+        imageUrl: images.map((campaignImage) => campaignImage.url),
+        createdBy: isEdit ? undefined : userId,
+      };
+
+      try {
+        let res = null;
+        if (isEdit) {
+          res = await httpPatch(
+            `${process.env.NEXT_PUBLIC_API_URL}/v1/cms/campaign/${campaignId}`,
+            await getToken(),
+            JSON.stringify(bodyObj)
+          );
+        } else {
+          res = await httpPost(
+            `${process.env.NEXT_PUBLIC_API_URL}/v1/cms/campaign/create`,
+            await getToken(),
+            JSON.stringify(bodyObj)
+          );
+        }
+      } catch (err) {
+        console.log(err);
+      }
     }
-
-    getToken().then((token) => {
-      fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/v1/campaign/${
-          isEdit ? campaignId : "create"
-        }`,
-        {
-          method: isEdit ? "PATCH" : "POST",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(bodyObj),
-        }
-      ).then((res) => {
-        if (res.ok) {
-          router.push("/campaigns");
-          return;
-        }
-      });
-    });
+    router.push("/campaigns");
 
     // TODO add functionality to create the donation amount - current missing in BE
   };
 
   return (
-    <Dialog open={true}>
+    <Dialog open={true} onOpenChange={() => setEditStage(EditStage.Edit)}>
       <DialogContent className="sm:max-w-[430px]">
         <DialogHeader>
           <DialogTitle>Would you like to publish the campaign?</DialogTitle>

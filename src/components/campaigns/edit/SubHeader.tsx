@@ -1,17 +1,10 @@
 import { arabotoBold } from "@/lib/font";
-import { Montserrat } from "next/font/google";
-import BreadCrumbs, { Crumb } from "@/components/ui/breadcrumbs";
+import BreadCrumbs from "@/components/ui/breadcrumbs";
 import {
   EditStage,
   editStageOrdering,
   getDisplay,
 } from "@/components/campaigns/edit/edit-stage";
-
-const montserrat = Montserrat({
-  subsets: ["latin"],
-  style: ["normal"],
-  weight: ["700"],
-});
 
 export default function SubHeader({
   editStage,

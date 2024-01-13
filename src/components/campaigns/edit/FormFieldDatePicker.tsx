@@ -1,7 +1,5 @@
 import { CalendarIcon } from "@radix-ui/react-icons";
 import { addDays, format } from "date-fns";
-
-import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -18,8 +16,9 @@ import {
 import { DateRange } from "react-day-picker";
 import { useState } from "react";
 import useCampaignEditorStore from "@/stores/useCampaignEditorStore";
+import { UseFormReturn } from "react-hook-form";
 
-export default function DatePickerForm() {
+export default function FormFieldDatePicker({ form }: { form: UseFormReturn }) {
   const [date, setDate] = useState<DateRange | undefined>({
     from: new Date(2024, 0, 20),
     to: addDays(new Date(2024, 0, 20), 20),
@@ -30,6 +29,7 @@ export default function DatePickerForm() {
   return (
     <div className="my-2">
       <FormField
+        control={form.control}
         name="duration"
         render={({ field }) => (
           <FormItem className="flex flex-row items-center justify-between">
@@ -39,10 +39,7 @@ export default function DatePickerForm() {
                 <FormControl>
                   <Button
                     variant={"outline"}
-                    className={cn(
-                      "w-[240px] pl-3 text-left font-normal",
-                      !field.value && "text-muted-foreground"
-                    )}
+                    className="w-[240px] pl-3 text-left font-normal"
                   >
                     <CalendarIcon className="mr-auto h-4 w-4 opacity-50" />
                     {date?.from ? (

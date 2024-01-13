@@ -18,7 +18,6 @@ export default function FormFieldTextarea({
   name: string;
   label: string;
   placeholder: string;
-  type: string | undefined;
 }) {
   return (
     <FormField

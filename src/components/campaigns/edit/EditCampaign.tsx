@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { useForm, UseFormReturn } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import {
@@ -19,7 +19,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { X } from "lucide-react";
-import { ErrorMessage } from "@hookform/error-message";
 import DonationAmountsForm from "@/components/campaigns/edit/DonationOptionForm";
 import { EditStage } from "@/components/campaigns/edit/edit-stage";
 import useCampaignEditorStore, {
@@ -30,10 +29,14 @@ import { CampaignStatus } from "@/types/prismaSchema";
 import FormFieldTextarea from "./FormFieldTextarea";
 import FormFieldInput from "./FormFieldInput";
 import FormFieldDatePicker from "./FormFieldDatePicker";
+import ErrorMessage from "./ErrorMessage";
 
-function CampaignStatusForm({ form }: { form: UseFormReturn }) {
+function CampaignStatusForm({ form }: { form: any }) {
   return (
-    <AccordionItem value="campaign-status">
+    <AccordionItem
+      value="campaign-status"
+      className="bg-white/50 px-4 rounded border-0 mb-4"
+    >
       <AccordionTrigger>Campaign Status</AccordionTrigger>
       <AccordionContent>
         <FormField
@@ -65,9 +68,12 @@ function CampaignStatusForm({ form }: { form: UseFormReturn }) {
   );
 }
 
-function CampaignDetailsForm({ form }: { form: UseFormReturn }) {
+function CampaignDetailsForm({ form }: { form: any }) {
   return (
-    <AccordionItem value="campaign-details">
+    <AccordionItem
+      value="campaign-details"
+      className="bg-white/50 px-4 rounded border-0 mb-4"
+    >
       <AccordionTrigger>Campaign Details</AccordionTrigger>
       <AccordionContent>
         <FormFieldInput
@@ -75,6 +81,7 @@ function CampaignDetailsForm({ form }: { form: UseFormReturn }) {
           name="title"
           label="Title"
           placeholder="Enter the title of the campaign"
+          type="text"
         />
         <FormFieldTextarea
           form={form}
@@ -113,7 +120,7 @@ function CampaignMediaCard({
   );
 }
 
-function CampaignMediaForm({ form }: { form: UseFormReturn }) {
+function CampaignMediaForm({ form }: { form: any }) {
   const [images, setImages] = useState<CampaignImage[]>(
     useCampaignEditorStore((state) => state.images)
   );
@@ -124,16 +131,20 @@ function CampaignMediaForm({ form }: { form: UseFormReturn }) {
     form.setValue("images", images);
   }, [images]);
 
-  const onImageUpload = (image) => {
-    // TODO change this to create an image url which is saved somewhere so that the campaign site can access
-    // Currently creates a local url which campaign site cannot access
-    const imageUrl = URL.createObjectURL(image);
-    const imageTitle = image.name;
-    images.push({
-      url: imageUrl,
-      name: imageTitle,
-    });
-    setImages([...images]);
+  const onImageUpload = (e: React.FormEvent<HTMLInputElement>) => {
+    const files = (e.target as HTMLInputElement).files as FileList;
+    if (files) {
+      // TODO change this to create an image url which is saved somewhere so that the campaign site can access
+      // Currently creates a local url which campaign site cannot access
+      const image = files[0];
+      const imageUrl = URL.createObjectURL(image);
+      const imageTitle = image.name;
+      images.push({
+        url: imageUrl,
+        name: imageTitle,
+      });
+      setImages([...images]);
+    }
   };
 
   const onDelete = (index: number) => {
@@ -142,13 +153,13 @@ function CampaignMediaForm({ form }: { form: UseFormReturn }) {
   };
 
   return (
-    <AccordionItem value="campaign-media">
+    <AccordionItem
+      value="campaign-media"
+      className="bg-white/50 px-4 rounded border-0 mb-4"
+    >
       <AccordionTrigger>Campaign Media</AccordionTrigger>
       <AccordionContent>
-        <Input
-          type="file"
-          onInput={(event) => onImageUpload(event.target.files[0])}
-        />
+        <Input type="file" onInput={(e) => onImageUpload(e)} />
         {images.map((image, index) => (
           <CampaignMediaCard
             key={image.url}
@@ -196,7 +207,7 @@ export default function EditCampaign({
     },
   });
 
-  const [expandedItems, setExpandedItems] = useState([]);
+  const [expandedItems, setExpandedItems] = useState<string[]>([]);
 
   useEffect(() => {
     const formValues = form.getValues();
@@ -227,18 +238,20 @@ export default function EditCampaign({
       ["donationOptions", "donation-options"],
       ["images", "campaign-media"],
     ]);
-    const newExpandedItems = [];
+    const newExpandedItems: string[] = [];
     for (const attr in form.formState.errors) {
       const accordionValue = attrToAccordionMap.get(attr);
-      if (newExpandedItems.includes(accordionValue)) {
-        continue;
+      if (accordionValue) {
+        if (newExpandedItems.includes(accordionValue)) {
+          continue;
+        }
+        newExpandedItems.push(accordionValue);
       }
-      newExpandedItems.push(accordionValue);
     }
     setExpandedItems(newExpandedItems);
   }, [form.formState.errors]);
 
-  const onSubmit = (data) => {
+  const onSubmit = () => {
     setEditStage(EditStage.Preview);
   };
 
@@ -251,7 +264,6 @@ export default function EditCampaign({
       >
         <Accordion
           type="multiple"
-          collapsible="true"
           value={expandedItems}
           onValueChange={setExpandedItems}
         >

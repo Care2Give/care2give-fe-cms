@@ -75,7 +75,7 @@ export const getColumns = (onEdit) => [
   columnHelper.accessor("endDate", {
     cell: (props) => (
       <p className="text-center">
-        {new Date(props.getValue()).toLocaleDateString("en-SG")}
+        {new Date(props.getValue()).toLocaleDateString("en-SG", dateOptions)}
       </p>
     ),
     header: () => (
