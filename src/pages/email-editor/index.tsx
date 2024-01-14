@@ -19,6 +19,7 @@ import { useAuth } from "@clerk/nextjs";
 import httpPost from "@/lib/httpPost";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -73,12 +74,21 @@ export default function EmailEditor() {
       content: bodyEditor?.getHTML(),
       editedBy: userId,
     };
-    const res = await httpPost(
-      `${process.env.NEXT_PUBLIC_API_URL}/v1/cms/email-editor`,
-      await getToken(),
-      JSON.stringify(data)
-    );
-    mutate(res);
+
+    const promise = async () => {
+      const res = await httpPost(
+        `${process.env.NEXT_PUBLIC_API_URL}/v1/cms/email-editor`,
+        await getToken(),
+        JSON.stringify(data)
+      );
+      mutate(res);
+    };
+
+    toast.promise(promise, {
+      loading: "Saving email...",
+      success: `Email saved!`,
+      error: "Error saving email.",
+    });
   };
 
   if (error) return null;
