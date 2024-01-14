@@ -1,6 +1,6 @@
 import { createColumnHelper } from "@tanstack/react-table";
 import { arabotoBold } from "@/lib/font";
-import { capitalizeFirstLetter, dateOptions } from "@/lib/utils";
+import { dateOptions } from "@/lib/utils";
 import { EditIcon } from "lucide-react";
 import { CampaignTable } from "@/types/campaigns/CampaignTable";
 import Image from "next/image";
@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 
 const columnHelper = createColumnHelper<CampaignTable>();
 
-export const columns = [
+export const columns = (onEdit: (indexOfCampaign: number) => void) => [
   columnHelper.accessor("title", {
     cell: (props) => <p className="text-center">{props.getValue()}</p>,
     header: () => (
@@ -47,7 +47,7 @@ export const columns = [
           props.getValue() === "ACTIVE" ? "bg-green-200" : "bg-red-200"
         } text-center py-2 px-4 rounded-2xl`}
       >
-        {capitalizeFirstLetter(props.getValue())}
+        {props.getValue() === "ACTIVE" ? "Active" : "Inactive"}
       </div>
     ),
     header: () => (
@@ -75,7 +75,7 @@ export const columns = [
   columnHelper.accessor("endDate", {
     cell: (props) => (
       <p className="text-center">
-        {new Date(props.getValue()).toLocaleDateString("en-SG")}
+        {new Date(props.getValue()).toLocaleDateString("en-SG", dateOptions)}
       </p>
     ),
     header: () => (
@@ -88,8 +88,8 @@ export const columns = [
   }),
   columnHelper.display({
     id: "edit",
-    cell: () => (
-      <Button variant="ghost">
+    cell: (cell) => (
+      <Button variant="ghost" onClick={() => onEdit(cell.row.index)}>
         <EditIcon />
       </Button>
     ),

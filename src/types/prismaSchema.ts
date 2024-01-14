@@ -1,7 +1,7 @@
 export interface Campaign {
-  id: string;
-  createdAt: Date;
-  updatedAt: Date;
+  id?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
   status: CampaignStatus;
   startDate: Date;
   endDate: Date;
@@ -10,15 +10,15 @@ export interface Campaign {
   currency: string;
   dollars: number;
   cents: number;
-  createdBy: string;
+  createdBy: string | undefined;
   editedBy: string;
   imageUrl: string[];
 }
 
 export enum CampaignStatus {
-  ACTIVE = "Active",
-  INACTIVE = "Inactive",
-  ARCHIVED = "Archived",
+  ACTIVE = "ACTIVE",
+  INACTIVE = "INACTIVE",
+  ARCHIVED = "ARCHIVED",
 }
 
 export interface CampaignDonationAmount {
