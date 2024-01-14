@@ -26,7 +26,6 @@ export interface CampaignDonationAmount {
   createdAt: Date;
   updatedAt: Date;
   currency: string;
-  value: number;
   dollars: number;
   cents: number;
   description?: string;

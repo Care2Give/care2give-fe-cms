@@ -52,6 +52,7 @@ function CampaignStatusForm({ form }: { form: any }) {
               </div>
               <FormControl>
                 <Switch
+                  color="blue"
                   checked={field.value === CampaignStatus.ACTIVE}
                   onCheckedChange={(isActive) =>
                     field.onChange(

@@ -1,6 +1,6 @@
 import { createColumnHelper } from "@tanstack/react-table";
 import { arabotoBold } from "@/lib/font";
-import { capitalizeFirstLetter, dateOptions } from "@/lib/utils";
+import { dateOptions } from "@/lib/utils";
 import { EditIcon } from "lucide-react";
 import { CampaignTable } from "@/types/campaigns/CampaignTable";
 import Image from "next/image";
@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 
 const columnHelper = createColumnHelper<CampaignTable>();
 
-export const getColumns = (onEdit) => [
+export const columns = (onEdit: (indexOfCampaign: number) => void) => [
   columnHelper.accessor("title", {
     cell: (props) => <p className="text-center">{props.getValue()}</p>,
     header: () => (

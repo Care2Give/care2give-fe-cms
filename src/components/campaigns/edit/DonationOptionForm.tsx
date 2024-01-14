@@ -1,12 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { createColumnHelper } from "@tanstack/react-table";
-import { arabotoBold } from "@/lib/font";
-import { EditIcon, PlusCircle, Trash2 } from "lucide-react";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { ColumnDef } from "@tanstack/react-table";
+import { PlusCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { z } from "zod";
 import {
@@ -26,77 +20,13 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { PopoverClose } from "@radix-ui/react-popover";
 import useCampaignEditorStore from "@/stores/useCampaignEditorStore";
 import { CampaignDonationAmount } from "@/types/prismaSchema";
 import ErrorMessage from "./ErrorMessage";
+import { columns } from "./columns";
 
-function getColumns(
-  onEdit: (index: number) => void,
-  onDelete: (index: number) => void
-) {
-  const columnHelper = createColumnHelper<CampaignDonationAmount>();
-
-  const columns = [
-    columnHelper.accessor("value", {
-      cell: (props) => <p className="text-center">{props.getValue()}</p>,
-      header: () => (
-        <p
-          className={`${arabotoBold.className} text-black text-center text-[18px] pt-2`}
-        >
-          Amount
-        </p>
-      ),
-    }),
-    columnHelper.accessor("description", {
-      cell: (props) => <p className="text-center">{props.getValue()}</p>,
-      header: () => (
-        <p
-          className={`${arabotoBold.className} text-black text-center text-[18px] pt-2`}
-        >
-          Description
-        </p>
-      ),
-    }),
-    columnHelper.display({
-      id: "edit",
-      cell: ({ cell }) => (
-        <EditIcon
-          onClick={() => onEdit(cell.row.index)}
-          className="hover:cursor-pointer hover:stroke-[#3872FC]"
-        />
-      ),
-    }),
-    columnHelper.display({
-      id: "delete",
-      cell: ({ cell }) => (
-        <Popover>
-          <PopoverTrigger asChild>
-            <Trash2 />
-          </PopoverTrigger>
-          <PopoverContent className="w-80">
-            <div>Are you sure you want to delete this option?</div>
-            <div className="flex justify-end">
-              <PopoverClose>
-                <Button variant="ghost">Cancel</Button>
-              </PopoverClose>
-              <PopoverClose>
-                <Button onClick={() => onDelete(cell.row.index)}>
-                  Confirm
-                </Button>
-              </PopoverClose>
-            </div>
-          </PopoverContent>
-        </Popover>
-      ),
-    }),
-  ];
-  return columns;
-}
-
-export default function DonationAmountsForm({ form }: { form: any }) {
+export default function DonationOptionForm({ form }: { form: any }) {
   const { donationOptions, setDonationOptions } = useCampaignEditorStore();
-  const [data, setData] = useState(donationOptions);
   const [newDonationOption, setNewDonationOption] = useState<{
     value: number;
     description: string;
@@ -112,20 +42,22 @@ export default function DonationAmountsForm({ form }: { form: any }) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   useEffect(() => {
-    form.setValue("donationOptions", data);
-    setDonationOptions(data);
-  }, [data]);
+    form.setValue("donationOptions", donationOptions);
+  }, [donationOptions]);
 
   const onEdit = (index: number) => {
     setIsDialogOpen(true);
     setEditOption({ isEdit: true, index: index });
-    const { value, description } = data[index];
-    setNewDonationOption({ value, description: description || "" });
+    const { dollars, cents, description } = donationOptions[index];
+    setNewDonationOption({
+      value: dollars + Math.floor(cents / 100),
+      description: description || "",
+    });
   };
 
   const onDelete = (index: number) => {
-    data.splice(index, 1);
-    setData([...data]);
+    donationOptions.splice(index, 1);
+    setDonationOptions([...donationOptions]);
   };
 
   const onCancel = () => {
@@ -136,7 +68,6 @@ export default function DonationAmountsForm({ form }: { form: any }) {
       description: "",
     });
   };
-  const columns = getColumns(onEdit, onDelete);
 
   const donationOptionSchema = z.object({
     value: z.coerce.number().min(1),
@@ -151,11 +82,26 @@ export default function DonationAmountsForm({ form }: { form: any }) {
     }
     setIsDialogOpen(false);
     setErrors({});
+
+    const dollars = Math.floor(newDonationOption.value);
+    const cents = Math.floor((newDonationOption.value - dollars) * 100);
     if (editOption.isEdit) {
-      data[editOption.index] = newDonationOption;
-      setData([...data]);
+      donationOptions[editOption.index] = {
+        ...donationOptions[editOption.index],
+        dollars,
+        cents,
+        description: newDonationOption.description || "",
+      };
+      setDonationOptions([...donationOptions]);
     } else {
-      setData([...data, newDonationOption]);
+      setDonationOptions([
+        ...donationOptions,
+        {
+          dollars,
+          cents,
+          description: newDonationOption.description || "",
+        } as CampaignDonationAmount,
+      ]);
     }
     setNewDonationOption({
       value: 0,
@@ -171,15 +117,23 @@ export default function DonationAmountsForm({ form }: { form: any }) {
     >
       <AccordionTrigger>Donation Amount</AccordionTrigger>
       <AccordionContent>
-        <DataTable columns={columns} data={data} />
+        <DataTable
+          columns={
+            columns(onEdit, onDelete) as ColumnDef<
+              CampaignDonationAmount,
+              string
+            >[]
+          }
+          data={donationOptions}
+        />
         <ErrorMessage name="donationOptions" errors={form.formState.errors} />
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <div className="flex flex-row items-center justify-end">
             <Button
-              className="bg-blue-500 hover:bg-blue-600"
+              className="bg-blue-500 hover:bg-blue-600 flex gap-2 items-center"
               onClick={() => setIsDialogOpen(true)}
             >
-              <PlusCircle className="mr-2" />
+              <PlusCircle />
               Add donation option
             </Button>
           </div>
@@ -199,21 +153,21 @@ export default function DonationAmountsForm({ form }: { form: any }) {
                   Donation amount
                 </Label>
                 <Input
-                  type="value"
+                  type="number"
                   id="value"
                   defaultValue={0}
                   className="col-span-3"
                   value={newDonationOption.value}
                   onChange={(event) =>
                     setNewDonationOption({
-                      value: parseFloat(event.target.value),
+                      value: parseFloat(event.target.value) || 0,
                       description: newDonationOption.description,
                     })
                   }
                 />
-                {errors["value"] && (
+                {"value" in errors && (
                   <p className="col-start-2 col-span-3 text-red-600">
-                    {errors["value"]._errors.join(`\n`)}
+                    {(errors["value"] as any)._errors.join(`\n`)}
                   </p>
                 )}
               </div>
@@ -233,9 +187,9 @@ export default function DonationAmountsForm({ form }: { form: any }) {
                     })
                   }
                 />
-                {errors["description"] && (
+                {"description" in errors && (
                   <p className="col-start-2 col-span-3 text-red-600">
-                    {errors["description"]._errors.join(`\n`)}
+                    {((errors["description"] as any)._errors || []).join(`\n`)}
                   </p>
                 )}
               </div>

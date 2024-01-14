@@ -56,13 +56,13 @@ export function PublishDialog({
         let res = null;
         if (isEdit) {
           res = await httpPatch(
-            `${process.env.NEXT_PUBLIC_API_URL}/v1/cms/campaign/${campaignId}`,
+            `${process.env.NEXT_PUBLIC_API_URL}/v1/cms/campaigns/${campaignId}`,
             await getToken(),
             JSON.stringify(bodyObj)
           );
         } else {
           res = await httpPost(
-            `${process.env.NEXT_PUBLIC_API_URL}/v1/cms/campaign/create`,
+            `${process.env.NEXT_PUBLIC_API_URL}/v1/cms/campaigns`,
             await getToken(),
             JSON.stringify(bodyObj)
           );
