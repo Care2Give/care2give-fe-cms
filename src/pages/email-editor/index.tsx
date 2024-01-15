@@ -100,12 +100,12 @@ export default function EmailEditor() {
         {data ? (
           <Subject editor={subjectEditor} subject={data.subject} />
         ) : (
-          <Skeleton className="w-full h-10 rounded-full mt-8" />
+          <Skeleton className="w-full h-10 rounded-lg mt-8" />
         )}
         {data ? (
           <Body editor={bodyEditor} body={data.content} />
         ) : (
-          <Skeleton className="w-full h-24 rounded-full mt-8" />
+          <Skeleton className="w-full h-24 rounded-lg mt-8" />
         )}
       </div>
       {data ? (
@@ -145,7 +145,7 @@ export default function EmailEditor() {
           </div>
         </>
       ) : (
-        <Skeleton className="w-full h-8 rounded-full mt-8" />
+        <Skeleton className="w-full h-8 rounded-lg mt-8" />
       )}
     </Layout>
   );
