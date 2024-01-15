@@ -4,53 +4,27 @@ import { X } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Command, CommandGroup, CommandItem } from "@/components/ui/command";
 import { Command as CommandPrimitive } from "cmdk";
+import { CampaignInput } from "@/pages/donations/export-data";
 
-type Framework = Record<"value" | "label", string>;
+interface MultiSelectProps {
+  data: CampaignInput[];
+  selected: CampaignInput[];
+  setSelected: (campaigns: CampaignInput[]) => void;
+}
 
-const FRAMEWORKS = [
-  {
-    value: "next.js",
-    label: "Next.js",
-  },
-  {
-    value: "sveltekit",
-    label: "SvelteKit",
-  },
-  {
-    value: "nuxt.js",
-    label: "Nuxt.js",
-  },
-  {
-    value: "remix",
-    label: "Remix",
-  },
-  {
-    value: "astro",
-    label: "Astro",
-  },
-  {
-    value: "wordpress",
-    label: "WordPress",
-  },
-  {
-    value: "express.js",
-    label: "Express.js",
-  },
-  {
-    value: "nest.js",
-    label: "Nest.js",
-  },
-] satisfies Framework[];
-
-export default function MultiSelect() {
+export default function MultiSelect({
+  data,
+  selected,
+  setSelected,
+}: MultiSelectProps) {
   const inputRef = React.useRef<HTMLInputElement>(null);
   const [open, setOpen] = React.useState(false);
-  const [selected, setSelected] = React.useState<Framework[]>([FRAMEWORKS[4]]);
   const [inputValue, setInputValue] = React.useState("");
 
-  const handleUnselect = React.useCallback((framework: Framework) => {
-    setSelected((prev) => prev.filter((s) => s.value !== framework.value));
-  }, []);
+  const handleUnselect = (campaign: CampaignInput) => {
+    const newInput = selected.filter((s) => s.value !== campaign.value);
+    setSelected(newInput);
+  };
 
   const handleKeyDown = React.useCallback(
     (e: React.KeyboardEvent<HTMLDivElement>) => {
@@ -58,11 +32,9 @@ export default function MultiSelect() {
       if (input) {
         if (e.key === "Delete" || e.key === "Backspace") {
           if (input.value === "") {
-            setSelected((prev) => {
-              const newSelected = [...prev];
-              newSelected.pop();
-              return newSelected;
-            });
+            const newSelected = [...selected];
+            newSelected.pop();
+            setSelected(newSelected);
           }
         }
         // This is not a default behaviour of the <input /> field
@@ -74,8 +46,8 @@ export default function MultiSelect() {
     []
   );
 
-  const selectables = FRAMEWORKS.filter(
-    (framework) => !selected.includes(framework)
+  const selectables = data.filter(
+    (c) => !selected.some((s) => s.label === c.label && s.value === c.value)
   );
 
   return (
@@ -83,27 +55,27 @@ export default function MultiSelect() {
       onKeyDown={handleKeyDown}
       className="overflow-visible bg-transparent"
     >
-      <div className="group border border-input px-3 py-2 text-sm ring-offset-background rounded-md focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2">
+      <div className="group border border-input px-3 py-2 text-sm ring-offset-background rounded-md focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 bg-white">
         <div className="flex gap-1 flex-wrap">
-          {selected.map((framework) => {
+          {selected.map((campaign, i) => {
             return (
               <Badge
-                key={framework.value}
+                key={`${campaign.value}_${i}`}
                 className="bg-[#FFEFE0] text-black hover:bg-[#FFEFE0]"
               >
-                {framework.label}
+                {campaign.label}
                 <button
                   className="ml-1 ring-offset-background rounded-full outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
                   onKeyDown={(e) => {
                     if (e.key === "Enter") {
-                      handleUnselect(framework);
+                      handleUnselect(campaign);
                     }
                   }}
                   onMouseDown={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
                   }}
-                  onClick={() => handleUnselect(framework)}
+                  onClick={() => handleUnselect(campaign)}
                 >
                   <X className="h-3 w-3" />
                 </button>
@@ -123,30 +95,31 @@ export default function MultiSelect() {
         </div>
       </div>
       <div className="relative mt-2">
-        {open && selectables.length > 0 ? (
+        {open && selectables.length > 0 && (
           <div className="absolute w-full z-10 top-0 rounded-md border bg-popover text-popover-foreground shadow-md outline-none animate-in">
             <CommandGroup className="h-full overflow-auto">
-              {selectables.map((framework) => {
+              {selectables.map((campaign, i) => {
                 return (
                   <CommandItem
-                    key={framework.value}
+                    key={`${campaign.value}_${i}`}
                     onMouseDown={(e) => {
                       e.preventDefault();
                       e.stopPropagation();
                     }}
-                    onSelect={(value) => {
+                    onSelect={() => {
                       setInputValue("");
-                      setSelected((prev) => [...prev, framework]);
+                      setSelected([...selected, campaign]);
                     }}
-                    className={"cursor-pointer"}
+                    className="cursor-pointer"
                   >
-                    {framework.label}
+                    {campaign.label}
+                    <span className="hidden">{campaign.value}</span>
                   </CommandItem>
                 );
               })}
             </CommandGroup>
           </div>
-        ) : null}
+        )}
       </div>
     </Command>
   );

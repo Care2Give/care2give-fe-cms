@@ -4,16 +4,63 @@ import DatePicker from "@/components/home/DatePicker";
 import useDonationStore from "@/stores/useDonationStore";
 import { Button } from "@/components/ui/button";
 import Header from "@/components/donations/Header";
+import useClerkSWR from "@/lib/useClerkSWR";
+import { convertTitleToValueAndLabel } from "@/lib/utils";
+import { Skeleton } from "@/components/ui/skeleton";
+
+export type CampaignInput = {
+  value: string;
+  label: string;
+};
 
 export default function ExportData() {
-  const { startDate, setStartDate, endDate, setEndDate } = useDonationStore();
+  const {
+    startDate,
+    setStartDate,
+    endDate,
+    setEndDate,
+    campaignsToExport,
+    setCampaignsToExport,
+  } = useDonationStore();
+  const { data, error } = useClerkSWR(
+    `${process.env.NEXT_PUBLIC_API_URL}/v1/cms/donations/campaigns`
+  );
+
+  const handleExportData = async () => {
+    // TODO: Integrate BE endpoint to export data
+    // const res = await fetch(
+    //   `${process.env.NEXT_PUBLIC_API_URL}/v1/cms/donations/export`,
+    //   {
+    //     method: "POST",
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //     },
+    //     body: JSON.stringify({
+    //       startDate,
+    //       endDate,
+    //       campaigns: campaignsToExport,
+    //     }),
+    //   }
+    // );
+    return;
+  };
+
+  if (error) return null;
 
   return (
     <Layout>
       <Header isExportData />
       <div className="flex flex-col gap-2">
         <p className="text-xl font-bold">Campaign:</p>
-        <MultiSelect />
+        {data ? (
+          <MultiSelect
+            data={convertTitleToValueAndLabel(data)}
+            selected={campaignsToExport}
+            setSelected={setCampaignsToExport}
+          />
+        ) : (
+          <Skeleton className="h-8 w-full rounded-lg" />
+        )}
       </div>
       <div className="flex flex-col gap-2">
         <p className="text-xl font-bold">Date Range:</p>
@@ -23,7 +70,10 @@ export default function ExportData() {
         </div>
       </div>
       <div className="flex justify-end">
-        <Button className="bg-blue-500 hover:bg-blue-700 text-lg">
+        <Button
+          className="bg-blue-500 hover:bg-blue-600 text-lg"
+          onClick={handleExportData}
+        >
           Export Data
         </Button>
       </div>

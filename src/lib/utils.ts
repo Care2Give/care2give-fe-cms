@@ -87,3 +87,12 @@ export function getFormattedDateTime(date: Date) {
     minute: "2-digit",
   })}`;
 }
+
+export function convertTitleToValueAndLabel(
+  name: Array<{ id: string; title: string }>
+): Array<{ value: string; label: string }> {
+  return name.map((item) => ({
+    value: item.id,
+    label: item.title,
+  }));
+}

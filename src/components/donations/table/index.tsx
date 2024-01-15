@@ -17,7 +17,7 @@ export default function Table({ data }: { data: DonationTable[] }) {
       />
       <div className="w-full flex justify-end mt-4">
         <Link href="/donations/export-data">
-          <Button className="bg-blue-500 hover:bg-blue-700 text-lg">
+          <Button className="bg-blue-500 hover:bg-blue-600 text-lg">
             Export Data
           </Button>
         </Link>
