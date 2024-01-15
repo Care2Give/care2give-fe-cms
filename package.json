@@ -42,6 +42,7 @@
     "clsx": "^2.0.0",
     "cmdk": "^0.2.0",
     "date-fns": "^2.30.0",
+    "file-saver": "^2.0.5",
     "lucide-react": "^0.291.0",
     "next": "14.0.1",
     "next-themes": "^0.2.1",
@@ -63,6 +64,7 @@
   },
   "devDependencies": {
     "@clerk/types": "^3.60.0",
+    "@types/file-saver": "^2.0.7",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
