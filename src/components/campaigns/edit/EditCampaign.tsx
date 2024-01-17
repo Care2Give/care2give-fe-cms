@@ -175,8 +175,10 @@ function CampaignMediaForm({ form }: { form: any }) {
 }
 
 export default function EditCampaign({
+  editStage,
   setEditStage,
 }: {
+  editStage: EditStage;
   setEditStage: (arg0: EditStage) => void;
 }) {
   const validationSchema = z.object({
@@ -252,6 +254,7 @@ export default function EditCampaign({
     setExpandedItems(newExpandedItems);
   }, [form.formState.errors]);
 
+  //TODO: This is not being accessed when submitting from footer
   const onSubmit = () => {
     setEditStage(EditStage.Preview);
   };
