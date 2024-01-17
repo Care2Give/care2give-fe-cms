@@ -175,10 +175,8 @@ function CampaignMediaForm({ form }: { form: any }) {
 }
 
 export default function EditCampaign({
-  editStage,
   setEditStage,
 }: {
-  editStage: EditStage;
   setEditStage: (arg0: EditStage) => void;
 }) {
   const validationSchema = z.object({
