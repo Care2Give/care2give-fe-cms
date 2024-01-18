@@ -114,7 +114,12 @@ function CampaignMediaCard({
     <div className="flex justify-between border rounded-md items-center mx-10 my-2">
       <div className="flex items-center">
         <div className="relative w-[100px] h-[100px]">
-          <Image src={image.url} alt={image.name} layout="fill" />
+          <Image
+            src={image.url}
+            alt={image.name}
+            layout="fill"
+            objectFit="cover"
+          />
         </div>
         <span className="m-2">{image.name}</span>
       </div>
