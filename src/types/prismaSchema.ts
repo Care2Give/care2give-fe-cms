@@ -12,7 +12,8 @@ export interface Campaign {
   cents: number;
   createdBy: string | undefined;
   editedBy: string;
-  imageUrl: string[];
+  imageNames: string[];
+  imageUrls: string[];
 }
 
 export enum CampaignStatus {

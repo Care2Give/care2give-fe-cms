@@ -42,7 +42,7 @@ function buildPreviewLink({
   }
 
   for (let i = 0; i < images.length; i++) {
-    urlObj.searchParams.append("imageUrl", images[i].url);
+    urlObj.searchParams.append("imageUrls", images[i].url);
   }
 
   return urlObj;
