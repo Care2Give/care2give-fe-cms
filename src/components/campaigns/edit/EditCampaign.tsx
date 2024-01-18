@@ -113,7 +113,9 @@ function CampaignMediaCard({
   return (
     <div className="flex justify-between border rounded-md items-center mx-10 my-2">
       <div className="flex items-center">
-        <Image width="300" height="300" src={image.url} alt={image.name} />
+        <div className="relative w-[100px] h-[100px]">
+          <Image src={image.url} alt={image.name} layout="fill" />
+        </div>
         <span className="m-2">{image.name}</span>
       </div>
       <X className="mr-4" onClick={onDelete} />
