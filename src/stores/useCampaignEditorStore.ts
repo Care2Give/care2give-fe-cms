@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { CampaignDonationAmount, CampaignStatus } from "@/types/prismaSchema";
-import { addDays } from "date-fns";
+import { addDays, addMonths } from "date-fns";
 
 export type CampaignImage = {
   url: string;
@@ -42,7 +42,7 @@ const useCampaignEditorStore = create<CampaignEditorState>()((set) => ({
   setTargetAmount: (targetAmount) => set({ targetAmount }),
   startDate: new Date(),
   setStartDate: (startDate) => set({ startDate }),
-  endDate: addDays(new Date(), 20),
+  endDate: addMonths(new Date(), 1),
   setEndDate: (endDate) => set({ endDate }),
   donationOptions: [],
   setDonationOptions: (donationOptions) => set({ donationOptions }),

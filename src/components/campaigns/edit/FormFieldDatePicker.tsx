@@ -1,5 +1,5 @@
 import { CalendarIcon } from "@radix-ui/react-icons";
-import { addDays, format } from "date-fns";
+import { addDays, addMonths, format } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -20,8 +20,8 @@ import { UseFormReturn } from "react-hook-form";
 
 export default function FormFieldDatePicker({ form }: { form: UseFormReturn }) {
   const [date, setDate] = useState<DateRange | undefined>({
-    from: new Date(2024, 0, 20),
-    to: addDays(new Date(2024, 0, 20), 20),
+    from: new Date(),
+    to: addMonths(new Date(), 1),
   });
 
   const { setEndDate, setStartDate } = useCampaignEditorStore();
