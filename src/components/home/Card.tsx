@@ -21,8 +21,15 @@ type CardProps = {
   data: string;
   Icon: LucideIcon;
   footerData?: string;
+  setFilter: (filter: string) => void;
 };
-export default function Card({ statistic, data, Icon, footerData }: CardProps) {
+export default function Card({
+  statistic,
+  data,
+  Icon,
+  footerData,
+  setFilter,
+}: CardProps) {
   return (
     <div className="bg-white shadow rounded xl:w-56 w-60 flex flex-col justify-between">
       <div className="pt-8 p-4 flex justify-between items-center h-full">
@@ -40,15 +47,19 @@ export default function Card({ statistic, data, Icon, footerData }: CardProps) {
         {footerData && (
           <p className={`${montserrat.className} text-sm`}>{footerData}</p>
         )}
-        <CardFrequencySelector />
+        <CardFrequencySelector setFilter={setFilter} />
       </div>
     </div>
   );
 }
 
-function CardFrequencySelector() {
+interface CardFrequencySelectorProps {
+  setFilter: (filter: string) => void;
+}
+
+function CardFrequencySelector({ setFilter }: CardFrequencySelectorProps) {
   return (
-    <Select>
+    <Select onValueChange={(val) => setFilter(val)}>
       <SelectTrigger className="w-[97px] h-[27px]">
         <SelectValue placeholder="Daily" />
       </SelectTrigger>
