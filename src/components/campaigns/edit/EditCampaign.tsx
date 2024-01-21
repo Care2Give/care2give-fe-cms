@@ -113,10 +113,17 @@ function CampaignMediaCard({
   return (
     <div className="flex justify-between border rounded-md items-center mx-10 my-2">
       <div className="flex items-center">
-        <Image width="50" height="50" src={image.url} alt={image.name} />
+        <div className="relative w-[100px] h-[100px]">
+          <Image
+            src={image.url}
+            alt={image.name}
+            layout="fill"
+            objectFit="cover"
+          />
+        </div>
         <span className="m-2">{image.name}</span>
       </div>
-      <X onClick={onDelete} />
+      <X className="mr-4" onClick={onDelete} />
     </div>
   );
 }
@@ -252,6 +259,7 @@ export default function EditCampaign({
     setExpandedItems(newExpandedItems);
   }, [form.formState.errors]);
 
+  //TODO: This is not being accessed when submitting from footer
   const onSubmit = () => {
     setEditStage(EditStage.Preview);
   };

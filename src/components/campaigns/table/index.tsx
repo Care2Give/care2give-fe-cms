@@ -42,12 +42,11 @@ export default function Table({ campaigns }: { campaigns: CampaignTable[] }) {
       setTitle(data.title);
       setDonationOptions(data.donationAmounts);
       setDescription(data.description || "");
-      // TODO change database to store the name of image if needed
       setImages(
-        data.imageUrl.map((imageUrl) => {
+        data.imageUrls.map((imageUrl, i) => {
           return {
             url: imageUrl,
-            name: "",
+            name: data.imageNames[i],
           };
         })
       );

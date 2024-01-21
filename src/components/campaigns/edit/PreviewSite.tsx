@@ -3,6 +3,10 @@ import { Button } from "@/components/ui/button";
 import { EditStage } from "@/components/campaigns/edit/edit-stage";
 import { CampaignDonationAmount } from "@/types/prismaSchema";
 
+function calcDonationOptionAmt(dollars: number, cents: number) {
+  return dollars + cents / 100;
+}
+
 function buildPreviewLink({
   title,
   targetAmount,
@@ -27,19 +31,20 @@ function buildPreviewLink({
   urlObj.searchParams.append("targetDate", new Date(endDate).toTimeString());
   urlObj.searchParams.append("slug", title);
   urlObj.searchParams.append("description", description);
+
   for (let i = 0; i < donationOptions.length; i++) {
+    const { dollars, cents, description } = donationOptions[i];
     urlObj.searchParams.append(
       "donationOptionValue",
-      donationOptions[i].value.toString()
+      calcDonationOptionAmt(dollars, cents).toString()
     );
-    urlObj.searchParams.append(
-      "donationOptionDescription",
-      donationOptions[i].description || ""
-    );
+    urlObj.searchParams.append("donationOptionDescription", description || "");
   }
+
   for (let i = 0; i < images.length; i++) {
-    urlObj.searchParams.append("imageUrl", images[i].url);
+    urlObj.searchParams.append("imageUrls", images[i].url);
   }
+
   return urlObj;
 }
 

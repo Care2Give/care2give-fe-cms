@@ -47,8 +47,8 @@ export function PublishDialog({
         dollars: Math.floor(targetAmount),
         cents: targetAmount - Math.floor(targetAmount),
         editedBy: userId,
-        // TODO change to not convert CampaignImage to just its URL when database is updated
-        imageUrl: images.map((campaignImage) => campaignImage.url),
+        imageNames: images.map((campaignImage) => campaignImage.name),
+        imageUrls: images.map((campaignImage) => campaignImage.url),
         createdBy: isEdit ? undefined : userId,
       };
 

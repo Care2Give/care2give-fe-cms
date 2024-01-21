@@ -25,7 +25,7 @@ export const columns = (
         currency: "SGD",
       }).format(amount);
 
-      return formatted;
+      return <p className="text-center">{formatted}</p>;
     },
     header: () => (
       <p
@@ -36,7 +36,7 @@ export const columns = (
     ),
   }),
   columnHelper.accessor("description", {
-    cell: (props) => props.getValue(),
+    cell: (props) => <p className="text-center">{props.getValue()}</p>,
     header: () => (
       <p
         className={`${arabotoBold.className} text-black text-center text-[18px] pt-2`}
@@ -48,7 +48,7 @@ export const columns = (
   columnHelper.display({
     id: "edit",
     cell: ({ cell }) => (
-      <Button variant="ghost">
+      <Button variant="ghost" className="float-right p-0">
         <EditIcon onClick={() => onEdit(cell.row.index)} />
       </Button>
     ),
@@ -58,7 +58,7 @@ export const columns = (
     cell: ({ cell }) => (
       <Popover>
         <PopoverTrigger asChild>
-          <Button variant="ghost">
+          <Button variant="ghost" className="p-0">
             <Trash2 />
           </Button>
         </PopoverTrigger>
