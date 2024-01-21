@@ -31,7 +31,6 @@ export default function MostPopularCampaignCard() {
 
   useEffect(() => {
     setMostPopularCampaign(mostPopularCampaignFetched);
-    console.log(mostPopularCampaignFetched);
   }, [mostPopularCampaignFetched]);
 
   return (

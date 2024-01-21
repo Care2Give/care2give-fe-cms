@@ -19,23 +19,6 @@ export default function SideBar() {
   const { user } = useUser();
   const role = user?.publicMetadata.role;
 
-  const ArchiveMenuButtons = [
-    <SideBarButton
-      key="archive-donations-button"
-      icon={CornerDownRightIcon}
-      text="Donations"
-      link="/archive/donations"
-      isSmall
-    />,
-    <SideBarButton
-      key="archive-campaigns-button"
-      icon={CornerDownRightIcon}
-      text="Campaigns"
-      link="/archive/campaigns"
-      isSmall
-    />,
-  ];
-
   if (!user) return null;
 
   return (
@@ -81,12 +64,18 @@ export default function SideBar() {
           <span className="w-full text-left px-5 text-xs font-semibold">
             Archive
           </span>
-          <div>{...ArchiveMenuButtons}</div>
+          <div>
+            <SideBarButton
+              key="archive-campaigns-button"
+              icon={CornerDownRightIcon}
+              text="Campaigns"
+              link="/archive/campaigns"
+              isSmall
+            />
+          </div>
         </div>
       </div>
       <div className="w-full flex flex-col gap-2">
-        {/* temporarily removing the logout button */}
-        {/* <Logout /> */}
         <SideBarProfile user={user} />
       </div>
     </div>
