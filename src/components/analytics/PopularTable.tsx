@@ -3,7 +3,7 @@ import { Montserrat } from "next/font/google";
 type PopularTableProps = {
   campaign: string;
   amount: number;
-  numberOfDonors: number;
+  numberOfDonations: number;
 };
 
 const montserrat = Montserrat({
@@ -28,7 +28,7 @@ export default function PopularTable(data: PopularTableProps[]) {
         <div
           className={`${montserrat.className} text-grey-500 text-xs text-right w-2/12`}
         >
-          No. of Donor
+          No. of Donations
         </div>
       </div>
       {dataArray.map((item, idx) => (
@@ -42,7 +42,7 @@ export default function PopularTable(data: PopularTableProps[]) {
           <div
             className={`${montserrat.className} text-xs flex justify-center w-2/12`}
           >
-            {item.numberOfDonors}
+            {item.numberOfDonations}
           </div>
         </div>
       ))}
