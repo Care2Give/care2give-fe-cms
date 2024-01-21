@@ -30,6 +30,9 @@ import FormFieldTextarea from "./FormFieldTextarea";
 import FormFieldInput from "./FormFieldInput";
 import FormFieldDatePicker from "./FormFieldDatePicker";
 import ErrorMessage from "./ErrorMessage";
+import { useAuth } from "@clerk/nextjs";
+import httpPostFormData from "@/lib/httpPostFormData";
+import { ImageUploadResponsePayload } from "@/types/campaigns/ImageUploadResponsePayload";
 
 function CampaignStatusForm({ form }: { form: any }) {
   return (
@@ -133,25 +136,36 @@ function CampaignMediaForm({ form }: { form: any }) {
     useCampaignEditorStore((state) => state.images)
   );
   const setImagesStore = useCampaignEditorStore((state) => state.setImages);
+  const { getToken } = useAuth();
 
   useEffect(() => {
     setImagesStore(images);
     form.setValue("images", images);
   }, [images]);
 
-  const onImageUpload = (e: React.FormEvent<HTMLInputElement>) => {
+  const onImageUpload = async (e: React.FormEvent<HTMLInputElement>) => {
     const files = (e.target as HTMLInputElement).files as FileList;
     if (files) {
-      // TODO change this to create an image url which is saved somewhere so that the campaign site can access
-      // Currently creates a local url which campaign site cannot access
-      const image = files[0];
-      const imageUrl = URL.createObjectURL(image);
-      const imageTitle = image.name;
-      images.push({
-        url: imageUrl,
-        name: imageTitle,
-      });
-      setImages([...images]);
+      try {
+        // TODO change this to create an image url which is saved somewhere so that the campaign site can access
+        // Currently creates a local url which campaign site cannot access
+        const image = files[0];
+        const formData = new FormData();
+        formData.append("image", image);
+        const res: ImageUploadResponsePayload = await httpPostFormData(
+          `${process.env.NEXT_PUBLIC_API_URL}/v1/cms/campaigns/images`,
+          await getToken(),
+          formData
+        );
+        const imageTitle = image.name;
+        images.push({
+          url: res.url,
+          name: imageTitle,
+        });
+        setImages([...images]);
+      } catch (error) {
+        console.error(error);
+      }
     }
   };
 
