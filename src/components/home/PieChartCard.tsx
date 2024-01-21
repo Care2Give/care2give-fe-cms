@@ -6,57 +6,97 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { arabotoBold } from "@/lib/font";
-import { Montserrat } from "next/font/google";
 import { cn } from "@/lib/utils";
 import { capitalizeFirstLetter } from "@/lib/utils";
 import { PieChart } from "react-minimal-pie-chart";
-
-const montserrat = Montserrat({
-  subsets: ["latin"],
-  style: ["normal"],
-  weight: ["400"],
-});
+import { useEffect } from "react";
+import useClerkSWR from "@/lib/useClerkSWR";
+import usePieChartStore from "@/stores/homepage/usePieChartStore";
+import { SelectDonationType } from "@/types/homepage/DonationTypes";
 
 type CardProps = {
   statistic: string;
   selectorPlaceholder: string;
-  selectorVals: string[];
 };
 
 type CardSelectorProps = {
   placeholder: string;
   values: string[];
+  setFilter: (typeOfDonation: string) => void;
 };
 
-const MOCK_DATA = [
-  { title: "One", value: 10, color: "#FFD694" },
-  { title: "Two", value: 15, color: "#FCE3BB" },
-  { title: "Three", value: 20, color: "#FCEBCF" },
-];
+// const MOCK_DATA = [
+//   { title: "One", value: 100, color: "#FFD694" },
+//   { title: "Two", value: 15, color: "#FCE3BB" },
+//   { title: "Three", value: 20, color: "#FCEBCF" },
+// ];
+
+const colors = ["#FFD694", "#FCE3BB", "#FCEBCF"];
 
 export default function PieChartCard({
   statistic,
   selectorPlaceholder,
-  selectorVals,
 }: CardProps) {
+  const { typesOfDonationsFilter, setTypesOfDonationsFilter } =
+    usePieChartStore();
+
+  useEffect(() => {
+    console.log("re-rendered pie chart");
+    console.log(typesOfDonationsFilter);
+  }, [typesOfDonationsFilter]);
+
+  let { data, error } = useClerkSWR(
+    `${process.env.NEXT_PUBLIC_API_URL}/v1/cms/homepage-analytics/types-of-donations?filter=` +
+      typesOfDonationsFilter
+  );
+
+  // convert data ({type: string; count: number}) into array of objects
+  const pieChartData: {
+    title: string;
+    value: number;
+    color: string;
+  }[] = [];
+  let count = 0;
+
+  for (let key in data) {
+    pieChartData.push({
+      title: key,
+      value: Number(data[key]),
+      color: colors[count++],
+    });
+  }
+
   return (
     <div className="bg-white shadow rounded xl:w-56 w-60 flex flex-col gap-4">
       <div className={`${arabotoBold.className} pt-4 text-center text-2xl`}>
         {statistic}
       </div>
       <div className="h-40">
-        <PieChart data={MOCK_DATA} lineWidth={48} />
+        <PieChart data={pieChartData} lineWidth={48} />
       </div>
       <div className={cn("bg-[#ffefdf] flex justify-end items-center p-4")}>
-        <CardSelector placeholder={selectorPlaceholder} values={selectorVals} />
+        <CardSelector
+          placeholder={selectorPlaceholder}
+          values={[
+            SelectDonationType.INDIVIDUAL,
+            SelectDonationType.GROUP,
+            SelectDonationType.ANONYMOUS,
+            SelectDonationType.ALL,
+          ]}
+          setFilter={setTypesOfDonationsFilter}
+        />
       </div>
     </div>
   );
 }
 
-function CardSelector({ placeholder, values }: CardSelectorProps) {
+function CardSelector({ placeholder, values, setFilter }: CardSelectorProps) {
   return (
-    <Select>
+    <Select
+      onValueChange={(val) => {
+        setFilter(val);
+      }}
+    >
       <SelectTrigger className="w-[97px] h-[27px]">
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>

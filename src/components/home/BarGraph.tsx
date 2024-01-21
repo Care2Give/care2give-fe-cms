@@ -6,6 +6,9 @@ import dynamic from "next/dynamic";
 import { addDays, differenceInDays } from "date-fns";
 import { mmddFormatter } from "@/lib/utils";
 
+import { useEffect } from "react";
+import useClerkSWR from "@/lib/useClerkSWR";
+
 const Chart = dynamic(() => import("react-charts").then((mod) => mod.Chart), {
   ssr: false,
 });
@@ -18,18 +21,34 @@ type BarGraphProps = {
 export default function BarGraph({ startDate, endDate }: BarGraphProps) {
   const length = differenceInDays(endDate, startDate) + 1; // Inclusive of end
 
+  useEffect(() => {
+    console.log("re-rendered bar graph");
+  }, [startDate, endDate]);
+
+  let { data, error } = useClerkSWR(
+    `${process.env.NEXT_PUBLIC_API_URL}/v1/cms/homepage-analytics/daily-donations?first=` +
+      startDate +
+      "&second=" +
+      endDate
+  );
+
   /**
    * IMPT: required to name variable as data, and respective properties for Chart component to process
    * Colour is dependent on the series (the object in data array) for a respective group of bar graphs
    * Series 1: Blue, Series 2: Orange
    */
-  const data = [
+  data = [
     {
       label: "Total Donation",
       data: [...new Array(length)].map((_, i) => {
+        const currentDate = addDays(startDate, i);
+        const currentDateString = currentDate.toISOString().split("T")[0];
+        const donationAmount =
+          data && currentDateString in data ? data[currentDateString] : 0;
+
         return {
-          date: mmddFormatter(addDays(startDate, i)),
-          donationAmt: Math.floor(Math.random() * 100),
+          date: mmddFormatter(currentDate),
+          donationAmt: donationAmount ? donationAmount : 0,
         };
       }),
     },

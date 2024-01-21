@@ -1,0 +1,45 @@
+import { useEffect, useState } from "react";
+import Card from "./Card";
+import { FileHeartIcon } from "lucide-react";
+import useClerkSWR from "@/lib/useClerkSWR";
+import useMostPopularCampaignStore from "@/stores/homepage/useMostPopularCampaignStore";
+
+export default function MostPopularCampaignCard() {
+  // feature 4: most popular campaign
+  const { mostPopularCampaignFilter, setMostPopularCampaignFilter } =
+    useMostPopularCampaignStore();
+
+  interface MostPopularCampaign {
+    mostPopularCampaignTitle: string;
+    numberOfDonors: number;
+  }
+
+  const [mostPopularCampaign, setMostPopularCampaign] =
+    useState<MostPopularCampaign>({
+      mostPopularCampaignTitle: "None",
+      numberOfDonors: 0,
+    });
+
+  useEffect(() => {
+    console.log("rerendered most popular campaign");
+  }, [mostPopularCampaignFilter]);
+
+  const { data: mostPopularCampaignFetched, error } = useClerkSWR(
+    `${process.env.NEXT_PUBLIC_API_URL}/v1/cms/homepage-analytics/most-popular-campaign?filter=` +
+      mostPopularCampaignFilter
+  );
+
+  useEffect(() => {
+    setMostPopularCampaign(mostPopularCampaignFetched);
+  }, [mostPopularCampaignFetched]);
+
+  return (
+    <Card
+      statistic={mostPopularCampaign?.mostPopularCampaignTitle}
+      data="Most Popular Campaign"
+      footerData={`${mostPopularCampaign?.numberOfDonors}` + " Donors"}
+      Icon={FileHeartIcon}
+      setFilter={setMostPopularCampaignFilter}
+    />
+  );
+}
