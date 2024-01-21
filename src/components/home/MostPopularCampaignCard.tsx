@@ -2,21 +2,21 @@ import { useEffect, useState } from "react";
 import Card from "./Card";
 import { FileHeartIcon } from "lucide-react";
 import useClerkSWR from "@/lib/useClerkSWR";
-import useMostPopularCampaignStore from "@/stores/homepage/useMostPopularCampaignStore";
+import useMostPopularCampaignStore from "@/stores/useMostPopularCampaignStore";
+
+interface MostPopularCampaign {
+  campaignTitle: string;
+  numberOfDonors: number;
+}
 
 export default function MostPopularCampaignCard() {
   // feature 4: most popular campaign
   const { mostPopularCampaignFilter, setMostPopularCampaignFilter } =
     useMostPopularCampaignStore();
 
-  interface MostPopularCampaign {
-    mostPopularCampaignTitle: string;
-    numberOfDonors: number;
-  }
-
   const [mostPopularCampaign, setMostPopularCampaign] =
     useState<MostPopularCampaign>({
-      mostPopularCampaignTitle: "None",
+      campaignTitle: "None",
       numberOfDonors: 0,
     });
 
@@ -31,11 +31,12 @@ export default function MostPopularCampaignCard() {
 
   useEffect(() => {
     setMostPopularCampaign(mostPopularCampaignFetched);
+    console.log(mostPopularCampaignFetched);
   }, [mostPopularCampaignFetched]);
 
   return (
     <Card
-      statistic={mostPopularCampaign?.mostPopularCampaignTitle}
+      statistic={mostPopularCampaign?.campaignTitle}
       data="Most Popular Campaign"
       footerData={`${mostPopularCampaign?.numberOfDonors}` + " Donors"}
       Icon={FileHeartIcon}
