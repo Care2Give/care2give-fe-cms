@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { CampaignDonationAmount, CampaignStatus } from "@/types/prismaSchema";
-import { addDays, addMonths } from "date-fns";
+import { addMonths } from "date-fns";
 
 export type CampaignImage = {
   url: string;

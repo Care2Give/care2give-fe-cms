@@ -12,8 +12,7 @@ const nextConfig = {
       },
       {
         protocol: "https",
-        hostname:
-          "care2give-ap-southeast-1-dev.s3.ap-southeast-1.amazonaws.com",
+        hostname: "care2give-s3-dev.s3.ap-southeast-1.amazonaws.com",
       },
     ],
   },
