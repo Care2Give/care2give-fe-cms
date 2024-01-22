@@ -12,6 +12,7 @@ import useClerkSWR from "@/lib/useClerkSWR";
 import {useEffect, useState} from "react";
 import Spinner from "@/components/shared/Spinner";
 import {parseISO} from "date-fns";
+import {Obj} from "@popperjs/core";
 
 type PieChartCardProps = {
   pieChartId: string;
@@ -48,6 +49,8 @@ type Donation = {
 type PieChartCardBodyProps = {
   totalDonation: number;
   highestDonation: Donation;
+  donationTypeMap: Object;
+  donationAmountMap: Object;
 };
 
 const MOCK_CAMPAIGNS_DATA = [
@@ -111,6 +114,8 @@ const MOCK_CAMPAIGNS_DATA = [
 const ALL_CAMPAIGNS_NAME = MOCK_CAMPAIGNS_DATA.map(
   (campaign) => campaign.campaignName
 );
+
+const DEFAULT_PIECHART_COLORS = ["#1DCF9E", "#5CD1B2", "#9FD4C6"];
 const MOCK_PIECHART_DATA = [
   { title: "One", value: 10, color: "#1DCF9E" },
   { title: "Two", value: 15, color: "#5CD1B2" },
@@ -153,6 +158,8 @@ export default function PieChartCard({
               <PieChartCardBody
                   totalDonation={campaignData.currentAmount}
                   highestDonation={campaignData.highestDonation}
+                  donationTypeMap={JSON.parse(campaignData.donationTypeMap)}
+                  donationAmountMap={JSON.parse(campaignData.donationAmountMap)}
               />
           </>
       }
@@ -213,8 +220,32 @@ function CardSelector({ pieChartId, placeholder, values, setCampaignId }: CardSe
 
 function PieChartCardBody({
   totalDonation,
-  highestDonation
+  highestDonation,
+  donationTypeMap,
+  donationAmountMap
 }: PieChartCardBodyProps) {
+  const donationTypeData = [];
+  let counter = 0;
+  for (const donationType in donationTypeMap) {
+    donationTypeData.push({
+      title: donationType,
+      value: donationTypeMap[donationType],
+      color: DEFAULT_PIECHART_COLORS[counter % DEFAULT_PIECHART_COLORS.length]
+    })
+    counter += 1;
+  }
+
+  const donationAmountData = [];
+  counter = 0;
+  for (const donationAmount in donationAmountMap) {
+    donationAmountData.push({
+      title: donationAmount,
+      value: donationAmountMap[donationAmount],
+      color: DEFAULT_PIECHART_COLORS[counter % DEFAULT_PIECHART_COLORS.length]
+    })
+    counter += 1;
+  }
+
   return (
     <div className="flex justify-between items-center">
       <div className="flex flex-col gap-2">
@@ -246,11 +277,11 @@ function PieChartCardBody({
       </div>
       <div className="flex gap-4 text-center text-xs font-bold">
         <div className="h-28">
-          <PieChart data={MOCK_PIECHART_DATA} lineWidth={48} />
+          <PieChart data={donationTypeData} lineWidth={48} />
           <p className="pt-2">Donor Types</p>
         </div>
         <div className="h-28">
-          <PieChart data={MOCK_PIECHART_DATA} lineWidth={48} />
+          <PieChart data={donationAmountData} lineWidth={48} />
           <p className="pt-2">Donation Amount</p>
         </div>
       </div>
