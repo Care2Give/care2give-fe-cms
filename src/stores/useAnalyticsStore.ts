@@ -34,10 +34,6 @@ export const graphOptions: GraphOption[] = [
   },
 ];
 interface AnalyticsState {
-  pieChartCampaignOne: string;
-  pieChartCampaignTwo: string;
-  setPieChartCampaignOne: (val: string) => void; // Based on onValueChange for Select component
-  setPieChartCampaignTwo: (val: string) => void;
   graphYAxis: GraphYAxis;
   setGraphYAxis: (type: GraphYAxis) => void;
   graphStartDate: Date;
@@ -58,10 +54,6 @@ interface AnalyticsState {
 }
 
 const useAnalyticsStore = create<AnalyticsState>()((set, get) => ({
-  pieChartCampaignOne: "Charity Dinner 2020",
-  pieChartCampaignTwo: "Smell Good, Feel Good, Do Good",
-  setPieChartCampaignOne: (name) => set((_) => ({ pieChartCampaignOne: name })),
-  setPieChartCampaignTwo: (name) => set((_) => ({ pieChartCampaignTwo: name })),
   graphYAxis: "donationAmount",
   setGraphYAxis: (type) => set((_) => ({ graphYAxis: type })),
   graphStartDate: new Date("2023-12-18"),

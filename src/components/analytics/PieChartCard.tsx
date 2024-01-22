@@ -8,32 +8,46 @@ import {
 } from "../ui/select";
 import { PieChart } from "react-minimal-pie-chart";
 import useAnalyticsStore from "@/stores/useAnalyticsStore";
+import useClerkSWR from "@/lib/useClerkSWR";
+import {useEffect, useState} from "react";
+import Spinner from "@/components/shared/Spinner";
+import {parseISO} from "date-fns";
 
 type PieChartCardProps = {
   pieChartId: string;
-  campaignName: string;
 };
 
 type PieChartCardHeaderProps = {
   pieChartId: string;
   selectorPlaceholder: string;
-  selectorValues: string[];
+  selectorValues: CampaignValue[];
   startDate: Date;
   endDate: Date;
   daysLeft: number; // Mock for now but will be calculated and not stored in db
+  setCampaignId: (campaignId: string) => void
 };
 
 type CardSelectorProps = {
   pieChartId: string;
   placeholder: string;
-  values: string[];
+  values: CampaignValue[];
+  setCampaignId: (campaignId: string) => void;
 };
+
+type CampaignValue = {
+  id: string;
+  title: string;
+}
+
+type Donation = {
+  value: number;
+  donorName: string;
+  createdAt: string;
+}
 
 type PieChartCardBodyProps = {
   totalDonation: number;
-  topDonationAmt: number;
-  topDonorName: string;
-  topDonationDate: Date;
+  highestDonation: Donation;
 };
 
 const MOCK_CAMPAIGNS_DATA = [
@@ -105,28 +119,43 @@ const MOCK_PIECHART_DATA = [
 
 export default function PieChartCard({
   pieChartId,
-  campaignName,
 }: PieChartCardProps) {
-  const campaignData = MOCK_CAMPAIGNS_DATA.filter(
-    (campaign) => campaign.campaignName == campaignName
-  )[0]; // Probably using campaignId for actual
+  const [campaignId, setCampaignId ] = useState("");
+  const { data: allCampaignData, error: errorAllCampaignData, isLoading: isLoadingAllCampaignData } = useClerkSWR(
+      `${process.env.NEXT_PUBLIC_API_URL}/v1/cms/analytics/campaigns?filter=allTime`
+  );
+  const allCampaignName = allCampaignData ? allCampaignData : [];
+  const { data: campaignData, error: errorCampaignData, isLoading: isLoadingCampaignData } = useClerkSWR(`${process.env.NEXT_PUBLIC_API_URL}/v1/cms/analytics/${campaignId}`)
+
+  useEffect(() => {
+    if (allCampaignData && allCampaignData.length > 0) {
+      setCampaignId(allCampaignData[pieChartId].id);
+    }
+  }, [allCampaignData])
+
+  console.log(campaignData, errorCampaignData, isLoadingCampaignData, campaignId);
 
   return (
     <div className="bg-white shadow rounded flex flex-col gap-4 p-8 m-2">
-      <PieChartCardHeader
-        pieChartId={pieChartId}
-        selectorPlaceholder={campaignName}
-        selectorValues={ALL_CAMPAIGNS_NAME}
-        startDate={campaignData.data.startDate}
-        endDate={campaignData.data.endDate}
-        daysLeft={campaignData.data.daysLeft}
-      />
-      <PieChartCardBody
-        totalDonation={campaignData.data.totalDonation}
-        topDonationAmt={campaignData.data.topDonor.donationAmt}
-        topDonorName={campaignData.data.topDonor.donorName}
-        topDonationDate={campaignData.data.topDonor.date}
-      />
+      {
+        isLoadingAllCampaignData || isLoadingCampaignData || campaignId === ""
+          ? <Spinner />
+          : <>
+              <PieChartCardHeader
+                  pieChartId={pieChartId}
+                  selectorPlaceholder={campaignId !== "" ? allCampaignName[pieChartId].title : ""}
+                  selectorValues={allCampaignName}
+                  startDate={parseISO(campaignData.startDate)}
+                  endDate={parseISO(campaignData.endDate)}
+                  daysLeft={campaignData.timeLeft}
+                  setCampaignId={setCampaignId}
+              />
+              <PieChartCardBody
+                  totalDonation={campaignData.currentAmount}
+                  highestDonation={campaignData.highestDonation}
+              />
+          </>
+      }
     </div>
   );
 }
@@ -138,6 +167,7 @@ function PieChartCardHeader({
   startDate,
   endDate,
   daysLeft,
+  setCampaignId,
 }: PieChartCardHeaderProps) {
   return (
     <div className="flex justify-between items-center">
@@ -145,6 +175,7 @@ function PieChartCardHeader({
         pieChartId={pieChartId}
         placeholder={selectorPlaceholder}
         values={selectorValues}
+        setCampaignId={setCampaignId}
       />
       <div className="text-right">
         <p>
@@ -159,14 +190,10 @@ function PieChartCardHeader({
   );
 }
 
-function CardSelector({ pieChartId, placeholder, values }: CardSelectorProps) {
-  const { setPieChartCampaignOne, setPieChartCampaignTwo } =
-    useAnalyticsStore();
+function CardSelector({ pieChartId, placeholder, values, setCampaignId }: CardSelectorProps) {
   return (
     <Select
-      onValueChange={
-        pieChartId === "1" ? setPieChartCampaignOne : setPieChartCampaignTwo
-      }
+      onValueChange={setCampaignId}
     >
       <SelectTrigger className="w-[177px] h-[45px]">
         <SelectValue placeholder={placeholder} />
@@ -174,8 +201,8 @@ function CardSelector({ pieChartId, placeholder, values }: CardSelectorProps) {
       <SelectContent>
         {values.map((val, i) => {
           return (
-            <SelectItem value={val} key={i}>
-              {capitalizeFirstLetter(val)}
+            <SelectItem value={val.id} key={i}>
+              {capitalizeFirstLetter(val.title)}
             </SelectItem>
           );
         })}
@@ -186,9 +213,7 @@ function CardSelector({ pieChartId, placeholder, values }: CardSelectorProps) {
 
 function PieChartCardBody({
   totalDonation,
-  topDonationAmt,
-  topDonorName,
-  topDonationDate,
+  highestDonation
 }: PieChartCardBodyProps) {
   return (
     <div className="flex justify-between items-center">
@@ -198,19 +223,26 @@ function PieChartCardBody({
           <b>$ {totalDonation}</b>
         </div>
         <hr />
-        <div>
-          <p>Highest Amount</p>
-          <b>$ {topDonationAmt}</b>
-        </div>
-        <div className="text-xs">
-          <p>From: {topDonorName}</p>
-          <p>
-            Date:{" "}
-            <span className="underline">
-              {ddmmyyyyFormatter(topDonationDate)}
+        {
+          highestDonation
+            ? <>
+                <div>
+                  <p>Highest Amount</p>
+                  <b>$ {highestDonation.value}</b>
+                </div>
+                <div className="text-xs">
+                  <p>From: {highestDonation.donorName}</p>
+                  <p>
+                    Date:{" "}
+                    <span className="underline">
+              {ddmmyyyyFormatter(parseISO(highestDonation.createdAt))}
             </span>
-          </p>
-        </div>
+                  </p>
+                </div>
+              </>
+              : <div>No donations yet</div>
+        }
+
       </div>
       <div className="flex gap-4 text-center text-xs font-bold">
         <div className="h-28">

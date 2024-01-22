@@ -10,8 +10,6 @@ import useClerkSWR from "@/lib/useClerkSWR";
 import { useState} from "react";
 
 export default function Analytics() {
-  const { pieChartCampaignOne, pieChartCampaignTwo } = useAnalyticsStore();
-
   const [ campaignDetailFilter, setCampaignDetailFilter] = useState("daily");
   const [ popularAmountFilter, setPopularAmountFilter] = useState("daily");
 
@@ -74,8 +72,8 @@ export default function Analytics() {
       </div>
       <GraphCard />
       <div className="grid grid-cols-1 xl:grid-cols-2">
-        <PieChartCard pieChartId="1" campaignName={pieChartCampaignOne} />
-        <PieChartCard pieChartId="2" campaignName={pieChartCampaignTwo} />
+        <PieChartCard pieChartId="1" />
+        <PieChartCard pieChartId="2" />
       </div>
     </Layout>
   );
