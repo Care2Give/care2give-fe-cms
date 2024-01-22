@@ -11,6 +11,8 @@ const montserrat = Montserrat({
   style: ["normal"],
 });
 
+const defaultColors = ["bg-[#1DCF9E]", "bg-[#5185FF]", "bg-[#FF5757]", "bg-[#F8DF71]"];
+
 const campaigns = [
   {
     name: "Charity Dinner 2020",
@@ -31,7 +33,7 @@ const campaigns = [
 ];
 
 function GraphCardSidebar() {
-  const { graphType, setGraphType } = useAnalyticsStore();
+  const { graphType, setGraphType, allCampaigns, toggleSelectedCampaigns, selectedCampaigns } = useAnalyticsStore();
   return (
     <div className="w-36 basis-36 flex flex-col gap-4">
       <div className={" rounded-lg border border-slate-200 h-8 p-1"}>
@@ -67,18 +69,18 @@ function GraphCardSidebar() {
           Campaigns
         </h3>
         <div className="space-y-2">
-          {campaigns.map((campaign) => (
-            <div className="flex border-2 rounded-md" key={campaign.name}>
+          {allCampaigns.map((campaign, campaignIndex) => (
+            <div className="flex border-2 rounded-md" key={campaign}>
               <div
-                className={`${campaign.bgClass} basis-2 flex-none rounded-s-sm`}
+                className={`${defaultColors[campaignIndex]} basis-2 flex-none rounded-s-sm`}
               ></div>
               <div className="flex items-center gap-2 px-2 py-4">
-                <Checkbox id={campaign.name} />
+                <Checkbox id={campaign} onCheckedChange={() => toggleSelectedCampaigns(campaign)} checked={selectedCampaigns.includes(campaign)}/>
                 <label
-                  htmlFor={campaign.name}
+                  htmlFor={campaign}
                   className="text-xs leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                 >
-                  {campaign.name}
+                  {campaign}
                 </label>
               </div>
             </div>
