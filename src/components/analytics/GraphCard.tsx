@@ -14,6 +14,8 @@ const Chart = dynamic(() => import("react-charts").then((mod) => mod.Chart), {
   ssr: false,
 });
 
+export const defaultColors = ["#1DCF9E", "#5185FF", "#FF5757", "#F8DF71"];
+
 const GraphCard = () => {
   const { graphType, graphYAxis, graphStartDate, graphEndDate, graphInterval, setSelectedCampaigns, setAllCampaigns, selectedCampaigns } = useAnalyticsStore();
 
@@ -87,7 +89,8 @@ const GraphCard = () => {
             ? <Spinner />
             : <Graph
                   options={{
-                      data: filteredGraphData,
+                      defaultColors: defaultColors,
+                      data: filteredGraphData.length === 0 ? [{label: "", data: [{primary: graphStartDate, secondary: 0}]}] : filteredGraphData,
                       primaryAxis:
                           graphType === "line" ? linePrimaryAxis : barPrimaryAxis,
                       secondaryAxes:

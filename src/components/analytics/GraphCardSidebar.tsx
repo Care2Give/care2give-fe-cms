@@ -5,32 +5,12 @@ import { BarChart3, LineChart } from "lucide-react";
 import { Montserrat } from "next/font/google";
 import { cn } from "@/lib/utils";
 import { Checkbox } from "../ui/checkbox";
+import {defaultColors} from "@/components/analytics/GraphCard";
 
 const montserrat = Montserrat({
   subsets: ["latin"],
   style: ["normal"],
 });
-
-const defaultColors = ["bg-[#1DCF9E]", "bg-[#5185FF]", "bg-[#FF5757]", "bg-[#F8DF71]"];
-
-const campaigns = [
-  {
-    name: "Charity Dinner 2020",
-    bgClass: "bg-[#1DCF9E]",
-  },
-  {
-    name: "Providing Housing Advice",
-    bgClass: "bg-[#5185FF]",
-  },
-  {
-    name: "Smell Good, Feel Good, Do Good",
-    bgClass: "bg-[#FF5757]",
-  },
-  {
-    name: "Hidden Heroes",
-    bgClass: "bg-[#F8DF71]",
-  },
-];
 
 function GraphCardSidebar() {
   const { graphType, setGraphType, allCampaigns, toggleSelectedCampaigns, selectedCampaigns } = useAnalyticsStore();
@@ -72,7 +52,7 @@ function GraphCardSidebar() {
           {allCampaigns.map((campaign, campaignIndex) => (
             <div className="flex border-2 rounded-md" key={campaign}>
               <div
-                className={`${defaultColors[campaignIndex]} basis-2 flex-none rounded-s-sm`}
+                className={`bg-[${defaultColors[campaignIndex % defaultColors.length]}] basis-2 flex-none rounded-s-sm`}
               ></div>
               <div className="flex items-center gap-2 px-2 py-4">
                 <Checkbox id={campaign} onCheckedChange={() => toggleSelectedCampaigns(campaign)} checked={selectedCampaigns.includes(campaign)}/>
