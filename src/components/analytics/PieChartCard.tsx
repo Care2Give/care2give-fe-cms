@@ -138,8 +138,6 @@ export default function PieChartCard({
     }
   }, [allCampaignData])
 
-  console.log(campaignData, errorCampaignData, isLoadingCampaignData, campaignId);
-
   return (
     <div className="bg-white shadow rounded flex flex-col gap-4 p-8 m-2">
       {
