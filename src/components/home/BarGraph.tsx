@@ -21,10 +21,6 @@ type BarGraphProps = {
 export default function BarGraph({ startDate, endDate }: BarGraphProps) {
   const length = differenceInDays(endDate, startDate) + 1; // Inclusive of end
 
-  useEffect(() => {
-    console.log("re-rendered bar graph");
-  }, [startDate, endDate]);
-
   let { data, error } = useClerkSWR(
     `${process.env.NEXT_PUBLIC_API_URL}/v1/cms/homepage-analytics/daily-donations?first=` +
       startDate +
@@ -78,6 +74,8 @@ export default function BarGraph({ startDate, endDate }: BarGraphProps) {
     ],
     []
   ) as AxisOptions<unknown>[];
+
+  if (error) return null;
 
   return (
     <div className="min-h-[350px]">
