@@ -47,8 +47,7 @@ export function PublishDialog({
         dollars: Math.floor(targetAmount),
         cents: targetAmount - Math.floor(targetAmount),
         editedBy: userId,
-        imageNames: images.map((campaignImage) => campaignImage.name),
-        imageUrls: images.map((campaignImage) => campaignImage.url),
+        imageUrls: images,
         createdBy: isEdit ? undefined : userId,
       };
 

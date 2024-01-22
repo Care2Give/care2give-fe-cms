@@ -2,11 +2,6 @@ import { create } from "zustand";
 import { CampaignDonationAmount, CampaignStatus } from "@/types/prismaSchema";
 import { addMonths } from "date-fns";
 
-export type CampaignImage = {
-  url: string;
-  name: string;
-};
-
 interface CampaignEditorState {
   id: string;
   setId: (id: string) => void;
@@ -24,8 +19,8 @@ interface CampaignEditorState {
   setEndDate: (endDate: Date) => void;
   donationOptions: CampaignDonationAmount[];
   setDonationOptions: (donationOptions: CampaignDonationAmount[]) => void;
-  images: CampaignImage[];
-  setImages: (images: CampaignImage[]) => void;
+  images: string[];
+  setImages: (images: string[]) => void;
   reset: () => void;
 }
 
@@ -47,7 +42,7 @@ const useCampaignEditorStore = create<CampaignEditorState>()((set) => ({
   donationOptions: [],
   setDonationOptions: (donationOptions) => set({ donationOptions }),
   images: [],
-  setImages: (images: CampaignImage[]) => set({ images }),
+  setImages: (images: string[]) => set({ images }),
   reset: () =>
     set({
       status: CampaignStatus.ACTIVE,
