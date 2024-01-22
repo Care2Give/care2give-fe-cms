@@ -7,12 +7,11 @@ import {
   SelectValue,
 } from "../ui/select";
 import { PieChart } from "react-minimal-pie-chart";
-import useAnalyticsStore from "@/stores/useAnalyticsStore";
 import useClerkSWR from "@/lib/useClerkSWR";
 import {useEffect, useState} from "react";
 import Spinner from "@/components/shared/Spinner";
 import {parseISO} from "date-fns";
-import {Obj} from "@popperjs/core";
+import {toast} from "sonner";
 
 type PieChartCardProps = {
   pieChartId: string;
@@ -53,74 +52,7 @@ type PieChartCardBodyProps = {
   donationAmountMap: Object;
 };
 
-const MOCK_CAMPAIGNS_DATA = [
-  {
-    campaignName: "Charity Dinner 2020",
-    data: {
-      startDate: new Date("2020-01-01"),
-      endDate: new Date("2020-03-31"),
-      daysLeft: 80,
-      totalDonation: 12000.45,
-      topDonor: {
-        donationAmt: 300,
-        donorName: "Mr. Tan",
-        date: new Date("2020-02-23"),
-      },
-    },
-  },
-  {
-    campaignName: "Smell Good, Feel Good, Do Good",
-    data: {
-      startDate: new Date("2020-01-01"),
-      endDate: new Date("2020-06-31"),
-      daysLeft: 73,
-      totalDonation: 10023.5,
-      topDonor: {
-        donationAmt: 80,
-        donorName: "Mrs. Lee",
-        date: new Date("2020-01-02"),
-      },
-    },
-  },
-  {
-    campaignName: "Providing Housing Advice",
-    data: {
-      startDate: new Date("2020-01-01"),
-      endDate: new Date("2020-05-31"),
-      daysLeft: 60,
-      totalDonation: 9503.5,
-      topDonor: {
-        donationAmt: 240,
-        donorName: "Mr. Johnson",
-        date: new Date("2020-01-10"),
-      },
-    },
-  },
-  {
-    campaignName: "Hidden Heroes",
-    data: {
-      startDate: new Date("2020-01-01"),
-      endDate: new Date("2020-04-31"),
-      daysLeft: 45,
-      totalDonation: 14321.5,
-      topDonor: {
-        donationAmt: 530,
-        donorName: "Mrs. Fatimah",
-        date: new Date("2020-02-05"),
-      },
-    },
-  },
-];
-const ALL_CAMPAIGNS_NAME = MOCK_CAMPAIGNS_DATA.map(
-  (campaign) => campaign.campaignName
-);
-
 const DEFAULT_PIECHART_COLORS = ["#1DCF9E", "#5CD1B2", "#9FD4C6"];
-const MOCK_PIECHART_DATA = [
-  { title: "One", value: 10, color: "#1DCF9E" },
-  { title: "Two", value: 15, color: "#5CD1B2" },
-  { title: "Three", value: 20, color: "#9FD4C6" },
-];
 
 export default function PieChartCard({
   pieChartId,
@@ -137,6 +69,11 @@ export default function PieChartCard({
       setCampaignId(allCampaignData[pieChartId].id);
     }
   }, [allCampaignData])
+
+  if (errorAllCampaignData || (campaignId.length !== 0 && errorCampaignData)) {
+    toast.error("Error retrieving campaign data for pie chart");
+    return null;
+  }
 
   return (
     <div className="bg-white shadow rounded flex flex-col gap-4 p-8 m-2">

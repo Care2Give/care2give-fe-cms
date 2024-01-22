@@ -8,6 +8,7 @@ import useAnalyticsStore from "@/stores/useAnalyticsStore";
 import GraphCard from "@/components/analytics/GraphCard";
 import useClerkSWR from "@/lib/useClerkSWR";
 import { useState} from "react";
+import {toast} from "sonner";
 
 export default function Analytics() {
   const [ campaignDetailFilter, setCampaignDetailFilter] = useState("daily");
@@ -20,6 +21,14 @@ export default function Analytics() {
   const { data: fullPopularAmountData, error: errorPopularAmountData, isLoading: isLoadingPopularAmountData } = useClerkSWR(
       `${process.env.NEXT_PUBLIC_API_URL}/v1/cms/analytics/most-popular-amounts?filter=${popularAmountFilter}`
   );
+
+  if (errorCampaignData) {
+    toast.error("Error retrieving campaign data");
+  }
+
+  if (errorPopularAmountData) {
+    toast.error("Error retrieving popular donation amount data");
+  }
 
   const typedCampaignData = fullCampaignData ? fullCampaignData : [];
 

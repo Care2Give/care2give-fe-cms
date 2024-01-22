@@ -9,6 +9,7 @@ import GraphCardSidebar from "./GraphCardSidebar";
 import useClerkSWR from "@/lib/useClerkSWR";
 import {DetailedCampaign} from "@/types/analytics/DetailedCampaign";
 import Spinner from "@/components/shared/Spinner";
+import {toast} from "sonner";
 
 const Chart = dynamic(() => import("react-charts").then((mod) => mod.Chart), {
   ssr: false,
@@ -20,6 +21,10 @@ const GraphCard = () => {
   const { graphType, graphYAxis, graphStartDate, graphEndDate, graphInterval, setSelectedCampaigns, setAllCampaigns, selectedCampaigns } = useAnalyticsStore();
 
   const { data : fullData, error, isLoading } = useClerkSWR(`${process.env.NEXT_PUBLIC_API_URL}/v1/cms/analytics/detail-campaigns?filter=${graphInterval}&startDate=${graphStartDate.toISOString()}&endDate=${graphEndDate.toISOString()}`)
+
+  if (error) {
+      toast.error("Error retrieving detailed campaign data");
+  }
 
   const dataTyped: DetailedCampaign[] = fullData ? fullData[graphYAxis] : [];
   const graphData = dataTyped.map(campaign => ({
