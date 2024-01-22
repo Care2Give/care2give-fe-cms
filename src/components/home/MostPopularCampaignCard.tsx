@@ -20,10 +20,6 @@ export default function MostPopularCampaignCard() {
       numberOfDonors: 0,
     });
 
-  useEffect(() => {
-    console.log("rerendered most popular campaign");
-  }, [mostPopularCampaignFilter]);
-
   const { data: mostPopularCampaignFetched, error } = useClerkSWR(
     `${process.env.NEXT_PUBLIC_API_URL}/v1/cms/homepage-analytics/most-popular-campaign?filter=` +
       mostPopularCampaignFilter
@@ -33,11 +29,13 @@ export default function MostPopularCampaignCard() {
     setMostPopularCampaign(mostPopularCampaignFetched);
   }, [mostPopularCampaignFetched]);
 
+  if (error) return null;
+
   return (
     <Card
       statistic={mostPopularCampaign?.campaignTitle}
       data="Most Popular Campaign"
-      footerData={`${mostPopularCampaign?.numberOfDonors}` + " Donors"}
+      footerData={`${mostPopularCampaign?.numberOfDonors || ""} Donors`}
       Icon={FileHeartIcon}
       setFilter={setMostPopularCampaignFilter}
     />
