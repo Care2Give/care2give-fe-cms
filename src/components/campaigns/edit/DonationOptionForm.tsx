@@ -20,7 +20,9 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import useCampaignEditorStore from "@/stores/useCampaignEditorStore";
+import useCampaignEditorStore, {
+  DonationAmountInput,
+} from "@/stores/useCampaignEditorStore";
 import { CampaignDonationAmount } from "@/types/prismaSchema";
 import ErrorMessage from "./ErrorMessage";
 import { columns } from "./columns";
@@ -28,10 +30,10 @@ import { columns } from "./columns";
 export default function DonationOptionForm({ form }: { form: any }) {
   const { donationOptions, setDonationOptions } = useCampaignEditorStore();
   const [newDonationOption, setNewDonationOption] = useState<{
-    value: number;
+    amount: number;
     description: string;
   }>({
-    value: 0,
+    amount: 0,
     description: "",
   });
   const [editOption, setEditOption] = useState({
@@ -48,9 +50,9 @@ export default function DonationOptionForm({ form }: { form: any }) {
   const onEdit = (index: number) => {
     setIsDialogOpen(true);
     setEditOption({ isEdit: true, index: index });
-    const { dollars, cents, description } = donationOptions[index];
+    const { amount, description } = donationOptions[index];
     setNewDonationOption({
-      value: dollars + Math.floor(cents / 100),
+      amount,
       description: description || "",
     });
   };
@@ -62,15 +64,16 @@ export default function DonationOptionForm({ form }: { form: any }) {
 
   const onCancel = () => {
     setIsDialogOpen(false);
+    setEditOption({ isEdit: false, index: 0 });
     setErrors({});
     setNewDonationOption({
-      value: 0,
+      amount: 0,
       description: "",
     });
   };
 
   const donationOptionSchema = z.object({
-    value: z.coerce.number().min(1),
+    amount: z.coerce.number().min(1),
     description: z.string().min(1),
   });
 
@@ -83,13 +86,10 @@ export default function DonationOptionForm({ form }: { form: any }) {
     setIsDialogOpen(false);
     setErrors({});
 
-    const dollars = Math.floor(newDonationOption.value);
-    const cents = Math.floor((newDonationOption.value - dollars) * 100);
     if (editOption.isEdit) {
       donationOptions[editOption.index] = {
         ...donationOptions[editOption.index],
-        dollars,
-        cents,
+        amount: newDonationOption.amount,
         description: newDonationOption.description || "",
       };
       setDonationOptions([...donationOptions]);
@@ -97,14 +97,13 @@ export default function DonationOptionForm({ form }: { form: any }) {
       setDonationOptions([
         ...donationOptions,
         {
-          dollars,
-          cents,
+          amount: newDonationOption.amount,
           description: newDonationOption.description || "",
-        } as CampaignDonationAmount,
+        } as DonationAmountInput,
       ]);
     }
     setNewDonationOption({
-      value: 0,
+      amount: 0,
       description: "",
     });
     setEditOption({ isEdit: false, index: 0 });
@@ -120,7 +119,7 @@ export default function DonationOptionForm({ form }: { form: any }) {
         <DataTable
           columns={
             columns(onEdit, onDelete) as ColumnDef<
-              CampaignDonationAmount,
+              DonationAmountInput,
               string
             >[]
           }
@@ -132,6 +131,7 @@ export default function DonationOptionForm({ form }: { form: any }) {
             <Button
               className="bg-blue-500 hover:bg-blue-600 flex gap-2 items-center"
               onClick={() => setIsDialogOpen(true)}
+              type="button"
             >
               <PlusCircle />
               Add donation option
@@ -157,17 +157,17 @@ export default function DonationOptionForm({ form }: { form: any }) {
                   id="value"
                   defaultValue={0}
                   className="col-span-3"
-                  value={newDonationOption.value}
+                  value={newDonationOption.amount}
                   onChange={(event) =>
                     setNewDonationOption({
-                      value: parseFloat(event.target.value) || 0,
+                      amount: parseFloat(event.target.value) || 0,
                       description: newDonationOption.description,
                     })
                   }
                 />
-                {"value" in errors && (
+                {"amount" in errors && (
                   <p className="col-start-2 col-span-3 text-red-600">
-                    {(errors["value"] as any)._errors.join(`\n`)}
+                    {(errors["amount"] as any)._errors.join(`\n`)}
                   </p>
                 )}
               </div>
@@ -182,7 +182,7 @@ export default function DonationOptionForm({ form }: { form: any }) {
                   value={newDonationOption.description}
                   onChange={(event) =>
                     setNewDonationOption({
-                      value: newDonationOption.value,
+                      amount: newDonationOption.amount,
                       description: event.target.value,
                     })
                   }

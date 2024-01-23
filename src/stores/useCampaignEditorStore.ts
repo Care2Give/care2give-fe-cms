@@ -6,6 +6,12 @@ export interface CampaignImage {
   name: string;
   url: string;
 }
+
+export interface DonationAmountInput {
+  amount: number;
+  description: string;
+}
+
 interface CampaignEditorState {
   id: string;
   setId: (id: string) => void;
@@ -21,8 +27,8 @@ interface CampaignEditorState {
   setStartDate: (startDate: Date) => void;
   endDate: Date;
   setEndDate: (endDate: Date) => void;
-  donationOptions: CampaignDonationAmount[];
-  setDonationOptions: (donationOptions: CampaignDonationAmount[]) => void;
+  donationOptions: DonationAmountInput[];
+  setDonationOptions: (donationOptions: DonationAmountInput[]) => void;
   images: CampaignImage[];
   setImages: (images: CampaignImage[]) => void;
   reset: () => void;

@@ -208,7 +208,7 @@ export default function EditCampaign({
     startDate: z.coerce.date(),
     endDate: z.coerce.date(),
     donationOptions: z
-      .array(z.object({ value: z.coerce.number(), description: z.string() }))
+      .array(z.object({ amount: z.coerce.number(), description: z.string() }))
       .min(1, "At least one donation option must be specified"),
     images: z
       .array(z.object({ url: z.string(), name: z.string() }))

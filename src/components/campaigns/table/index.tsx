@@ -2,11 +2,30 @@ import { CampaignTable } from "@/types/campaigns/CampaignTable";
 import SubHeader from "../SubHeader";
 import { columns } from "./columns";
 import { DataTable } from "./data-table";
-import useCampaignEditorStore from "@/stores/useCampaignEditorStore";
+import useCampaignEditorStore, {
+  DonationAmountInput,
+} from "@/stores/useCampaignEditorStore";
 import { useRouter } from "next/router";
 import { ColumnDef } from "@tanstack/react-table";
 import { useAuth } from "@clerk/nextjs";
 import { CampaignsWithDonationAmounts } from "@/types/campaigns/CampaignWithDonationAmounts";
+import { CampaignDonationAmount } from "@/types/prismaSchema";
+
+/**
+ * Converts DB object stored with dollars and cents to input object stored with amount
+ * @param donationAmounts Donation Amounts in dollars and cents
+ * @returns array of DonationAmountInput with total amount from the dollars and cents
+ */
+function convertDonationDbObjToInputObj(
+  donationAmounts: CampaignDonationAmount[]
+): DonationAmountInput[] {
+  return donationAmounts.map((dbObject) => {
+    return {
+      amount: dbObject.dollars + Math.floor(dbObject.cents / 100),
+      description: dbObject.description || "",
+    };
+  });
+}
 
 export default function Table({ campaigns }: { campaigns: CampaignTable[] }) {
   const router = useRouter();
@@ -40,7 +59,7 @@ export default function Table({ campaigns }: { campaigns: CampaignTable[] }) {
       setStartDate(new Date(data.startDate));
       setEndDate(new Date(data.endDate));
       setTitle(data.title);
-      setDonationOptions(data.donationAmounts);
+      setDonationOptions(convertDonationDbObjToInputObj(data.donationAmounts));
       setDescription(data.description || "");
       setImages(
         data.imageUrls.map((imageUrl, i) => {

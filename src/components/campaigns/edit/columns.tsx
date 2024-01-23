@@ -2,28 +2,26 @@ import { createColumnHelper } from "@tanstack/react-table";
 import { arabotoBold } from "@/lib/font";
 import { EditIcon, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { CampaignDonationAmount } from "@/types/prismaSchema";
 import {
   Popover,
   PopoverTrigger,
   PopoverContent,
   PopoverClose,
 } from "@radix-ui/react-popover";
+import { DonationAmountInput } from "@/stores/useCampaignEditorStore";
 
-const columnHelper = createColumnHelper<CampaignDonationAmount>();
+const columnHelper = createColumnHelper<DonationAmountInput>();
 
 export const columns = (
   onEdit: (index: number) => void,
   onDelete: (index: number) => void
 ) => [
-  columnHelper.accessor("dollars", {
+  columnHelper.accessor("amount", {
     cell: ({ row }) => {
-      const { dollars, cents } = row.original;
-      const amount = dollars + cents / 100;
       const formatted = new Intl.NumberFormat("en-SG", {
         style: "currency",
         currency: "SGD",
-      }).format(amount);
+      }).format(row.original.amount);
 
       return <p className="text-center">{formatted}</p>;
     },
