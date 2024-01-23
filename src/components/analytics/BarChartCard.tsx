@@ -5,7 +5,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import localFont from "next/font/local";
 import { Montserrat } from "next/font/google";
 import BarChart from "./BarChart";
 

@@ -42,7 +42,14 @@ export default function Table({ campaigns }: { campaigns: CampaignTable[] }) {
       setTitle(data.title);
       setDonationOptions(data.donationAmounts);
       setDescription(data.description || "");
-      setImages(data.imageUrls);
+      setImages(
+        data.imageUrls.map((imageUrl, i) => {
+          return {
+            url: imageUrl,
+            name: "",
+          };
+        })
+      );
       setStatus(data.status);
       setTargetAmount(targetAmount);
       router.push("/campaigns/edit");
