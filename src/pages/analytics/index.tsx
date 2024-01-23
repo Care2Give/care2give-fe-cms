@@ -6,113 +6,83 @@ import PopularTable from "@/components/analytics/PopularTable";
 import PieChartCard from "@/components/analytics/PieChartCard";
 import useAnalyticsStore from "@/stores/useAnalyticsStore";
 import GraphCard from "@/components/analytics/GraphCard";
-
-const dummyCampaignDetails = [
-  {
-    campaign: "Charity Dinner 2020",
-    amount: 10230,
-    trend: true,
-  },
-  {
-    campaign: "Smell Good, Feel Good, Do Good",
-    amount: 6040,
-    trend: false,
-  },
-  {
-    campaign: "Providing Housing Advice",
-    amount: 5300,
-    trend: true,
-  },
-  {
-    campaign: "Hidden Heroes",
-    amount: 1300,
-    trend: true,
-  },
-];
-
-const dummyPopularDetails = [
-  {
-    campaign: "Charity Dinner 2020",
-    amount: 20,
-    numberOfDonors: 62,
-  },
-  {
-    campaign: "Charity Dinner 2020",
-    amount: 100,
-    numberOfDonors: 46,
-  },
-  {
-    campaign: "Smell Good, Feel Good, Do Good",
-    amount: 50,
-    numberOfDonors: 23,
-  },
-  {
-    campaign: "Providing Housing Advice",
-    amount: 20,
-    numberOfDonors: 21,
-  },
-  {
-    campaign: "Smell Good, Feel Good, Do Good",
-    amount: 10,
-    numberOfDonors: 18,
-  },
-  {
-    campaign: "Providing Housing Advice",
-    amount: 10,
-    numberOfDonors: 18,
-  },
-  {
-    campaign: "Smell Good, Feel Good, Do Good",
-    amount: 10,
-    numberOfDonors: 17,
-  },
-  {
-    campaign: "Charity Dinner 2020",
-    amount: 10,
-    numberOfDonors: 10,
-  },
-  {
-    campaign: "Charity Dinner 2020",
-    amount: 500,
-    numberOfDonors: 4,
-  },
-];
+import useClerkSWR from "@/lib/useClerkSWR";
+import { useState} from "react";
+import {toast} from "sonner";
 
 export default function Analytics() {
-  const { pieChartCampaignOne, pieChartCampaignTwo } = useAnalyticsStore();
+  const [ campaignDetailFilter, setCampaignDetailFilter] = useState("daily");
+  const [ popularAmountFilter, setPopularAmountFilter] = useState("daily");
 
-  const campaignDetails = dummyCampaignDetails.map((campaign) => ({
+  const { data: fullCampaignData, error: errorCampaignData, isLoading: isLoadingCampaignData } = useClerkSWR(
+      `${process.env.NEXT_PUBLIC_API_URL}/v1/cms/analytics/campaigns?filter=${campaignDetailFilter}`
+  );
+
+  const { data: fullPopularAmountData, error: errorPopularAmountData, isLoading: isLoadingPopularAmountData } = useClerkSWR(
+      `${process.env.NEXT_PUBLIC_API_URL}/v1/cms/analytics/most-popular-amounts?filter=${popularAmountFilter}`
+  );
+
+  if (errorCampaignData) {
+    toast.error("Error retrieving campaign data");
+  }
+
+  if (errorPopularAmountData) {
+    toast.error("Error retrieving popular donation amount data");
+  }
+
+  const typedCampaignData = fullCampaignData ? fullCampaignData : [];
+
+  const barCampaignData = typedCampaignData.map((campaign) => ({
     xLabel: "",
     yLabel: `$${Math.floor(campaign.amount / 1000)}+`,
     scale: campaign.amount,
   }));
-  const popularDetails = dummyPopularDetails.map((campaign) => ({
+
+  const tableCampaignData = typedCampaignData.map((campaign) => ({
+    campaign: campaign.title,
+    amount: campaign.amount,
+    trend: campaign.trend
+  }))
+
+  const typedPopularAmountData = fullPopularAmountData ? fullPopularAmountData : [];
+
+  const barPopularAmountData = typedPopularAmountData.map((campaign) => ({
     xLabel: `$${campaign.amount}`,
-    yLabel: `${campaign.numberOfDonors}`,
-    scale: campaign.numberOfDonors,
+    yLabel: `${campaign.numberOfDonations}`,
+    scale: campaign.numberOfDonations,
   }));
+
+  const tablePopularAmountData = typedPopularAmountData.map(donationAmount => ({
+    campaign: donationAmount.campaign,
+    amount: donationAmount.amount,
+    numberOfDonations: donationAmount.numberOfDonations
+  }))
 
   return (
     <Layout>
       <Header />
       <div className="grid grid-cols-1 xl:grid-cols-2">
         <BarChartCard
-          title="Campaigns"
-          barChartDetails={campaignDetails}
-          tableDetails={dummyCampaignDetails}
-          Table={CampaignTable}
+            title="Campaigns"
+            barChartDetails={barCampaignData}
+            tableDetails={tableCampaignData}
+            Table={CampaignTable}
+            isLoading={isLoadingCampaignData}
+            setFrequency={setCampaignDetailFilter}
         />
         <BarChartCard
           title="Most Popular Amounts"
-          barChartDetails={popularDetails}
-          tableDetails={dummyPopularDetails}
+          barChartDetails={barPopularAmountData}
+          tableDetails={tablePopularAmountData}
           Table={PopularTable}
+          isLoading={isLoadingPopularAmountData}
+          setFrequency={setPopularAmountFilter}
         />
       </div>
       <GraphCard />
       <div className="grid grid-cols-1 xl:grid-cols-2">
-        <PieChartCard pieChartId="1" campaignName={pieChartCampaignOne} />
-        <PieChartCard pieChartId="2" campaignName={pieChartCampaignTwo} />
+        <PieChartCard pieChartId="1" />
+        <PieChartCard pieChartId="2" />
       </div>
     </Layout>
   );
