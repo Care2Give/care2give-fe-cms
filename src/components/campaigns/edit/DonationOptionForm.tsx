@@ -21,7 +21,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import useCampaignEditorStore, {
-  DonationAmountInput,
+  DonationAmountFormInput,
 } from "@/stores/useCampaignEditorStore";
 import { CampaignDonationAmount } from "@/types/prismaSchema";
 import ErrorMessage from "./ErrorMessage";
@@ -99,7 +99,7 @@ export default function DonationOptionForm({ form }: { form: any }) {
         {
           amount: newDonationOption.amount,
           description: newDonationOption.description || "",
-        } as DonationAmountInput,
+        } as DonationAmountFormInput,
       ]);
     }
     setNewDonationOption({
@@ -119,7 +119,7 @@ export default function DonationOptionForm({ form }: { form: any }) {
         <DataTable
           columns={
             columns(onEdit, onDelete) as ColumnDef<
-              DonationAmountInput,
+              DonationAmountFormInput,
               string
             >[]
           }

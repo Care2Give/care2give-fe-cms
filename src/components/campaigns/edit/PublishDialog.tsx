@@ -8,11 +8,33 @@ import {
 } from "@/components/ui/dialog";
 import { useRouter } from "next/router";
 import { EditStage } from "@/components/campaigns/edit/edit-stage";
-import useCampaignEditorStore from "@/stores/useCampaignEditorStore";
+import useCampaignEditorStore, {
+  DonationAmountFormInput,
+} from "@/stores/useCampaignEditorStore";
 import { useAuth } from "@clerk/nextjs";
 import httpPost from "@/lib/httpPost";
 import httpPatch from "@/lib/httpPatch";
-import { Campaign } from "@/types/prismaSchema";
+import { CampaignWithDonationAmountsPayload } from "@/types/campaigns/CampaignWithDonationAmountsPayload";
+import { CampaignDonationAmountPayload } from "@/types/campaigns/CampaignDonationAmountPayload";
+
+/**
+ * Converts Donation input stored with amount to db object stored with dollars and cents
+ * @param donationAmounts DonationAmountFormInput with total amount from the dollars and cents
+ * @returns Donation Amounts in dollars and cents
+ */
+function convertDonationInputObjToDbInputObj(
+  donationAmounts: DonationAmountFormInput[]
+): CampaignDonationAmountPayload[] {
+  return donationAmounts.map((inputObject) => {
+    const dollars = Math.floor(inputObject.amount);
+    const cents = Math.floor((inputObject.amount - dollars) * 100);
+    return {
+      dollars,
+      cents,
+      description: inputObject.description || "",
+    };
+  });
+}
 
 export function PublishDialog({
   setEditStage,
@@ -29,6 +51,7 @@ export function PublishDialog({
     description,
     targetAmount,
     images,
+    donationOptions,
   } = useCampaignEditorStore();
   const { getToken, userId } = useAuth();
 
@@ -37,7 +60,7 @@ export function PublishDialog({
     const isEdit = campaignId !== "";
 
     if (userId) {
-      const bodyObj: Campaign = {
+      const bodyObj: CampaignWithDonationAmountsPayload = {
         status,
         startDate,
         endDate,
@@ -49,6 +72,7 @@ export function PublishDialog({
         editedBy: userId,
         imageUrls: images.map((campaignImage) => campaignImage.url),
         createdBy: isEdit ? undefined : userId,
+        donationAmounts: convertDonationInputObjToDbInputObj(donationOptions),
       };
 
       try {
@@ -71,8 +95,6 @@ export function PublishDialog({
       }
     }
     router.push("/campaigns");
-
-    // TODO add functionality to create the donation amount - current missing in BE
   };
 
   return (

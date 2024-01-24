@@ -1,5 +1,5 @@
 import useCampaignEditorStore, {
-  DonationAmountInput,
+  DonationAmountFormInput,
 } from "@/stores/useCampaignEditorStore";
 import { Button } from "@/components/ui/button";
 import { EditStage } from "@/components/campaigns/edit/edit-stage";
@@ -16,7 +16,7 @@ function buildPreviewLink({
   targetAmount: number;
   endDate: Date;
   description: string;
-  donationOptions: DonationAmountInput[];
+  donationOptions: DonationAmountFormInput[];
   images: { url: string }[];
 }): URL {
   const campaignWebsite = process.env.NEXT_PUBLIC_CAMPAIGN_WEBSITE;

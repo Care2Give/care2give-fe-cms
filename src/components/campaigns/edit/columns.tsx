@@ -8,9 +8,9 @@ import {
   PopoverContent,
   PopoverClose,
 } from "@radix-ui/react-popover";
-import { DonationAmountInput } from "@/stores/useCampaignEditorStore";
+import { DonationAmountFormInput } from "@/stores/useCampaignEditorStore";
 
-const columnHelper = createColumnHelper<DonationAmountInput>();
+const columnHelper = createColumnHelper<DonationAmountFormInput>();
 
 export const columns = (
   onEdit: (index: number) => void,
