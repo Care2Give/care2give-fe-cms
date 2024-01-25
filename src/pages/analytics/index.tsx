@@ -9,6 +9,8 @@ import GraphCard from "@/components/analytics/GraphCard";
 import useClerkSWR from "@/lib/useClerkSWR";
 import { useState} from "react";
 import {toast} from "sonner";
+import {AnalyticCampaign} from "@/types/analytics/AnalyticCampaign";
+import {DonationAmount} from "@/types/analytics/DonationAmount";
 
 export default function Analytics() {
   const [ campaignDetailFilter, setCampaignDetailFilter] = useState("daily");
@@ -30,7 +32,7 @@ export default function Analytics() {
     toast.error("Error retrieving popular donation amount data");
   }
 
-  const typedCampaignData = fullCampaignData ? fullCampaignData : [];
+  const typedCampaignData: AnalyticCampaign[] = fullCampaignData ? fullCampaignData : [];
 
   const barCampaignData = typedCampaignData.map((campaign) => ({
     xLabel: "",
@@ -44,7 +46,7 @@ export default function Analytics() {
     trend: campaign.trend
   }))
 
-  const typedPopularAmountData = fullPopularAmountData ? fullPopularAmountData : [];
+  const typedPopularAmountData: DonationAmount[] = fullPopularAmountData ? fullPopularAmountData : [];
 
   const barPopularAmountData = typedPopularAmountData.map((campaign) => ({
     xLabel: `$${campaign.amount}`,

@@ -48,8 +48,8 @@ type Donation = {
 type PieChartCardBodyProps = {
   totalDonation: number;
   highestDonation: Donation;
-  donationTypeMap: Object;
-  donationAmountMap: Object;
+  donationType: [string, number][];
+  donationAmount: [string, number][];
 };
 
 const DEFAULT_PIECHART_COLORS = ["#1DCF9E", "#5CD1B2", "#9FD4C6"];
@@ -93,8 +93,8 @@ export default function PieChartCard({
               <PieChartCardBody
                   totalDonation={campaignData.currentAmount}
                   highestDonation={campaignData.highestDonation}
-                  donationTypeMap={JSON.parse(campaignData.donationTypeMap)}
-                  donationAmountMap={JSON.parse(campaignData.donationAmountMap)}
+                  donationType={Object.entries(JSON.parse(campaignData.donationTypeMap))}
+                  donationAmount={Object.entries(JSON.parse(campaignData.donationAmountMap))}
               />
           </>
       }
@@ -156,15 +156,15 @@ function CardSelector({ pieChartId, placeholder, values, setCampaignId }: CardSe
 function PieChartCardBody({
   totalDonation,
   highestDonation,
-  donationTypeMap,
-  donationAmountMap
+  donationType,
+  donationAmount
 }: PieChartCardBodyProps) {
   const donationTypeData = [];
   let counter = 0;
-  for (const donationType in donationTypeMap) {
+  for (const donationTypeIndex in donationType) {
     donationTypeData.push({
-      title: donationType,
-      value: donationTypeMap[donationType],
+      title: donationType[donationTypeIndex][0],
+      value: donationType[donationTypeIndex][1],
       color: DEFAULT_PIECHART_COLORS[counter % DEFAULT_PIECHART_COLORS.length]
     })
     counter += 1;
@@ -172,10 +172,10 @@ function PieChartCardBody({
 
   const donationAmountData = [];
   counter = 0;
-  for (const donationAmount in donationAmountMap) {
+  for (const donationAmountIndex in donationAmount) {
     donationAmountData.push({
-      title: donationAmount,
-      value: donationAmountMap[donationAmount],
+      title: donationAmount[donationAmountIndex][0],
+      value: donationAmount[donationAmountIndex][1],
       color: DEFAULT_PIECHART_COLORS[counter % DEFAULT_PIECHART_COLORS.length]
     })
     counter += 1;

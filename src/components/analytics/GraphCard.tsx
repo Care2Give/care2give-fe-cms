@@ -45,7 +45,7 @@ const GraphCard = () => {
 
 
   const linePrimaryAxis = React.useMemo<
-    AxisOptions<(typeof dataTyped)[number]["data"][number]>
+    AxisOptions<(typeof filteredGraphData)[number]["data"][number]>
   >(
     () => ({
       getValue: (datum) => datum.primary as Date,
@@ -54,7 +54,7 @@ const GraphCard = () => {
   ) as AxisOptions<unknown>;
 
   const barPrimaryAxis = React.useMemo<
-    AxisOptions<(typeof dataTyped)[number]["data"][number]>
+    AxisOptions<(typeof filteredGraphData)[number]["data"][number]>
   >(
     () => ({
       getValue: (datum) => mmddFormatter(datum.primary as Date),
@@ -63,7 +63,7 @@ const GraphCard = () => {
   ) as AxisOptions<unknown>;
 
   const secondaryAxes = React.useMemo<
-    AxisOptions<(typeof dataTyped)[number]["data"][number]>[]
+    AxisOptions<(typeof filteredGraphData)[number]["data"][number]>[]
   >(
     () => [
       {
@@ -74,7 +74,7 @@ const GraphCard = () => {
   ) as AxisOptions<unknown>[];
 
   const secondaryStackedAxes = React.useMemo<
-    AxisOptions<(typeof dataTyped)[number]["data"][number]>[]
+    AxisOptions<(typeof filteredGraphData)[number]["data"][number]>[]
   >(
     () => [
       {
