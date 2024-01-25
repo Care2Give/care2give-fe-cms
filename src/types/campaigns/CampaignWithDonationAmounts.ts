@@ -1,5 +1,6 @@
 import { Campaign, CampaignDonationAmount } from "../prismaSchema";
 
-export type CampaignsWithDonationAmounts = {
+// Type for retrieval of Campaign with donationAmounts from DB
+export type CampaignWithDonationAmounts = {
   donationAmounts: CampaignDonationAmount[];
 } & Campaign;

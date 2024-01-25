@@ -19,12 +19,13 @@ import useCampaignEditorStore from "@/stores/useCampaignEditorStore";
 import { UseFormReturn } from "react-hook-form";
 
 export default function FormFieldDatePicker({ form }: { form: UseFormReturn }) {
-  const [date, setDate] = useState<DateRange | undefined>({
-    from: new Date(),
-    to: addMonths(new Date(), 1),
-  });
+  const { startDate, endDate, setEndDate, setStartDate } =
+    useCampaignEditorStore();
 
-  const { setEndDate, setStartDate } = useCampaignEditorStore();
+  const [date, setDate] = useState<DateRange | undefined>({
+    from: startDate,
+    to: endDate,
+  });
 
   return (
     <div className="my-2">
