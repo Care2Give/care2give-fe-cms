@@ -1,6 +1,5 @@
 import { UserButton } from "@clerk/nextjs";
 
-// TODO: Styling and design needed
 export default function NoRole() {
   return (
     <div className="flex flex-col justify-center items-center min-h-screen">

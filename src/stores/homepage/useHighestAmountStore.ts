@@ -6,8 +6,9 @@ interface HighestAmountStore {
 }
 
 const useHighestAmountStore = create<HighestAmountStore>()((set) => ({
-  highestAmountFilter: "alltime",
-  setHighestAmountFilter: (highestAmountFilter) => set((_) => ({ highestAmountFilter: highestAmountFilter })),
+  highestAmountFilter: "daily",
+  setHighestAmountFilter: (highestAmountFilter) =>
+    set((_) => ({ highestAmountFilter: highestAmountFilter })),
 }));
 
 export default useHighestAmountStore;

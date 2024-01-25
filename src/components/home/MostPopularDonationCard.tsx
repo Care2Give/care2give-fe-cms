@@ -26,7 +26,6 @@ export default function MostPopularDonationCard() {
   );
 
   useEffect(() => {
-    console.log("most popular donation fetched", mostPopularDonationFetched);
     setMostPopularDonation(mostPopularDonationFetched);
   }, [mostPopularDonationFetched]);
 
@@ -35,7 +34,9 @@ export default function MostPopularDonationCard() {
   return (
     <Card
       statistic={mostPopularDonation?.mostPopularAmount}
-      data="Most Popular Amount"
+      data={
+        mostPopularDonation?.mostPopularAmount ? "Most Popular Amount" : "None"
+      }
       Icon={ThumbsUpIcon}
       footerData={`${mostPopularDonation?.numberOfDonors || ""} Donors`}
       setFilter={setMostPopularDonationFilter}
