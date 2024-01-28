@@ -16,9 +16,7 @@ export default function TotalDonorsCard() {
     donorNumber: "0",
   });
 
-  useEffect(() => {
-    console.log("rerendered total donors feature");
-  }, [totalDonorsFilter]);
+  useEffect(() => {}, [totalDonorsFilter]);
 
   const { data: totalDonorsFetched, error } = useClerkSWR(
     `${process.env.NEXT_PUBLIC_API_URL}/v1/cms/homepage-analytics/total-donor-number?filter=` +

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Card from "./Card";
 import { ChevronsUp } from "lucide-react";
 import useClerkSWR from "@/lib/useClerkSWR";
-import useHighestAmountStore from "@/stores/homepage/useHighestAmount";
+import useHighestAmountStore from "@/stores/homepage/useHighestAmountStore";
 
 export default function HighestAmountCard() {
   // feature 3: highest donation amount
