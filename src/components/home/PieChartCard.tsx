@@ -25,13 +25,18 @@ type CardSelectorProps = {
   setFilter: (typeOfDonation: string) => void;
 };
 
-// const MOCK_DATA = [
-//   { title: "One", value: 100, color: "#FFD694" },
-//   { title: "Two", value: 15, color: "#FCE3BB" },
-//   { title: "Three", value: 20, color: "#FCEBCF" },
-// ];
-
 const colors = ["#FFD694", "#FCE3BB", "#FCEBCF"];
+
+function formatTitle(key: string) {
+  var splitStr = key.toLowerCase().split("_");
+
+  for (var i = 0; i < splitStr.length; i++) {
+    splitStr[i] =
+      splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);
+  }
+
+  return splitStr.join(" ");
+}
 
 export default function PieChartCard({
   statistic,
@@ -57,7 +62,7 @@ export default function PieChartCard({
 
   for (let key in data) {
     pieChartData.push({
-      title: key,
+      title: formatTitle(key.toLowerCase()),
       value: Number(data[key]),
       color: colors[count++],
     });
