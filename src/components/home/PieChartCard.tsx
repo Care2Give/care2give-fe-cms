@@ -69,7 +69,16 @@ export default function PieChartCard({
         {statistic}
       </div>
       <div className="h-40">
-        <PieChart data={pieChartData} lineWidth={48} />
+        <PieChart
+          data={pieChartData}
+          lineWidth={48}
+          label={(data) => data.dataEntry.value}
+          labelPosition={75}
+          labelStyle={{
+            fontSize: "10px",
+            fontWeight: "600",
+          }}
+        />
       </div>
       <div className={cn("bg-[#ffefdf] flex justify-end items-center p-4")}>
         <CardSelector
