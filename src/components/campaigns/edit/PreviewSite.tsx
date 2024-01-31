@@ -1,7 +1,8 @@
-import useCampaignEditorStore from "@/stores/useCampaignEditorStore";
+import useCampaignEditorStore, {
+  DonationAmountFormInput,
+} from "@/stores/useCampaignEditorStore";
 import { Button } from "@/components/ui/button";
 import { EditStage } from "@/components/campaigns/edit/edit-stage";
-import { CampaignDonationAmount } from "@/types/prismaSchema";
 
 function buildPreviewLink({
   title,
@@ -15,7 +16,7 @@ function buildPreviewLink({
   targetAmount: number;
   endDate: Date;
   description: string;
-  donationOptions: CampaignDonationAmount[];
+  donationOptions: DonationAmountFormInput[];
   images: { url: string }[];
 }): URL {
   const campaignWebsite = process.env.NEXT_PUBLIC_CAMPAIGN_WEBSITE;
@@ -27,19 +28,17 @@ function buildPreviewLink({
   urlObj.searchParams.append("targetDate", new Date(endDate).toTimeString());
   urlObj.searchParams.append("slug", title);
   urlObj.searchParams.append("description", description);
+
   for (let i = 0; i < donationOptions.length; i++) {
-    urlObj.searchParams.append(
-      "donationOptionValue",
-      donationOptions[i].value.toString()
-    );
-    urlObj.searchParams.append(
-      "donationOptionDescription",
-      donationOptions[i].description || ""
-    );
+    const { amount, description } = donationOptions[i];
+    urlObj.searchParams.append("donationOptionValue", amount.toString());
+    urlObj.searchParams.append("donationOptionDescription", description || "");
   }
+
   for (let i = 0; i < images.length; i++) {
-    urlObj.searchParams.append("imageUrl", images[i].url);
+    urlObj.searchParams.append("imageUrls", images[i].url);
   }
+
   return urlObj;
 }
 

@@ -4,15 +4,15 @@ import { ThumbsUpIcon } from "lucide-react";
 import useClerkSWR from "@/lib/useClerkSWR";
 import useMostPopularDonationStore from "@/stores/homepage/useMostPopularDonationStore";
 
+interface MostPopularDonation {
+  mostPopularAmount: string;
+  numberOfDonors: number;
+}
+
 export default function MostPopularDonationCard() {
   // feature 5: most popular amount donated
   const { mostPopularDonationFilter, setMostPopularDonationFilter } =
     useMostPopularDonationStore();
-
-  interface MostPopularDonation {
-    mostPopularAmount: string;
-    numberOfDonors: number;
-  }
 
   const [mostPopularDonation, setMostPopularDonation] =
     useState<MostPopularDonation>({
@@ -31,12 +31,16 @@ export default function MostPopularDonationCard() {
     setMostPopularDonation(mostPopularDonationFetched);
   }, [mostPopularDonationFetched]);
 
+  if (error) return null;
+
   return (
     <Card
       statistic={mostPopularDonation?.mostPopularAmount}
-      data="Most Popular Amount"
+      data={
+        mostPopularDonation?.mostPopularAmount ? "Most Popular Amount" : "None"
+      }
       Icon={ThumbsUpIcon}
-      footerData={`${mostPopularDonation?.numberOfDonors}` + " Donors"}
+      footerData={`${mostPopularDonation?.numberOfDonors || ""} Donors`}
       setFilter={setMostPopularDonationFilter}
     />
   );

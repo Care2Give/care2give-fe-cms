@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 
 const columnHelper = createColumnHelper<CampaignTable>();
 
-export const columns = (onEdit: (indexOfCampaign: number) => void) => [
+export const columns = [
   columnHelper.accessor("title", {
     cell: (props) => <p className="text-center">{props.getValue()}</p>,
     header: () => (
@@ -42,11 +42,7 @@ export const columns = (onEdit: (indexOfCampaign: number) => void) => [
   }),
   columnHelper.accessor("status", {
     cell: (props) => (
-      <div
-        className={`${
-          props.getValue() === "ACTIVE" ? "bg-green-200" : "bg-red-200"
-        } text-center py-2 px-4 rounded-2xl`}
-      >
+      <div className="bg-gray-200 text-center py-2 px-4 rounded-2xl">
         {capitalizeFirstLetter(props.getValue())}
       </div>
     ),
@@ -84,14 +80,6 @@ export const columns = (onEdit: (indexOfCampaign: number) => void) => [
       >
         End Date
       </p>
-    ),
-  }),
-  columnHelper.display({
-    id: "edit",
-    cell: (cell) => (
-      <Button variant="ghost" onClick={() => onEdit(cell.row.index)}>
-        <EditIcon />
-      </Button>
     ),
   }),
 ];

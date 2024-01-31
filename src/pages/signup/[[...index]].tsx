@@ -1,4 +1,4 @@
-import { SignIn } from "@clerk/nextjs";
+import { SignUp } from "@clerk/nextjs";
 import Image from "next/image";
 import React from "react";
 import LoginImg from "../../../public/login/login-img.svg";
@@ -19,7 +19,7 @@ export default function Login() {
             <Image src={LoginImg} alt="login-img" priority />
           </div>
         </div>
-        <SignIn path="/login" afterSignInUrl="/" routing="path" />
+        <SignUp path="/signup" signInUrl="/login" routing="path" />
       </div>
     </div>
   );

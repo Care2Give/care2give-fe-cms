@@ -2,11 +2,30 @@ import { CampaignTable } from "@/types/campaigns/CampaignTable";
 import SubHeader from "../SubHeader";
 import { columns } from "./columns";
 import { DataTable } from "./data-table";
-import useCampaignEditorStore from "@/stores/useCampaignEditorStore";
+import useCampaignEditorStore, {
+  DonationAmountFormInput,
+} from "@/stores/useCampaignEditorStore";
 import { useRouter } from "next/router";
 import { ColumnDef } from "@tanstack/react-table";
 import { useAuth } from "@clerk/nextjs";
-import { CampaignsWithDonationAmounts } from "@/types/campaigns/CampaignWithDonationAmounts";
+import { CampaignWithDonationAmounts } from "@/types/campaigns/CampaignWithDonationAmounts";
+import { CampaignDonationAmount } from "@/types/prismaSchema";
+
+/**
+ * Converts DB object stored with dollars and cents to input object stored with amount
+ * @param donationAmounts Donation Amounts in dollars and cents
+ * @returns array of DonationAmountFormInput with total amount from the dollars and cents
+ */
+function convertDonationDbObjToInputObj(
+  donationAmounts: CampaignDonationAmount[]
+): DonationAmountFormInput[] {
+  return donationAmounts.map((dbObject) => {
+    return {
+      amount: dbObject.dollars + Math.floor(dbObject.cents / 100),
+      description: dbObject.description || "",
+    };
+  });
+}
 
 export default function Table({ campaigns }: { campaigns: CampaignTable[] }) {
   const router = useRouter();
@@ -33,18 +52,18 @@ export default function Table({ campaigns }: { campaigns: CampaignTable[] }) {
       `${process.env.NEXT_PUBLIC_API_URL}/v1/campaign/${campaignId}`,
       { headers: { Authorization: `Bearer ${token}` } }
     );
-    const data: CampaignsWithDonationAmounts = await res.json();
+    const data: CampaignWithDonationAmounts = await res.json();
+
     if (data) {
       const targetAmount = data.dollars + data.cents / 100;
       setId(data.id || "");
       setStartDate(new Date(data.startDate));
       setEndDate(new Date(data.endDate));
       setTitle(data.title);
-      setDonationOptions(data.donationAmounts);
+      setDonationOptions(convertDonationDbObjToInputObj(data.donationAmounts));
       setDescription(data.description || "");
-      // TODO change database to store the name of image if needed
       setImages(
-        data.imageUrl.map((imageUrl) => {
+        data.imageUrls.map((imageUrl, i) => {
           return {
             url: imageUrl,
             name: "",

@@ -4,13 +4,13 @@ import { SmileIcon } from "lucide-react";
 import useClerkSWR from "@/lib/useClerkSWR";
 import useTotalDonorsStore from "@/stores/homepage/useTotalDonorsStore";
 
+interface TotalDonors {
+  donorNumber: string;
+}
+
 export default function TotalDonorsCard() {
   // feature 2: total donor number
   const { totalDonorsFilter, setTotalDonorsFilter } = useTotalDonorsStore();
-
-  interface TotalDonors {
-    donorNumber: string;
-  }
 
   const [totalDonors, setTotalDonors] = useState<TotalDonors>({
     donorNumber: "0",
@@ -26,6 +26,8 @@ export default function TotalDonorsCard() {
   useEffect(() => {
     setTotalDonors(totalDonorsFetched);
   }, [totalDonorsFetched]);
+
+  if (error) return null;
 
   return (
     <Card

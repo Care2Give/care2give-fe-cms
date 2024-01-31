@@ -4,14 +4,14 @@ import { HeartHandshakeIcon } from "lucide-react";
 import useClerkSWR from "@/lib/useClerkSWR";
 import useTotalDonationAmountStore from "@/stores/homepage/useTotalDonationAmount";
 
+interface TotalDonationAmount {
+  totalAmount: string;
+}
+
 export default function TotalDonationAmountCard() {
   // feature 1: total donation amount
   const { totalDonationAmountFilter, setTotalDonationAmountFilter } =
     useTotalDonationAmountStore();
-
-  interface TotalDonationAmount {
-    totalAmount: string;
-  }
 
   const [totalDonationAmount, setTotalDonationAmount] =
     useState<TotalDonationAmount>({
@@ -28,6 +28,8 @@ export default function TotalDonationAmountCard() {
   useEffect(() => {
     setTotalDonationAmount(totalDonationAmountFetched);
   }, [totalDonationAmountFetched]);
+
+  if (error) return null;
 
   return (
     <Card

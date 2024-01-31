@@ -30,6 +30,9 @@ import FormFieldTextarea from "./FormFieldTextarea";
 import FormFieldInput from "./FormFieldInput";
 import FormFieldDatePicker from "./FormFieldDatePicker";
 import ErrorMessage from "./ErrorMessage";
+import { useAuth } from "@clerk/nextjs";
+import httpPostFormData from "@/lib/httpPostFormData";
+import { ImageUploadResponsePayload } from "@/types/campaigns/ImageUploadResponsePayload";
 
 function CampaignStatusForm({ form }: { form: any }) {
   return (
@@ -113,10 +116,17 @@ function CampaignMediaCard({
   return (
     <div className="flex justify-between border rounded-md items-center mx-10 my-2">
       <div className="flex items-center">
-        <Image width="50" height="50" src={image.url} alt={image.name} />
+        <div className="relative w-[100px] h-[100px]">
+          <Image
+            src={image.url}
+            alt={image.name}
+            layout="fill"
+            objectFit="cover"
+          />
+        </div>
         <span className="m-2">{image.name}</span>
       </div>
-      <X onClick={onDelete} />
+      <X className="mr-4" onClick={onDelete} />
     </div>
   );
 }
@@ -126,25 +136,36 @@ function CampaignMediaForm({ form }: { form: any }) {
     useCampaignEditorStore((state) => state.images)
   );
   const setImagesStore = useCampaignEditorStore((state) => state.setImages);
+  const { getToken } = useAuth();
 
   useEffect(() => {
     setImagesStore(images);
     form.setValue("images", images);
   }, [images]);
 
-  const onImageUpload = (e: React.FormEvent<HTMLInputElement>) => {
+  const onImageUpload = async (e: React.FormEvent<HTMLInputElement>) => {
     const files = (e.target as HTMLInputElement).files as FileList;
     if (files) {
-      // TODO change this to create an image url which is saved somewhere so that the campaign site can access
-      // Currently creates a local url which campaign site cannot access
-      const image = files[0];
-      const imageUrl = URL.createObjectURL(image);
-      const imageTitle = image.name;
-      images.push({
-        url: imageUrl,
-        name: imageTitle,
-      });
-      setImages([...images]);
+      try {
+        // TODO change this to create an image url which is saved somewhere so that the campaign site can access
+        // Currently creates a local url which campaign site cannot access
+        const image = files[0];
+        const formData = new FormData();
+        formData.append("image", image);
+        const res: ImageUploadResponsePayload = await httpPostFormData(
+          `${process.env.NEXT_PUBLIC_API_URL}/v1/cms/campaigns/images`,
+          await getToken(),
+          formData
+        );
+        const imageTitle = image.name;
+        images.push({
+          url: res.url,
+          name: imageTitle,
+        });
+        setImages([...images]);
+      } catch (error) {
+        console.error(error);
+      }
     }
   };
 
@@ -187,7 +208,7 @@ export default function EditCampaign({
     startDate: z.coerce.date(),
     endDate: z.coerce.date(),
     donationOptions: z
-      .array(z.object({ value: z.coerce.number(), description: z.string() }))
+      .array(z.object({ amount: z.coerce.number(), description: z.string() }))
       .min(1, "At least one donation option must be specified"),
     images: z
       .array(z.object({ url: z.string(), name: z.string() }))
@@ -252,6 +273,7 @@ export default function EditCampaign({
     setExpandedItems(newExpandedItems);
   }, [form.formState.errors]);
 
+  //TODO: This is not being accessed when submitting from footer
   const onSubmit = () => {
     setEditStage(EditStage.Preview);
   };

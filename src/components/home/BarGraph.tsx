@@ -77,6 +77,8 @@ export default function BarGraph({ startDate, endDate }: BarGraphProps) {
     []
   ) as AxisOptions<unknown>[];
 
+  if (error) return null;
+
   return (
     <div className="min-h-[350px]">
       <Chart

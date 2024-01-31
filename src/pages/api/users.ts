@@ -45,21 +45,4 @@ export default async function handler(
       return res.status(500).json({ error: "Error deleting user" });
     }
   }
-  // } else if (req.method === "POST") {
-  //   const { firstName, lastName, emailAddress, password, publicMetadata } =
-  //     JSON.parse(req.body);
-  //   try {
-  //     const newUser = await clerkClient.users.createUser({
-  //       firstName,
-  //       lastName,
-  //       emailAddress,
-  //       password,
-  //       publicMetadata,
-  //     });
-  //     return res.status(200).json(newUser);
-  //   } catch (err) {
-  //     console.log(err);
-  //     return res.status(500).json({ error: "Error creating user" });
-  //   }
-  // }
 }

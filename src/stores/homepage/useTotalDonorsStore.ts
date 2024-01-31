@@ -6,8 +6,9 @@ interface TotalDonorsStore {
 }
 
 const useTotalDonorsStore = create<TotalDonorsStore>()((set) => ({
-  totalDonorsFilter: "alltime",
-  setTotalDonorsFilter: (totalDonorsFilter) => set((_) => ({ totalDonorsFilter: totalDonorsFilter })),
+  totalDonorsFilter: "daily",
+  setTotalDonorsFilter: (totalDonorsFilter) =>
+    set((_) => ({ totalDonorsFilter: totalDonorsFilter })),
 }));
 
 export default useTotalDonorsStore;

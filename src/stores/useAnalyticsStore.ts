@@ -3,7 +3,7 @@ import { HeartHandshake, Smile } from "lucide-react";
 import { SelectSingleEventHandler } from "react-day-picker";
 import { devtools, persist } from "zustand/middleware";
 
-export const graphYAxis = ["donation-amount", "donors"] as const;
+export const graphYAxis = ["donationAmount", "numDonations"] as const;
 
 export type GraphYAxis = (typeof graphYAxis)[number];
 
@@ -24,20 +24,16 @@ export type GraphOption = {
 export const graphOptions: GraphOption[] = [
   {
     title: "Donation Amount",
-    value: "donation-amount",
+    value: "donationAmount",
     icon: HeartHandshake,
   },
   {
     title: "Donors",
-    value: "donors",
+    value: "numDonations",
     icon: Smile,
   },
 ];
 interface AnalyticsState {
-  pieChartCampaignOne: string;
-  pieChartCampaignTwo: string;
-  setPieChartCampaignOne: (val: string) => void; // Based on onValueChange for Select component
-  setPieChartCampaignTwo: (val: string) => void;
   graphYAxis: GraphYAxis;
   setGraphYAxis: (type: GraphYAxis) => void;
   graphStartDate: Date;
@@ -48,14 +44,17 @@ interface AnalyticsState {
   setGraphInterval: (interval: GraphInterval) => void;
   graphType: GraphType;
   setGraphType: (type: GraphType) => void;
+  allCampaigns: string[];
+  setAllCampaigns: (allCampaigns: string[]) => void;
+  selectedCampaigns: string[];
+  setSelectedCampaigns: (selectedCampaigns: string[]) => void;
+  toggleSelectedCampaigns: (campaignToToggle: string) => void;
+  removeSelectedCampaign: (campaignToRemove: string) => void;
+  addSelectedCampaign: (campaignToAdd: string) => void;
 }
 
-const useAnalyticsStore = create<AnalyticsState>()((set) => ({
-  pieChartCampaignOne: "Charity Dinner 2020",
-  pieChartCampaignTwo: "Smell Good, Feel Good, Do Good",
-  setPieChartCampaignOne: (name) => set((_) => ({ pieChartCampaignOne: name })),
-  setPieChartCampaignTwo: (name) => set((_) => ({ pieChartCampaignTwo: name })),
-  graphYAxis: "donation-amount",
+const useAnalyticsStore = create<AnalyticsState>()((set, get) => ({
+  graphYAxis: "donationAmount",
   setGraphYAxis: (type) => set((_) => ({ graphYAxis: type })),
   graphStartDate: new Date("2023-12-18"),
   setGraphStartDate: (date) => set((_) => ({ graphStartDate: date })),
@@ -65,6 +64,33 @@ const useAnalyticsStore = create<AnalyticsState>()((set) => ({
   setGraphInterval: (interval) => set((_) => ({ graphInterval: interval })),
   graphType: "line",
   setGraphType: (type) => set((_) => ({ graphType: type })),
+  allCampaigns: [],
+  setAllCampaigns: (allCampaigns: string[]) => set({allCampaigns: allCampaigns, selectedCampaigns: allCampaigns}),
+  selectedCampaigns: [],
+  setSelectedCampaigns: (selectedCampaigns) => set({selectedCampaigns}),
+  toggleSelectedCampaigns: (campaignToToggle) => {
+    const campaigns = get().selectedCampaigns;
+    if (campaigns.includes(campaignToToggle)) {
+      const newCampaigns = campaigns.filter(campaign => campaign != campaignToToggle);
+      set({selectedCampaigns: newCampaigns});
+    } else {
+      campaigns.push(campaignToToggle);
+      set({selectedCampaigns: campaigns});
+    }
+  },
+  removeSelectedCampaign: (campaignToRemove) => {
+    const campaigns = get().selectedCampaigns;
+    const newCampaigns = campaigns.filter(campaign => campaign != campaignToRemove);
+    set({selectedCampaigns: newCampaigns});
+  },
+  addSelectedCampaign: (campaignToAdd) => {
+    const campaigns = get().selectedCampaigns;
+    if (campaigns.includes(campaignToAdd)) {
+      return;
+    }
+    campaigns.push(campaignToAdd);
+    set({selectedCampaigns: campaigns});
+  }
 }));
 
 export default useAnalyticsStore;

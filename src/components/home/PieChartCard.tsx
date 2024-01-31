@@ -47,7 +47,7 @@ export default function PieChartCard({
 
   useEffect(() => {}, [typesOfDonationsFilter]);
 
-  let { data, error } = useClerkSWR(
+  const { data, error } = useClerkSWR(
     `${process.env.NEXT_PUBLIC_API_URL}/v1/cms/homepage-analytics/types-of-donations?filter=` +
       typesOfDonationsFilter
   );
@@ -67,6 +67,8 @@ export default function PieChartCard({
       color: colors[count++],
     });
   }
+
+  if (error) return null;
 
   return (
     <div className="bg-white shadow rounded xl:w-56 w-60 flex flex-col gap-4">

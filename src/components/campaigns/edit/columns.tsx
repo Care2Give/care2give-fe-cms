@@ -2,30 +2,28 @@ import { createColumnHelper } from "@tanstack/react-table";
 import { arabotoBold } from "@/lib/font";
 import { EditIcon, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { CampaignDonationAmount } from "@/types/prismaSchema";
 import {
   Popover,
   PopoverTrigger,
   PopoverContent,
   PopoverClose,
 } from "@radix-ui/react-popover";
+import { DonationAmountFormInput } from "@/stores/useCampaignEditorStore";
 
-const columnHelper = createColumnHelper<CampaignDonationAmount>();
+const columnHelper = createColumnHelper<DonationAmountFormInput>();
 
 export const columns = (
   onEdit: (index: number) => void,
   onDelete: (index: number) => void
 ) => [
-  columnHelper.accessor("dollars", {
+  columnHelper.accessor("amount", {
     cell: ({ row }) => {
-      const { dollars, cents } = row.original;
-      const amount = dollars + cents / 100;
       const formatted = new Intl.NumberFormat("en-SG", {
         style: "currency",
         currency: "SGD",
-      }).format(amount);
+      }).format(row.original.amount);
 
-      return formatted;
+      return <p className="text-center">{formatted}</p>;
     },
     header: () => (
       <p
@@ -36,7 +34,7 @@ export const columns = (
     ),
   }),
   columnHelper.accessor("description", {
-    cell: (props) => props.getValue(),
+    cell: (props) => <p className="text-center">{props.getValue()}</p>,
     header: () => (
       <p
         className={`${arabotoBold.className} text-black text-center text-[18px] pt-2`}
@@ -48,7 +46,7 @@ export const columns = (
   columnHelper.display({
     id: "edit",
     cell: ({ cell }) => (
-      <Button variant="ghost">
+      <Button variant="ghost" className="float-right p-0">
         <EditIcon onClick={() => onEdit(cell.row.index)} />
       </Button>
     ),
@@ -58,7 +56,7 @@ export const columns = (
     cell: ({ cell }) => (
       <Popover>
         <PopoverTrigger asChild>
-          <Button variant="ghost">
+          <Button variant="ghost" className="p-0">
             <Trash2 />
           </Button>
         </PopoverTrigger>
