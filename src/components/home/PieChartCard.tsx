@@ -28,9 +28,9 @@ type CardSelectorProps = {
 const colors = ["#FFD694", "#FCE3BB", "#FCEBCF"];
 
 function formatTitle(key: string) {
-  var splitStr = key.toLowerCase().split("_");
+  let splitStr = key.toLowerCase().split("_");
 
-  for (var i = 0; i < splitStr.length; i++) {
+  for (let i = 0; i < splitStr.length; i++) {
     splitStr[i] =
       splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);
   }
