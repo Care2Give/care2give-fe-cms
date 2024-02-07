@@ -21,8 +21,6 @@ type BarGraphProps = {
 export default function BarGraph({ startDate, endDate }: BarGraphProps) {
   const length = differenceInDays(endDate, startDate) + 1; // Inclusive of end
 
-  useEffect(() => {}, [startDate, endDate]);
-
   let { data, error } = useClerkSWR(
     `${process.env.NEXT_PUBLIC_API_URL}/v1/cms/homepage-analytics/daily-donations?first=` +
       startDate +

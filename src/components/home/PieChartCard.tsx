@@ -45,8 +45,6 @@ export default function PieChartCard({
   const { typesOfDonationsFilter, setTypesOfDonationsFilter } =
     usePieChartStore();
 
-  useEffect(() => {}, [typesOfDonationsFilter]);
-
   const { data, error } = useClerkSWR(
     `${process.env.NEXT_PUBLIC_API_URL}/v1/cms/homepage-analytics/types-of-donations?filter=` +
       typesOfDonationsFilter

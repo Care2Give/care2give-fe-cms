@@ -18,8 +18,6 @@ export default function TotalDonationAmountCard() {
       totalAmount: "0",
     });
 
-  useEffect(() => {}, [totalDonationAmountFilter]);
-
   const { data: totalDonationAmountFetched, error } = useClerkSWR(
     `${process.env.NEXT_PUBLIC_API_URL}/v1/cms/homepage-analytics/total-donation-amount?filter=` +
       totalDonationAmountFilter

@@ -20,8 +20,6 @@ export default function MostPopularCampaignCard() {
       numberOfDonors: 0,
     });
 
-  useEffect(() => {}, [mostPopularCampaignFilter]);
-
   const { data: mostPopularCampaignFetched, error } = useClerkSWR(
     `${process.env.NEXT_PUBLIC_API_URL}/v1/cms/homepage-analytics/most-popular-campaign?filter=` +
       mostPopularCampaignFilter
