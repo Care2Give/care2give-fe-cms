@@ -1,5 +1,6 @@
 import { SelectSingleEventHandler } from "react-day-picker";
 import { create } from "zustand";
+import { subDays } from "date-fns";
 
 interface BarGraphState {
   graphStartDate: Date;
@@ -9,7 +10,7 @@ interface BarGraphState {
 }
 
 const useBarGraphStore = create<BarGraphState>()((set) => ({
-  graphStartDate: new Date("2023-12-18"),
+  graphStartDate: subDays(new Date(), 7),
   graphEndDate: new Date(),
   setGraphStartDate: (date) => set((_) => ({ graphStartDate: date })),
   setGraphEndDate: (date) => set((_) => ({ graphEndDate: date })),
