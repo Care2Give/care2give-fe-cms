@@ -1,6 +1,6 @@
 import MultiSelect from "@/components/shared/MultiSelect";
 import Layout from "@/components/layout";
-import DatePicker from "@/components/home/DatePicker";
+import DatePicker from "@/components/home/RangeDatePicker";
 import useDonationStore from "@/stores/useDonationStore";
 import { Button } from "@/components/ui/button";
 import Header from "@/components/donations/Header";

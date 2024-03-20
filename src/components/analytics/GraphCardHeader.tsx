@@ -12,7 +12,7 @@ import {
   SelectValue,
 } from "../ui/select";
 import { CalendarDays } from "lucide-react";
-import DatePicker from "../home/DatePicker";
+import DatePicker from "../home/RangeDatePicker";
 
 function GraphCardHeader() {
   const {
