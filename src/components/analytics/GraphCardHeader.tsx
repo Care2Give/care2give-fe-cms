@@ -47,8 +47,8 @@ function GraphCardHeader() {
         <div className="flex gap-2 items-center">
           <CalendarDays height={27} width={27} strokeWidth={1} />
           <div className="flex gap-4 items-center">
-            <DatePicker date={graphStartDate} setDate={setGraphStartDate} />
-            <DatePicker date={graphEndDate} setDate={setGraphEndDate} />
+            <DatePicker />
+            <DatePicker />
           </div>
         </div>
         <Select required value={graphInterval} onValueChange={setGraphInterval}>
