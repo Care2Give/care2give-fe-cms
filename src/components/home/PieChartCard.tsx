@@ -25,13 +25,18 @@ type CardSelectorProps = {
   setFilter: (typeOfDonation: string) => void;
 };
 
-// const MOCK_DATA = [
-//   { title: "One", value: 100, color: "#FFD694" },
-//   { title: "Two", value: 15, color: "#FCE3BB" },
-//   { title: "Three", value: 20, color: "#FCEBCF" },
-// ];
-
 const colors = ["#FFD694", "#FCE3BB", "#FCEBCF"];
+
+function formatTitle(key: string) {
+  let splitStr = key.toLowerCase().split("_");
+
+  for (let i = 0; i < splitStr.length; i++) {
+    splitStr[i] =
+      splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);
+  }
+
+  return splitStr.join(" ");
+}
 
 export default function PieChartCard({
   statistic,
@@ -55,7 +60,7 @@ export default function PieChartCard({
 
   for (let key in data) {
     pieChartData.push({
-      title: key,
+      title: formatTitle(key.toLowerCase()),
       value: Number(data[key]),
       color: colors[count++],
     });
@@ -69,7 +74,16 @@ export default function PieChartCard({
         {statistic}
       </div>
       <div className="h-40">
-        <PieChart data={pieChartData} lineWidth={48} />
+        <PieChart
+          data={pieChartData}
+          lineWidth={48}
+          label={(data) => data.dataEntry.value}
+          labelPosition={75}
+          labelStyle={{
+            fontSize: "10px",
+            fontWeight: "600",
+          }}
+        />
       </div>
       <div className={cn("bg-[#ffefdf] flex justify-end items-center p-4")}>
         <CardSelector

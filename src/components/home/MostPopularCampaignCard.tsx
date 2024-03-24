@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Card from "./Card";
 import { FileHeartIcon } from "lucide-react";
 import useClerkSWR from "@/lib/useClerkSWR";
-import useMostPopularCampaignStore from "@/stores/useMostPopularCampaignStore";
+import useMostPopularCampaignStore from "@/stores/homepage/useMostPopularCampaignStore";
 
 interface MostPopularCampaign {
   campaignTitle: string;
