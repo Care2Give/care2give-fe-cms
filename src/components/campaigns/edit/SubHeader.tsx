@@ -5,6 +5,7 @@ import {
   editStageOrdering,
   getDisplay,
 } from "@/components/campaigns/edit/edit-stage";
+import useCampaignEditorStore from "@/stores/useCampaignEditorStore";
 
 export default function SubHeader({
   editStage,
@@ -13,6 +14,7 @@ export default function SubHeader({
   editStage: EditStage;
   setEditStage: (arg0: EditStage) => void;
 }) {
+  const { isCampaignExist } = useCampaignEditorStore();
   const crumbs = editStageOrdering.map((curEditStage: EditStage) => {
     return {
       display: getDisplay(curEditStage),
@@ -23,7 +25,9 @@ export default function SubHeader({
   return (
     <div className="flex justify-between items-center mx-2">
       <div>
-        <p className={`${arabotoBold.className} text-2xl`}>New Campaign</p>
+        <p className={`${arabotoBold.className} text-2xl`}>
+          {isCampaignExist ? "Edit" : "New"} Campaign
+        </p>
       </div>
       <div>
         <BreadCrumbs

@@ -2,7 +2,7 @@ import { PlusIcon } from "lucide-react";
 import { Button } from "../ui/button";
 import { arabotoBold } from "@/lib/font";
 import { Montserrat } from "next/font/google";
-import {useRouter} from "next/router";
+import { useRouter } from "next/router";
 import useCampaignEditorStore from "@/stores/useCampaignEditorStore";
 
 const montserrat = Montserrat({
@@ -12,21 +12,25 @@ const montserrat = Montserrat({
 });
 
 export default function SubHeader() {
-    const router = useRouter();
-    const resetCampaignEditStore = useCampaignEditorStore(state => state.reset);
-    const onCreateNewCampaign = () => {
-        router.push("campaigns/edit");
-        resetCampaignEditStore();
-    }
+  const router = useRouter();
 
-    return (
+  const { setIsCampaignExist, reset } = useCampaignEditorStore();
+
+  const onCreateNewCampaign = () => {
+    setIsCampaignExist(false);
+    router.push("campaigns/edit");
+    reset();
+  };
+
+  return (
     <div className="flex justify-between items-center px-2">
       <div>
         <p className={`${arabotoBold.className} text-2xl`}>Your campaigns</p>
       </div>
       <div>
-        <Button className="bg-[#5185FF] hover:bg-[#3872FC] flex items-center pl-3"
-                onClick={onCreateNewCampaign}
+        <Button
+          className="bg-[#5185FF] hover:bg-[#3872FC] flex items-center pl-3"
+          onClick={onCreateNewCampaign}
         >
           <PlusIcon className="h-4" />
           <div>
@@ -35,5 +39,5 @@ export default function SubHeader() {
         </Button>
       </div>
     </div>
-    );
+  );
 }

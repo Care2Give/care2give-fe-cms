@@ -40,6 +40,7 @@ export default function Table({ campaigns }: { campaigns: CampaignTable[] }) {
     setImages,
     setStatus,
     setTargetAmount,
+    setIsCampaignExist,
   } = useCampaignEditorStore();
 
   const { getToken } = useAuth();
@@ -72,6 +73,7 @@ export default function Table({ campaigns }: { campaigns: CampaignTable[] }) {
       );
       setStatus(data.status);
       setTargetAmount(targetAmount);
+      setIsCampaignExist(true);
       router.push("/campaigns/edit");
     }
   };

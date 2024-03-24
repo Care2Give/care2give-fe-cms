@@ -32,6 +32,8 @@ interface CampaignEditorState {
   images: CampaignImage[];
   setImages: (images: CampaignImage[]) => void;
   reset: () => void;
+  isCampaignExist: boolean;
+  setIsCampaignExist: (isCampaignExist: boolean) => void;
 }
 
 const useCampaignEditorStore = create<CampaignEditorState>()((set) => ({
@@ -64,6 +66,8 @@ const useCampaignEditorStore = create<CampaignEditorState>()((set) => ({
       donationOptions: [],
       images: [],
     }),
+  isCampaignExist: false,
+  setIsCampaignExist: (isCampaignExist) => set({ isCampaignExist }),
 }));
 
 export default useCampaignEditorStore;
