@@ -1,6 +1,6 @@
 import MultiSelect from "@/components/shared/MultiSelect";
 import Layout from "@/components/layout";
-import DatePicker from "@/components/home/RangeDatePicker";
+import DatePicker from "@/components/donations/DatePicker";
 import useDonationStore from "@/stores/useDonationStore";
 import { Button } from "@/components/ui/button";
 import Header from "@/components/donations/Header";
@@ -33,32 +33,37 @@ export default function ExportData() {
 
   const handleExportData = async () => {
     const promise = async () => {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/v1/cms/donations/export`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${await getToken()}`,
-          },
-          body: JSON.stringify({
-            startDate,
-            endDate,
-            campaignIds: campaignsToExport.map((c) => c.value),
-          }),
-        }
-      );
-      const data = await res.arrayBuffer();
+      try {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/v1/cms/donations/export`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${await getToken()}`,
+            },
+            body: JSON.stringify({
+              startDate,
+              endDate,
+              campaignIds: campaignsToExport.map((c) => c.value),
+            }),
+          }
+        );
+        if (!res.ok) throw new Error("Failed to export data.");
+        const data = await res.arrayBuffer();
 
-      saveAs(
-        new Blob([data], {
-          type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-        }),
-        `${new Date(startDate).toLocaleDateString(
-          "en-SG",
-          dateOptions
-        )}-${new Date(endDate).toLocaleDateString("en-SG", dateOptions)}.xlsx`
-      );
+        saveAs(
+          new Blob([data], {
+            type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+          }),
+          `${new Date(startDate).toLocaleDateString(
+            "en-SG",
+            dateOptions
+          )}-${new Date(endDate).toLocaleDateString("en-SG", dateOptions)}.xlsx`
+        );
+      } catch (error) {
+        throw error;
+      }
     };
     toast.promise(promise, {
       loading: "Exporting excel data...",
