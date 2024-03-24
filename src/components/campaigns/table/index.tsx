@@ -50,7 +50,7 @@ export default function Table({ campaigns }: { campaigns: CampaignTable[] }) {
     setId(campaignId);
     const token = await getToken();
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/v1/campaign/${campaignId}`,
+      `${process.env.NEXT_PUBLIC_API_URL}/v1/cms/campaigns/${campaignId}`,
       { headers: { Authorization: `Bearer ${token}` } }
     );
     const data: CampaignWithDonationAmounts = await res.json();

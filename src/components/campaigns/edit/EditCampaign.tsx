@@ -33,6 +33,13 @@ import ErrorMessage from "./ErrorMessage";
 import { useAuth } from "@clerk/nextjs";
 import httpPostFormData from "@/lib/httpPostFormData";
 import { ImageUploadResponsePayload } from "@/types/campaigns/ImageUploadResponsePayload";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 function CampaignStatusForm({ form }: { form: any }) {
   return (
@@ -45,27 +52,41 @@ function CampaignStatusForm({ form }: { form: any }) {
         <FormField
           control={form.control}
           name="status"
-          render={({ field }) => (
-            <FormItem className="flex flex-row items-center justify-between">
-              <div className="space-y-0.5">
-                <FormLabel className="text-base">Is campaign active?</FormLabel>
-                <FormDescription>
-                  Active campaigns will be displayed on campaign website.
-                </FormDescription>
-              </div>
-              <FormControl>
-                <Switch
-                  color="blue"
-                  checked={field.value === CampaignStatus.ACTIVE}
-                  onCheckedChange={(isActive) =>
-                    field.onChange(
-                      isActive ? CampaignStatus.ACTIVE : CampaignStatus.INACTIVE
-                    )
-                  }
-                />
-              </FormControl>
-            </FormItem>
-          )}
+          render={({ field }) => {
+            return (
+              <FormItem className="flex flex-row items-center justify-between">
+                <div className="space-y-0.5">
+                  <FormLabel className="text-base">
+                    Is campaign active?
+                  </FormLabel>
+                  <FormDescription>
+                    Active campaigns will be displayed on campaign website.
+                  </FormDescription>
+                </div>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Status of campaign" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value={CampaignStatus.ACTIVE}>
+                      Active
+                    </SelectItem>
+                    <SelectItem value={CampaignStatus.INACTIVE}>
+                      Inactive
+                    </SelectItem>
+                    <SelectItem value={CampaignStatus.ARCHIVED}>
+                      Archived
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+              </FormItem>
+            );
+          }}
         />
       </AccordionContent>
     </AccordionItem>
