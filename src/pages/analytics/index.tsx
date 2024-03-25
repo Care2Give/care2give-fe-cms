@@ -4,7 +4,6 @@ import BarChartCard from "@/components/analytics/BarChartCard";
 import CampaignTable from "@/components/analytics/CampaignTable";
 import PopularTable from "@/components/analytics/PopularTable";
 import PieChartCard from "@/components/analytics/PieChartCard";
-import useAnalyticsStore from "@/stores/useAnalyticsStore";
 import GraphCard from "@/components/analytics/GraphCard";
 import useClerkSWR from "@/lib/useClerkSWR";
 import { useState} from "react";
@@ -35,6 +34,7 @@ export default function Analytics() {
   const typedCampaignData: AnalyticCampaign[] = fullCampaignData ? fullCampaignData : [];
 
   const barCampaignData = typedCampaignData.map((campaign) => ({
+    campaignTitle: campaign.title,
     xLabel: "",
     yLabel: `$${Math.floor(campaign.amount / 1000)}+`,
     scale: campaign.amount,
@@ -49,6 +49,7 @@ export default function Analytics() {
   const typedPopularAmountData: DonationAmount[] = fullPopularAmountData ? fullPopularAmountData : [];
 
   const barPopularAmountData = typedPopularAmountData.map((campaign) => ({
+    campaignTitle: campaign.campaign,
     xLabel: `$${campaign.amount}`,
     yLabel: `${campaign.numberOfDonations}`,
     scale: campaign.numberOfDonations,

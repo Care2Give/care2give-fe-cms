@@ -23,6 +23,7 @@ type CampaignProps = {
 };
 
 type BarChartProps = {
+  campaignTitle: string;
   xLabel: string;
   yLabel: string;
   scale: number;
