@@ -18,8 +18,8 @@ export default function Campaigns() {
         <Table campaigns={data} />
       ) : (
         <>
-          {Array.from({ length: 5 }).map((_, i) => (
-            <Skeleton key={i} className="w-full h-16 rounded-xl" />
+          {Array.from({ length: 10 }).map((_, i) => (
+            <Skeleton key={i} className="w-full h-12 rounded-xl" />
           ))}
         </>
       )}

@@ -101,7 +101,7 @@ export function PublishDialog({
     <Dialog open={true} onOpenChange={() => setEditStage(EditStage.Edit)}>
       <DialogContent className="sm:max-w-[430px]">
         <DialogHeader>
-          <DialogTitle>Would you like to publish the campaign?</DialogTitle>
+          <DialogTitle>Would you like to save your changes?</DialogTitle>
         </DialogHeader>
         <div className="flex justify-around">
           <Button
